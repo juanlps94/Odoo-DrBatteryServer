@@ -1,0 +1,203 @@
+
+                // Simplified color-contrast function to replicate bootstrap in report preview.
+                @function preview-color-contrast($background) {
+                    @if (lightness($background) > 50) {
+                        @return black;
+                    } @else {
+                        @return white;
+                    }
+                }
+
+                .o_company_4_layout {
+                    font-family: Lato;
+
+                    h2 {
+                        color: #212529;
+                    }
+
+                    #informations strong {
+                        color: #212529;
+                    }
+
+                    .o_total strong {
+                        color: #212529;
+                    }
+
+                    .o_company_tagline {
+                        color: #212529
+                    }
+            }
+                // Simplified color-contrast function to replicate bootstrap in report preview.
+                @function preview-color-contrast($background) {
+                    @if (lightness($background) > 50) {
+                        @return black;
+                    } @else {
+                        @return white;
+                    }
+                }
+
+                .o_company_7_layout {
+                    font-family: Lato;
+
+                    h2 {
+                        color: #212529;
+                    }
+
+                    #informations strong {
+                        color: #212529;
+                    }
+
+                    .o_total strong {
+                        color: #212529;
+                    }
+
+                    .o_company_tagline {
+                        color: #212529
+                    }
+            }
+                // Simplified color-contrast function to replicate bootstrap in report preview.
+                @function preview-color-contrast($background) {
+                    @if (lightness($background) > 50) {
+                        @return black;
+                    } @else {
+                        @return white;
+                    }
+                }
+
+                .o_company_2_layout {
+                    font-family: Lato;
+
+                    h2 {
+                        color: #2f2faf;
+                    }
+
+                    #informations strong {
+                        color: #9191af;
+                    }
+
+                    .o_total strong {
+                        color: #2f2faf;
+                    }
+
+                    .o_company_tagline {
+                        color: #2f2faf
+                    }
+            }
+                // Simplified color-contrast function to replicate bootstrap in report preview.
+                @function preview-color-contrast($background) {
+                    @if (lightness($background) > 50) {
+                        @return black;
+                    } @else {
+                        @return white;
+                    }
+                }
+
+                .o_company_6_layout {
+                    font-family: Lato;
+
+                    h2 {
+                        color: #212529;
+                    }
+
+                    #informations strong {
+                        color: #212529;
+                    }
+
+                    .o_total strong {
+                        color: #212529;
+                    }
+
+                    .o_company_tagline {
+                        color: #212529
+                    }
+            }
+                // Simplified color-contrast function to replicate bootstrap in report preview.
+                @function preview-color-contrast($background) {
+                    @if (lightness($background) > 50) {
+                        @return black;
+                    } @else {
+                        @return white;
+                    }
+                }
+
+                .o_company_5_layout {
+                    font-family: Lato;
+
+                    h2 {
+                        color: #212529;
+                    }
+
+                    #informations strong {
+                        color: #212529;
+                    }
+
+                    .o_total strong {
+                        color: #212529;
+                    }
+
+                    .o_company_tagline {
+                        color: #212529
+                    }
+            }
+                // Simplified color-contrast function to replicate bootstrap in report preview.
+                @function preview-color-contrast($background) {
+                    @if (lightness($background) > 50) {
+                        @return black;
+                    } @else {
+                        @return white;
+                    }
+                }
+
+                .o_company_3_layout {
+                    font-family: Lato;
+
+                    h2 {
+                        color: #212529;
+                    }
+
+                    #informations strong {
+                        color: #212529;
+                    }
+
+                    .o_total strong {
+                        color: #212529;
+                    }
+
+                    .o_company_tagline {
+                        color: #212529
+                    }
+            }
+                // Simplified color-contrast function to replicate bootstrap in report preview.
+                @function preview-color-contrast($background) {
+                    @if (lightness($background) > 50) {
+                        @return black;
+                    } @else {
+                        @return white;
+                    }
+                }
+
+                .o_company_1_layout {
+                    font-family: Lato;
+
+                    h2 {
+                        color: #af0409;
+                    }
+
+                    #informations strong {
+                        color: #a9afaa;
+                    }
+
+                    .o_total strong {
+                        color: #af0409;
+                    }
+
+                    .o_company_tagline {
+                        color: #af0409
+                    }
+                &.o_report_layout_wave {
+                    #informations {
+                        border-color: #a9afaa;
+                        background-color: mix(white, #a9afaa, 92%);
+                    }
+                }
+            }

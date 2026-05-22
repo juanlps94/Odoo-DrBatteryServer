@@ -1,0 +1,744 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="paperformat_cierre_semanal" model="report.paperformat">
+        <field name="name">A4 Horizontal Cierre Semanal</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_cierre_semanal_taller" model="ir.actions.report">
+        <field name="name">Cierre de Caja / Semanal</field>
+        <field name="model">bateria.reparacion.carro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.report_cierre_semanal_template</field>
+        <field name="report_file">bateria_reportes.report_cierre_semanal_template</field>
+        <field name="paperformat_id" ref="bateria_reportes.paperformat_cierre_semanal"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <template id="report_cierre_semanal_template">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                <div class="page" style="font-family: Arial, sans-serif; font-size: 8px; color: #000; padding-top: 10px;">
+                    
+                    <div class="row align-items-center mb-3">
+                        <div class="col-4">
+                            <img src="/bateria_reportes/static/src/img/logo_jjs.png" style="max-height: 60px;" alt="Logo JJS"/>
+                        </div>
+                        <div class="col-8 text-start">
+                            <h3 class="fw-bold" style="margin-bottom: 5px;">RELACION SEMANAL TALLER</h3>
+                            <p style="font-size: 10px; margin-bottom: 0;">
+                                Desde: <strong><span t-esc="context.get('fecha_inicio')"/></strong> 
+                                Hasta: <strong><span t-esc="context.get('fecha_fin')"/></strong>
+                            </p>
+                        </div>
+                    </div>
+
+                    <table class="table table-sm table-bordered mt-3 mb-5" style="border: 1px solid #000;">
+                        <thead style="background-color: #f0f0f0; border-bottom: 2px solid #000;">
+                            <tr class="text-center align-middle fw-bold">
+                                <th style="border: 1px solid #000; width: 6%;">REALIZADO POR</th>
+                                <th style="border: 1px solid #000; width: 4%;">TIPO</th>
+                                <th style="border: 1px solid #000; width: 5%;">FECHA</th>
+                                <th style="border: 1px solid #000; width: 9%;">CLIENTE</th>
+                                <th style="border: 1px solid #000; width: 3%;">#</th>
+                                <th style="border: 1px solid #000; width: 5%;">MARCA</th>
+                                <th style="border: 1px solid #000; width: 5%;">MODELO</th>
+                                <th style="border: 1px solid #000; width: 5%;">PLACA</th>
+                                <th style="border: 1px solid #000; width: 5%;">A PAGAR ($)</th>
+                                <th style="border: 1px solid #000; width: 5%;">GASTOS MAT. ($)</th>
+                                <th style="border: 1px solid #000; width: 5%;">MANO DE OBRA ($)</th>
+                                <th style="border: 1px solid #000; width: 5%;">TOTAL S/GASTO ($)</th>
+                                <th style="border: 1px solid #000; width: 5%;">GASTO ADM ($)</th>
+                                <th style="border: 1px solid #000; width: 5%;">GANANCIA ($)</th>
+                                <th style="border: 1px solid #000; width: 5%; background-color: #d1e7dd;">JOHAN 50%</th>
+                                <th style="border: 1px solid #000; width: 5%; background-color: #d1e7dd;">LEO 50%</th>
+                                <th style="border: 1px solid #000; width: 18%;">OBSERVACION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="t_apagar" t-value="0"/>
+                            <t t-set="t_gmat" t-value="0"/>
+                            <t t-set="t_mobra" t-value="0"/>
+                            <t t-set="t_sgast" t-value="0"/>
+                            <t t-set="t_adm" t-value="0"/>
+                            <t t-set="t_gan" t-value="0"/>
+                            <t t-set="t_joh" t-value="0"/>
+                            <t t-set="t_leo" t-value="0"/>
+                            
+                            <t t-foreach="docs" t-as="d">
+                                <t t-set="t_apagar" t-value="t_apagar + d.total_venta"/>
+                                <t t-set="t_gmat" t-value="t_gmat + d.costo_repuestos"/>
+                                <t t-set="t_mobra" t-value="t_mobra + d.mo_mecanico"/>
+                                <t t-set="t_sgast" t-value="t_sgast + d.ganancia_bruta"/>
+                                <t t-set="t_adm" t-value="t_adm + d.gasto_adm"/>
+                                <t t-set="t_gan" t-value="t_gan + d.total_ganancia"/>
+                                <t t-set="t_joh" t-value="t_joh + d.ganancia_johan"/>
+                                <t t-set="t_leo" t-value="t_leo + d.ganancia_leo"/>
+
+                                <tr>
+                                    <td style="border: 1px solid #000;"><span t-field="d.mecanico"/></td>
+                                    <td class="text-center" style="border: 1px solid #000;">MECANICA</td>
+                                    <td class="text-center" style="border: 1px solid #000;"><span t-field="d.fecha_entrada" t-options='{"widget": "date"}'/></td>
+                                    <td style="border: 1px solid #000;"><span t-field="d.cliente_id.name"/></td>
+                                    <td class="text-center" style="border: 1px solid #000;"><span t-field="d.name"/></td>
+                                    <td style="border: 1px solid #000;"><span t-field="d.marca"/></td>
+                                    <td style="border: 1px solid #000;"><span t-field="d.modelo"/></td>
+                                    <td class="text-center" style="border: 1px solid #000;"><span t-field="d.placa"/></td>
+                                    
+                                    <td class="text-end fw-bold" style="border: 1px solid #000;"><span t-field="d.total_venta" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end text-danger" style="border: 1px solid #000;"><span t-field="d.costo_repuestos" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end text-danger" style="border: 1px solid #000;"><span t-field="d.mo_mecanico" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    
+                                    <td class="text-end fw-bold" style="border: 1px solid #000;"><span t-field="d.ganancia_bruta" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end text-danger" style="border: 1px solid #000;"><span t-field="d.gasto_adm" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end fw-bold text-success" style="border: 1px solid #000;"><span t-field="d.total_ganancia" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    
+                                    <td class="text-end fw-bold text-primary" style="border: 1px solid #000; background-color: #eaf4f0;"><span t-field="d.ganancia_johan" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end fw-bold text-primary" style="border: 1px solid #000; background-color: #eaf4f0;"><span t-field="d.ganancia_leo" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    
+                                    <td style="border: 1px solid #000; font-size: 7px;"><span t-field="d.trabajo_realizar"/></td>
+                                </tr>
+                            </t>
+                            
+                            <tr class="fw-bold" style="background-color: #e9ecef; border-top: 2px solid #000;">
+                                <td colspan="8" class="text-end" style="border: 1px solid #000;">TOTALES GENERALES ($):</td>
+                                <td class="text-end" style="border: 1px solid #000;"><span t-esc="t_apagar" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td class="text-end text-danger" style="border: 1px solid #000;"><span t-esc="t_gmat" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td class="text-end text-danger" style="border: 1px solid #000;"><span t-esc="t_mobra" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td class="text-end" style="border: 1px solid #000;"><span t-esc="t_sgast" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td class="text-end text-danger" style="border: 1px solid #000;"><span t-esc="t_adm" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td class="text-end text-success" style="border: 1px solid #000;"><span t-esc="t_gan" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td class="text-end text-primary" style="border: 1px solid #000;"><span t-esc="t_joh" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td class="text-end text-primary" style="border: 1px solid #000;"><span t-esc="t_leo" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td style="border: 1px solid #000;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="page-break-before: auto;"/>
+
+                    <h5 class="fw-bold mb-3 mt-4" style="border-bottom: 1px solid #000; display: inline-block; padding-bottom: 3px;">RESUMEN DE PAGO A MECÁNICOS</h5>
+                    <t t-set="mecanicos" t-value="list(set(docs.mapped('mecanico')))"/>
+                    <table class="table table-sm table-bordered" style="width: 100%; border: 1px solid #000; font-size: 10px;">
+                        <thead style="background-color: #f0f0f0;">
+                            <tr class="text-center fw-bold">
+                                <th style="border: 1px solid #000; width: 10%;">FECHA PAGO</th>
+                                <th style="border: 1px solid #000; width: 20%;">VEHICULO / TRABAJO</th>
+                                <th style="border: 1px solid #000; width: 10%;">MONTO $</th>
+                                <th style="border: 1px solid #000; width: 10%;">TASA BCV</th>
+                                <th style="border: 1px solid #000; width: 15%;">MONTO BS</th>
+                                <th style="border: 1px solid #000; width: 35%;">OBSERVACION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="gran_total_usd" t-value="0"/>
+                            <t t-set="gran_total_bs" t-value="0"/>
+                            
+                            <t t-foreach="mecanicos" t-as="mec">
+                                <t t-set="ordenes_mec" t-value="docs.filtered(lambda r: r.mecanico == mec and r.mo_mecanico > 0)"/>
+                                
+                                <t t-if="ordenes_mec">
+                                    <tr style="background-color: #d1e7dd;">
+                                        <td colspan="6" class="fw-bold text-uppercase" style="border: 1px solid #000; font-size: 11px;">
+                                            <span t-esc="mec if mec else 'MECANICO SIN ASIGNAR'"/>
+                                        </td>
+                                    </tr>
+                                    
+                                    <t t-set="sub_total_usd" t-value="0"/>
+                                    <t t-set="sub_total_bs" t-value="0"/>
+                                    
+                                    <t t-foreach="ordenes_mec" t-as="o">
+                                        <t t-set="mo_usd" t-value="o.mo_mecanico"/>
+                                        <t t-set="mo_bs" t-value="o.mo_mecanico * o.tasa_aplicada"/>
+                                        
+                                        <t t-set="sub_total_usd" t-value="sub_total_usd + mo_usd"/>
+                                        <t t-set="sub_total_bs" t-value="sub_total_bs + mo_bs"/>
+                                        
+                                        <tr>
+                                            <td class="text-center" style="border: 1px solid #000;"><span t-field="o.fecha_entrada" t-options='{"widget": "date"}'/></td>
+                                            <td style="border: 1px solid #000;">
+                                                <span t-field="o.marca"/> <span t-field="o.modelo"/> (<span t-field="o.placa"/>)
+                                            </td>
+                                            <td class="text-end" style="border: 1px solid #000;">$<span t-esc="mo_usd" t-options='{"widget": "float", "precision": 2}'/></td>
+                                            <td class="text-end" style="border: 1px solid #000;"><span t-field="o.tasa_aplicada" t-options='{"widget": "float", "precision": 2}'/></td>
+                                            <td class="text-end" style="border: 1px solid #000;">Bs <span t-esc="mo_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                            <td style="border: 1px solid #000; font-size: 8px;"><span t-field="o.trabajo_realizar"/></td>
+                                        </tr>
+                                    </t>
+                                    
+                                    <tr style="background-color: #f8f9fa;" class="fw-bold">
+                                        <td colspan="2" class="text-end" style="border: 1px solid #000;">TOTAL <span t-esc="mec" style="text-transform: uppercase;"/>:</td>
+                                        <td class="text-end text-danger" style="border: 1px solid #000;">$<span t-esc="sub_total_usd" t-options='{"widget": "float", "precision": 2}'/></td>
+                                        <td style="border: 1px solid #000;"></td>
+                                        <td class="text-end text-danger" style="border: 1px solid #000;">Bs <span t-esc="sub_total_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                        <td style="border: 1px solid #000;"></td>
+                                    </tr>
+                                    
+                                    <t t-set="gran_total_usd" t-value="gran_total_usd + sub_total_usd"/>
+                                    <t t-set="gran_total_bs" t-value="gran_total_bs + sub_total_bs"/>
+                                </t>
+                            </t>
+                            
+                            <tr class="fw-bold" style="background-color: #e9ecef; border-top: 2px solid #000;">
+                                <td colspan="2" class="text-end" style="border: 1px solid #000; font-size: 11px;">GRAN TOTAL PAGO MECÁNICOS:</td>
+                                <td class="text-end text-danger" style="border: 1px solid #000; font-size: 11px;">$<span t-esc="gran_total_usd" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td style="border: 1px solid #000;"></td>
+                                <td class="text-end text-danger" style="border: 1px solid #000; font-size: 11px;">Bs <span t-esc="gran_total_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                <td style="border: 1px solid #000;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="view_bateria_reporte_taller_wizard" model="ir.ui.view">
+        <field name="name">bateria.reporte.taller.wizard.form</field>
+        <field name="model">bateria.reporte.taller.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generar Cierre Semanal">
+                <div class="alert alert-info" role="alert">
+                    Selecciona el rango de fechas para generar el reporte de rentabilidad, nómina de mecánicos y división de ganancias.
+                </div>
+                <group>
+                    <group>
+                        <field name="fecha_inicio"/>
+                    </group>
+                    <group>
+                        <field name="fecha_fin"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_imprimir_reporte" type="object" string="Generar PDF" class="oe_highlight" icon="fa-print"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bateria_reporte_taller_wizard" model="ir.actions.act_window">
+        <field name="name">Cierre Semanal / Rentabilidad</field>
+        <field name="res_model">bateria.reporte.taller.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_reporte_recepcion_carro" model="ir.actions.report">
+        <field name="name">Orden de Recepción (Interno)</field>
+        <field name="model">bateria.reparacion.carro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.reporte_recepcion_template</field>
+        <field name="report_file">bateria_reportes.reporte_recepcion_template</field>
+        <field name="binding_model_id" eval="False"/> 
+    </record>
+
+    <template id="reporte_recepcion_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <div class="page" style="font-size: 14px; color: #000; padding-top: 20px;">
+                        
+                        <div class="row mb-4 align-items-center">
+                            <div class="col-4">
+                                <img src="/bateria_reportes/static/src/img/logo_jjs.png" style="max-height: 80px;" alt="Logo JJS"/>
+                            </div>
+                            <div class="col-8 text-end">
+                                <h2 style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 10px; display: inline-block;">ORDEN DE RECEPCIÓN E INSPECCIÓN</h2>
+                                <h4 style="color: #333;">N° <span t-field="doc.name"/></h4>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <strong>Fecha de Entrada:</strong> <span t-field="doc.fecha_entrada" t-options='{"widget": "date"}'/><br/>
+                                <strong>Cliente:</strong> <span t-field="doc.cliente_id.name"/><br/>
+                                <strong>Teléfono:</strong> <span t-field="doc.cliente_id.telefono"/><br/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Mecánico Asignado:</strong> <span t-field="doc.mecanico"/><br/>
+                            </div>
+                        </div>
+
+                        <h5 style="border-bottom: 2px solid #555; padding-bottom: 3px; font-weight: bold;">Datos del Vehículo</h5>
+                        <table class="table table-bordered table-sm mb-4">
+                            <tr>
+                                <td><strong>Marca:</strong> <span t-field="doc.marca"/></td>
+                                <td><strong>Modelo:</strong> <span t-field="doc.modelo"/></td>
+                                <td><strong>Año:</strong> <span t-field="doc.anio"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Placa:</strong> <span t-field="doc.placa"/></td>
+                                <td><strong>VIN:</strong> <span t-field="doc.vin"/></td>
+                                <td><strong>Kilometraje:</strong> <span t-field="doc.kilometraje"/></td>
+                            </tr>
+                        </table>
+
+                        <h5 style="border-bottom: 2px solid #555; padding-bottom: 3px; font-weight: bold;">Reporte de Inspección (Condiciones de Recepción)</h5>
+                        <p style="white-space: pre-wrap; border: 1px solid #999; padding: 10px; min-height: 80px;"><span t-field="doc.observaciones"/></p>
+
+                        <h5 style="border-bottom: 2px solid #555; padding-bottom: 3px; font-weight: bold;">Falla Reportada / Trabajo a Realizar</h5>
+                        <p style="white-space: pre-wrap; border: 1px solid #999; padding: 10px; min-height: 80px;"><span t-field="doc.trabajo_realizar"/></p>
+
+                        <div class="row mt-5 pt-5 text-center">
+                            <div class="col-6">
+                                <hr style="border-top: 1px solid black; width: 80%;"/>
+                                <strong>Firma del Cliente</strong><br/>
+                                <span>Acepto las condiciones de recepción</span>
+                            </div>
+                            <div class="col-6">
+                                <hr style="border-top: 1px solid black; width: 80%;"/>
+                                <strong>Firma del Taller</strong><br/>
+                                <span>Recibido Conforme</span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_reporte_presupuesto_carro" model="ir.actions.report">
+        <field name="name">Presupuesto Cliente</field>
+        <field name="model">bateria.reparacion.carro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.reporte_presupuesto_carro_template</field>
+        <field name="report_file">bateria_reportes.reporte_presupuesto_carro_template</field>
+        <field name="binding_model_id" eval="False"/> 
+    </record>
+
+    <template id="reporte_presupuesto_carro_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <t t-set="tasa" t-value="doc.tasa_aplicada if doc.moneda == 'bs' else 1.0"/>
+                    <t t-set="simbolo" t-value="'Bs' if doc.moneda == 'bs' else '$'"/>
+                    
+                    <div class="page" style="font-size: 14px; color: #000; padding-top: 20px;">
+                        
+                        <div class="row mb-4 align-items-center">
+                            <div class="col-4">
+                                <img src="/bateria_reportes/static/src/img/logo_jjs.png" style="max-height: 80px;" alt="Logo JJS"/>
+                            </div>
+                            <div class="col-8 text-end">
+                                <h2 style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 10px; display: inline-block;">PRESUPUESTO DE SERVICIO TÉCNICO</h2>
+                                <h4 style="color: #333;">N° <span t-field="doc.name"/></h4>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <strong>Cliente:</strong> <span t-field="doc.cliente_id.name"/><br/>
+                                <strong>Cédula/RIF:</strong> <span t-field="doc.cliente_id.rif"/><br/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Fecha:</strong> <span t-field="doc.fecha_entrada" t-options='{"widget": "date"}'/><br/>
+                                <strong>Vehículo:</strong> <span t-field="doc.marca"/> <span t-field="doc.modelo"/> (<span t-field="doc.placa"/>)<br/>
+                                <t t-if="doc.moneda == 'bs'">
+                                    <strong>Tasa Aplicada:</strong> <span t-field="doc.tasa_aplicada" t-options='{"widget": "float", "precision": 2}'/> Bs<br/>
+                                </t>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered table-sm mt-4">
+                            <thead style="background-color: #f0f0f0; color: #000;">
+                                <tr>
+                                    <th class="text-center">CANTIDAD</th>
+                                    <th>DESCRIPCIÓN</th>
+                                    <th class="text-end">PRECIO.U (<t t-esc="simbolo"/>)</th>
+                                    <th class="text-end">TOTAL (<t t-esc="simbolo"/>)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.pieza_ids" t-as="pieza">
+                                    <td class="text-center"><span t-field="pieza.cantidad"/></td>
+                                    <td><span t-field="pieza.name"/></td>
+                                    <td class="text-end"><t t-esc="simbolo"/> <span t-esc="pieza.precio_venta * tasa" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end">
+                                        <t t-esc="simbolo"/> <span t-esc="(pieza.cantidad * pieza.precio_venta) * tasa" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row justify-content-end mt-4">
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless">
+                                    <tr class="border-top" style="font-size: 18px; border-color: #000;">
+                                        <td><strong>TOTAL PRESUPUESTO:</strong></td>
+                                        <td class="text-end fw-bold"><strong><t t-esc="simbolo"/> <span t-esc="doc.total_venta * tasa" t-options='{"widget": "float", "precision": 2}'/></strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <p class="text-center mt-5 text-muted" style="font-size: 11px; border-top: 1px dashed #999; padding-top: 10px;">
+                            * Este presupuesto es válido por 5 días hábiles. Sujeto a disponibilidad de inventario al momento de la aprobación.
+                        </p>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_reporte_liquidacion_carro" model="ir.actions.report">
+        <field name="name">Liquidación Interna (Taller)</field>
+        <field name="model">bateria.reparacion.carro</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.reporte_liquidacion_carro_template</field>
+        <field name="report_file">bateria_reportes.reporte_liquidacion_carro_template</field>
+        <field name="binding_model_id" eval="False"/> 
+    </record>
+
+    <template id="reporte_liquidacion_carro_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <t t-set="tasa" t-value="doc.tasa_aplicada if doc.tasa_aplicada &gt; 0 else 1.0"/>
+                    <div class="page" style="font-size: 14px; color: #000; padding-top: 20px;">
+                        
+                        <div class="row mb-4 align-items-center">
+                            <div class="col-4">
+                                <img src="/bateria_reportes/static/src/img/logo_jjs.png" style="max-height: 80px;" alt="Logo JJS"/>
+                            </div>
+                            <div class="col-8 text-end">
+                                <h2 style="font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 10px; display: inline-block;">LIQUIDACIÓN DE ORDEN DE TALLER</h2>
+                                <h4 style="color: #333;">N° <span t-field="doc.name"/> (USO INTERNO)</h4>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <strong>Vehículo:</strong> <span t-field="doc.marca"/> <span t-field="doc.modelo"/> (<span t-field="doc.placa"/>)<br/>
+                                <strong>Mecánico:</strong> <span t-field="doc.mecanico"/><br/>
+                            </div>
+                            <div class="col-6 text-end">
+                                <strong>Fecha de Liquidación:</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d')"/><br/>
+                                <strong>O. Compra Asociada:</strong> <span t-field="doc.compra_id.name"/><br/>
+                                <strong>Tasa Cliente Aplicada:</strong> <span t-esc="tasa" t-options='{"widget": "float", "precision": 2}'/> Bs<br/>
+                            </div>
+                        </div>
+
+                        <h5 style="border-bottom: 2px solid #555; padding-bottom: 3px; font-weight: bold;">Desglose de Rentabilidad por Ítem</h5>
+                        <table class="table table-bordered table-sm mt-3" style="font-size: 12px;">
+                            <thead style="background-color: #f0f0f0; color: #000;">
+                                <tr>
+                                    <th class="text-center">Cant.</th>
+                                    <th>Descripción (Repuestos / Servicios)</th>
+                                    <th class="text-end">Costo Unit<br/><span style="font-size: 10px;">($ / Bs)</span></th>
+                                    <th class="text-end">Costo Total<br/><span style="font-size: 10px;">($ / Bs)</span></th>
+                                    <th class="text-end">Venta Unit<br/><span style="font-size: 10px;">($ / Bs)</span></th>
+                                    <th class="text-end">Ganancia Bruta<br/><span style="font-size: 10px;">($ / Bs)</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="doc.pieza_ids" t-as="pieza">
+                                    <td class="text-center" style="vertical-align: middle;"><span t-field="pieza.cantidad"/></td>
+                                    <td style="vertical-align: middle;">
+                                        <span t-field="pieza.name"/><br/>
+                                        <span class="text-muted" style="font-size: 10px;"><t t-if="pieza.tipo_linea == 'repuesto'">(Repuesto)</t><t t-else="">(Servicio/Mano Obra)</t></span>
+                                    </td>
+                                    <td class="text-end">
+                                        $ <span t-field="pieza.precio_compra" t-options='{"widget": "float", "precision": 2}'/><br/>
+                                        <span class="text-muted" style="font-size: 10px;">Bs <span t-esc="pieza.precio_compra * tasa" t-options='{"widget": "float", "precision": 2}'/></span>
+                                    </td>
+                                    <td class="text-end">
+                                        $ <span t-esc="pieza.cantidad * pieza.precio_compra" t-options='{"widget": "float", "precision": 2}'/><br/>
+                                        <span class="text-muted" style="font-size: 10px;">Bs <span t-esc="(pieza.cantidad * pieza.precio_compra) * tasa" t-options='{"widget": "float", "precision": 2}'/></span>
+                                    </td>
+                                    <td class="text-end">
+                                        $ <span t-field="pieza.precio_venta" t-options='{"widget": "float", "precision": 2}'/><br/>
+                                        <span class="text-muted" style="font-size: 10px;">Bs <span t-esc="pieza.precio_venta * tasa" t-options='{"widget": "float", "precision": 2}'/></span>
+                                    </td>
+                                    <td class="text-end fw-bold">
+                                        $ <span t-field="pieza.ganancia" t-options='{"widget": "float", "precision": 2}'/><br/>
+                                        <span class="text-muted fw-normal" style="font-size: 10px;">Bs <span t-esc="pieza.ganancia * tasa" t-options='{"widget": "float", "precision": 2}'/></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row justify-content-end mt-4">
+                            <div class="col-8">
+                                <table class="table table-sm table-borderless" style="border: 1px solid #999; border-radius: 5px; padding: 10px;">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Total Facturado al Cliente (Ingreso Bruto):</strong></td>
+                                            <td class="text-end text-success">+$ <span t-field="doc.total_venta" t-options='{"widget": "float", "precision": 2}'/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Total Costos (Repuestos y Pago Mecánicos):</strong></td>
+                                            <td class="text-end text-danger">-$ <span t-field="doc.total_costo_compra" t-options='{"widget": "float", "precision": 2}'/></td>
+                                        </tr>
+                                        <tr class="border-top" style="border-color: #ccc;">
+                                            <td><strong>Ganancia Bruta (Taller):</strong></td>
+                                            <td class="text-end fw-bold">$ <span t-field="doc.ganancia_bruta" t-options='{"widget": "float", "precision": 2}'/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Gastos Administrativos (10% s/ Ganancia Bruta):</strong></td>
+                                            <td class="text-end text-danger">-$ <span t-field="doc.gasto_adm" t-options='{"widget": "float", "precision": 2}'/></td>
+                                        </tr>
+                                        <tr class="border-top" style="font-size: 16px; border-color: #000;">
+                                            <td><strong>GANANCIA NETA FINAL:</strong></td>
+                                            <td class="text-end fw-bold"><strong>$ <span t-field="doc.total_ganancia" t-options='{"widget": "float", "precision": 2}'/></strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="view_bateria_reparacion_carro_tree" model="ir.ui.view">
+        <field name="name">bateria.reparacion.carro.tree</field>
+        <field name="model">bateria.reparacion.carro</field>
+        <field name="arch" type="xml">
+            <list decoration-info="estado in ('recepcion', 'inspeccion')" decoration-warning="estado in ('presupuesto', 'cobro', 'compras')" decoration-success="estado in ('listo', 'reparto')">
+                <field name="fecha_entrada"/>
+                <field name="name" string="N° Control"/>
+                <field name="cliente_id"/>
+                <field name="placa"/>
+                <field name="mecanico"/>
+                <field name="total_venta" string="Presupuesto ($ Total)" sum="Total"/>
+                <field name="saldo_pendiente" string="Deuda Restante" decoration-danger="saldo_pendiente &gt; 0.01" sum="Por Cobrar"/>
+                <field name="ganancia_bruta" string="Ganancia Taller ($)" sum="Ganancia" decoration-bf="1" decoration-success="1"/>
+                <field name="estado" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_reparacion_carro_form" model="ir.ui.view">
+        <field name="name">bateria.reparacion.carro.form</field>
+        <field name="model">bateria.reparacion.carro</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                <button name="action_volver_paso_anterior" string="⬅️ Volver al Paso Anterior" type="object" class="btn-secondary" invisible="estado in ('recepcion', 'reparto')"/>
+                    <button name="action_fase_inspeccion" string="🔍 Iniciar Inspección" type="object" class="oe_highlight" invisible="estado != 'recepcion'"/>
+                    <button name="action_iniciar_presupuesto" string="📝 Iniciar Presupuesto" type="object" class="oe_highlight btn-primary" invisible="estado != 'inspeccion'"/>
+                    <button name="action_fase_cobro" string="💰 Pasar a Cobro" type="object" class="oe_highlight btn-warning" invisible="estado != 'presupuesto'"/>
+                    <button name="action_enviar_a_compras" string="🛒 Enviar / Actualizar Compras" type="object" class="oe_highlight btn-success" invisible="estado != 'cobro'"/>
+                    <button name="action_sincronizar_costos" string="🔄 Traer Costos Reales de Compra" type="object" class="btn-info" invisible="not compra_id or estado in ('listo', 'reparto')"/>
+                    <button name="action_iniciar_reparacion" string="🔧 Iniciar Reparación" type="object" class="oe_highlight btn-danger" invisible="estado != 'compras'"/>
+                    <button name="action_marcar_listo" string="✅ Marcar como Entregado" type="object" class="oe_highlight btn-dark" invisible="estado != 'reparacion'"/>
+                    
+                    <button name="action_fase_reparto" string="💸 Repartir Ganancias (SOCIOS)" type="object" class="oe_highlight btn-success" invisible="estado != 'listo'"/>
+                    
+                    <button name="%(action_reporte_recepcion_carro)d" type="action" string="🖨️ Recepción" class="btn-secondary"/>
+                    <button name="%(action_reporte_presupuesto_carro)d" type="action" string="🖨️ Presupuesto" class="btn-primary" invisible="estado in ('recepcion', 'inspeccion')"/>
+                    <button name="%(action_reporte_liquidacion_carro)d" type="action" string="🖨️ Liquidación" class="btn-secondary" invisible="estado in ('recepcion', 'inspeccion', 'presupuesto')"/>
+                    
+                    <field name="estado" widget="statusbar" statusbar_visible="recepcion,inspeccion,presupuesto,cobro,compras,reparacion,listo,reparto"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="action" class="oe_stat_button" icon="fa-shopping-bag" invisible="not compra_id">
+                            <field name="compra_id" readonly="1" widget="statinfo" string="O. de Compra"/>
+                        </button>
+                    </div>
+
+                    <field name="es_atrasado" invisible="1"/>
+
+                    <div class="alert alert-danger text-center shadow-sm" role="alert" invisible="es_atrasado == False">
+                        <h4 class="alert-heading fw-bold mb-0"><i class="fa fa-exclamation-triangle"/> ¡ALERTA DE RETRASO!</h4>
+                        <p class="mb-0">El tiempo estimado de entrega de este vehículo ya caducó y aún no ha sido entregado al cliente.</p>
+                    </div>
+
+                    <div class="alert alert-danger text-center" role="alert" invisible="estado not in ('cobro', 'compras', 'reparacion') or monto_pagado &gt;= (total_venta * 0.4)">
+                        ⚠️ <strong>REGLA DE TALLER:</strong> El cliente debe abonar al menos el <strong>40% de inicial</strong> para liberar el vehículo hacia Compras y Reparación.
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="N° de Identificación / Control"/>
+                        <h1><field name="name" placeholder="Ej: N-08..."/></h1>
+                    </div>
+                    
+                    <group>
+                        <group string="Control y Tiempos" style="background-color: #fff3cd; padding: 10px; border-radius: 5px;">
+                            <field name="ubicacion_vehiculo" widget="radio" options="{'horizontal': true}"/>
+                            <field name="fecha_estimada_entrega" decoration-danger="1" decoration-bf="1" placeholder="Ej: 30/11/2026 14:00:00"/>
+                        </group>
+                        
+                        <group string="Datos de Entrada">
+                            <field name="fecha_entrada" readonly="estado != 'recepcion'"/>
+                            <field name="cliente_id" readonly="estado != 'recepcion'"/>
+                            <field name="mecanico" readonly="estado in ('listo', 'reparto')"/>
+                            <field name="trabajo_realizar" readonly="estado in ('listo', 'reparto')"/>
+                        </group>
+                        <group string="Registro Fotográfico">
+                            <field name="foto_vehiculo" widget="image" options="{'size': [250, 250], 'zoom': true}" class="oe_avatar shadow-sm" nolabel="1" readonly="estado != 'recepcion'"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="1. Inspección del Vehículo">
+                            <group>
+                                <group>
+                                    <field name="marca" readonly="estado != 'recepcion'"/>
+                                    <field name="modelo" readonly="estado != 'recepcion'"/>
+                                    <field name="anio" readonly="estado != 'recepcion'"/>
+                                </group>
+                                <group>
+                                    <field name="placa" readonly="estado != 'recepcion'"/>
+                                    <field name="vin" readonly="estado != 'recepcion'"/>
+                                    <field name="kilometraje" readonly="estado != 'recepcion'"/>
+                                </group>
+                            </group>
+                            <separator string="Reporte de Inspección y Condiciones"/>
+<field name="observaciones" placeholder="Posee reproductor, cauchos de repuesto, tapicería intacta..." readonly="estado not in ('recepcion', 'inspeccion')"/>                        </page>
+                        
+                        <page string="2. Presupuesto y Ganancias">
+                            <group string="¿Ya compraste los repuestos antes del presupuesto?" invisible="compra_id" style="background-color: #e9ecef; padding: 10px; border-radius: 5px;">
+                                <div class="o_row w-100">
+                                    <field name="compra_existente_id" placeholder="Buscar factura previa..." options="{'no_create': True}"/>
+                                    <button name="action_importar_compra" string="📥 Traer Repuestos de esta Compra" type="object" class="btn-info" invisible="not compra_existente_id"/>
+                                </div>
+                                <div class="text-muted mt-1" invisible="compra_id"><em>Selecciona una orden del módulo de Compras y el sistema extraerá las líneas con su costo exacto.</em></div>
+                            </group>
+                            
+                            <group string="Configuración de Moneda para Presupuesto" style="background-color: #f8f9fa; padding: 10px; border-radius: 5px;">
+                                <group>
+                                    <field name="moneda" widget="radio" options="{'horizontal': true}"/>
+                                    <label for="moneda_referencia" string="Tasa de Referencia"/>
+                                    <div class="o_row">
+                                        <field name="moneda_referencia" widget="radio" options="{'horizontal': true}"/>
+                                        <button name="action_actualizar_tasa_bcv_manual" type="object" icon="fa-refresh" class="btn btn-sm btn-primary" title="Traer precio actual"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <field name="usar_tasa_personalizada" widget="boolean_toggle"/>
+                                    <field name="tasa_cambio" invisible="not usar_tasa_personalizada" required="usar_tasa_personalizada"/>
+                                    <field name="tasa_aplicada" string="Tasa Activa" readonly="1" force_save="1" decoration-bf="1" decoration-success="1"/>
+                                </group>
+                            </group>
+
+                            <field name="pieza_ids" readonly="estado in ('listo', 'reparto')">
+                                <list editable="bottom">
+                                    <field name="tipo_linea" string="Tipo"/>
+                                    <field name="name" string="Descripción (Repuestos / Servicios)"/>
+                                    <field name="cantidad"/>
+                                    <field name="precio_venta" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                    <field name="precio_compra" widget="monetary" options="{'currency_symbol': '$'}" decoration-muted="1"/>
+                                    <field name="ganancia" readonly="1" force_save="1" widget="monetary" options="{'currency_symbol': '$'}" decoration-success="1" decoration-bf="1"/>
+                                </list>
+                            </field>
+                            
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_venta" string="Total Facturado" class="fw-bold" style="font-size: 16px;" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                <field name="total_costo_compra" string="(-) Total Costos" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                
+                                <hr colspan="2"/>
+                                <field name="ganancia_bruta" string="Ganancia Bruta Taller" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                <field name="gasto_adm" string="(-) Gasto Adm. (10%)" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                
+                                <hr colspan="2"/>
+                                <field name="total_ganancia" string="Ganancia Neta Final" class="fw-bold text-success" style="font-size: 18px;" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                
+                                <field name="ganancia_johan" string="Socio Johan (50%)" widget="monetary" options="{'currency_symbol': '$'}" groups="base.group_erp_manager" decoration-info="1"/>
+                                <field name="ganancia_leo" string="Socio Leo (50%)" widget="monetary" options="{'currency_symbol': '$'}" groups="base.group_erp_manager" decoration-info="1"/>
+                            </group>
+                        </page>
+                        
+                        <page string="3. Registro de Pagos">
+                            <field name="pago_ids">
+                                <list editable="bottom">
+                                    <field name="fecha"/>
+                                    <field name="caja_id" placeholder="Banco o Caja de Destino..."/>
+                                    <field name="metodo_pago"/>
+                                    <field name="referencia" placeholder="Ref. Transferencia / Serial Efectivo"/>
+                                    <field name="moneda"/>
+                                    <field name="monto" sum="Total Abonado"/>
+                                </list>
+                            </field>
+                            
+                            <group class="oe_subtotal_footer oe_right mt-3">
+                                <field name="total_venta" string="Total Presupuesto" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                                <field name="monto_pagado" string="Dinero Abonado" widget="monetary" options="{'currency_field': 'moneda'}" decoration-success="monto_pagado &gt; 0"/>
+                                <field name="saldo_pendiente" string="Deuda Restante" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'moneda'}" decoration-danger="saldo_pendiente &gt; 0.01"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bateria_reparacion_carro_kanban" model="ir.ui.view">
+        <field name="name">bateria.reparacion.carro.kanban</field>
+        <field name="model">bateria.reparacion.carro</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="estado" class="o_kanban_small_column" quick_create="false" records_draggable="false">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="cliente_id"/>
+                <field name="placa"/>
+                <field name="marca"/>
+                <field name="modelo"/>
+                <field name="mecanico"/>
+                <field name="estado"/>
+                <field name="total_venta"/>
+                <field name="es_atrasado"/> 
+                <templates>
+                    <t t-name="card">
+                        <div t-attf-style="border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 10px; border-left: 5px solid {{ record.es_atrasado.raw_value ? '#dc3545' : '#007bff' }}; background-color: {{ record.es_atrasado.raw_value ? '#fff3f3' : '#ffffff' }};" class="oe_kanban_global_click">
+                            
+                            <div class="o_kanban_image" style="float: left; margin-right: 10px;">
+                                <img t-attf-src="/web/image/bateria.reparacion.carro/#{record.id.raw_value}/foto_vehiculo" style="width: 70px; height: 70px; object-fit: cover; border-radius: 5px;" alt="Vehículo"/>
+                            </div>
+                            
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title" style="font-size: 15px; color: #111; font-weight: 900; text-transform: uppercase;">
+                                    <i class="fa fa-hashtag"/> <field name="name"/>
+                                </strong><br/>
+                                
+                                <span style="font-size: 13px; font-weight: bold; color: #333;"><field name="placa"/> - <field name="marca"/> <field name="modelo"/></span>
+                                
+                                <div style="font-size: 11px; margin-top: 5px; color: #555;">
+                                    <i class="fa fa-user" title="Cliente"/> <field name="cliente_id"/><br/>
+                                    <i class="fa fa-wrench" title="Mecánico"/> <t t-esc="record.mecanico.value or 'Sin asignar'"/>
+                                </div>
+                                
+                                <div class="mt-2 text-end">
+                                    <span class="badge rounded-pill text-bg-success" style="font-size: 12px;">
+                                        $<field name="total_venta"/>
+                                    </span>
+                                </div>
+                                
+                                <div t-if="record.es_atrasado.raw_value" class="mt-2 text-danger fw-bold text-center" style="font-size: 11px; background-color: #f8d7da; padding: 2px; border-radius: 4px;">
+                                    <i class="fa fa-exclamation-triangle"/> ¡TIEMPO EXCEDIDO!
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_bateria_reparacion_carro" model="ir.actions.act_window">
+        <field name="name">Órdenes de Taller Mecánico (JJS)</field>
+        <field name="res_model">bateria.reparacion.carro</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <menuitem id="menu_bateria_taller_mecanico_reparaciones" name="Órdenes de Taller" parent="menu_bateria_taller_root" action="action_bateria_reparacion_carro" sequence="20"/>
+    
+    <menuitem id="menu_bateria_reporte_taller" name="📊 Cierre Semanal" parent="menu_bateria_taller_root" action="action_bateria_reporte_taller_wizard" sequence="30"/>
+
+</odoo>

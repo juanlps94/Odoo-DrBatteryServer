@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="art_113165" model="bateria.taller.articulo">
+            <field name="codigo">113165</field>
+            <field name="gama">automovil</field>
+            <field name="name">2000 PROTECT 20W-50 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">15.74</field>
+            <field name="pvp_instituciones">18.71</field>
+        </record>
+        <record id="art_113149" model="bateria.taller.articulo">
+            <field name="codigo">113149</field>
+            <field name="gama">automovil</field>
+            <field name="name">4100 SYN-NERGY 15W-40 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">15.74</field>
+            <field name="pvp_instituciones">18.71</field>
+        </record>
+        <record id="art_108212" model="bateria.taller.articulo">
+            <field name="codigo">108212</field>
+            <field name="gama">automovil</field>
+            <field name="name">8100 ECO-LITE 5W30 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">17.99</field>
+            <field name="pvp_instituciones">20.17</field>
+        </record>
+        <record id="art_108214" model="bateria.taller.articulo">
+            <field name="codigo">108214</field>
+            <field name="gama">automovil</field>
+            <field name="name">8100 ECO-LITE 5W30 4X5L</field>
+            <field name="unidades_caja">4</field>
+            <field name="presentacion">5 Lts</field>
+            <field name="pvp_detal_taller">59.12</field>
+            <field name="pvp_instituciones">65.69</field>
+        </record>
+        <record id="art_109944" model="bateria.taller.articulo">
+            <field name="codigo">109944</field>
+            <field name="gama">automovil</field>
+            <field name="name">5100 20W50 4T 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">14.36</field>
+            <field name="pvp_instituciones">15.95</field>
+        </record>
+        <record id="art_104081" model="bateria.taller.articulo">
+            <field name="codigo">104081</field>
+            <field name="gama">automovil</field>
+            <field name="name">5100 15W50 4T 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">14.36</field>
+            <field name="pvp_instituciones">15.95</field>
+        </record>
+        <record id="art_107306" model="bateria.taller.articulo">
+            <field name="codigo">107306</field>
+            <field name="gama">automovil</field>
+            <field name="name">3000 20W50 4T 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">11.61</field>
+            <field name="pvp_instituciones">12.91</field>
+        </record>
+        <record id="art_110205" model="bateria.taller.articulo">
+            <field name="codigo">110205</field>
+            <field name="gama">automovil</field>
+            <field name="name">5000 20W50 4T 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">13.18</field>
+            <field name="pvp_instituciones">14.65</field>
+        </record>
+
+        <record id="art_104089" model="bateria.taller.articulo">
+            <field name="codigo">104089</field>
+            <field name="gama">motocicleta</field>
+            <field name="name">7100 10W30 4T 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">21.66</field>
+            <field name="pvp_instituciones">24.07</field>
+        </record>
+        <record id="art_90793AY421" model="bateria.taller.articulo">
+            <field name="codigo">90793AY421</field>
+            <field name="gama">motocicleta</field>
+            <field name="name">YAMALUBE 4T TC 20W50 MOTOCICLETA</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">11.22</field>
+            <field name="pvp_instituciones">12.47</field>
+        </record>
+        <record id="art_104086" model="bateria.taller.articulo">
+            <field name="codigo">104086</field>
+            <field name="gama">motocicleta</field>
+            <field name="name">7100 5W40 4T 12X1L</field>
+            <field name="unidades_caja">12</field>
+            <field name="presentacion">1 Lts</field>
+            <field name="pvp_detal_taller">19.05</field>
+            <field name="pvp_instituciones">21.17</field>
+        </record>
+    </data>
+</odoo>

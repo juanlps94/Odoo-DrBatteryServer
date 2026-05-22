@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<record id="view_bateria_ubicacion_list" model="ir.ui.view">
+        <field name="name">bateria.ubicacion.list</field>
+        <field name="model">bateria.ubicacion</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="nombre_completo" string="Ubicación"/>
+                <field name="tipo"/>
+                <field name="compania"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_ubicacion_form" model="ir.ui.view">
+        <field name="name">bateria.ubicacion.form</field>
+        <field name="model">bateria.ubicacion</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Nombre de la Ubicación"/>
+                        <h1><field name="name" placeholder="p. ej. Racksito"/></h1>
+                        
+                        <label for="ubicacion_padre_id" string="Ubicación Padre"/>
+                        <h2><field name="ubicacion_padre_id" placeholder="p. ej. GDRB"/></h2>
+                    </div>
+                    <group>
+                        <group string="INFORMACIÓN ADICIONAL">
+                            <field name="nombre_completo" readonly="1" string="Ruta Final"/>
+                            <field name="tipo"/>
+                            <field name="es_desecho"/>
+                            <field name="es_devolucion"/>
+                            <field name="compania"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bateria_inventario_list" model="ir.ui.view">
+        <field name="name">bateria.inventario.list</field>
+        <field name="model">bateria.inventario</field>
+        <field name="arch" type="xml">
+            <list decoration-success="tipo_movimiento == 'entrada'" decoration-danger="tipo_movimiento == 'salida'" create="false" delete="true">
+                <field name="fecha" widget="datetime"/>
+                <field name="tipo_movimiento"/>
+                <field name="producto_id"/>
+                <field name="cantidad"/>
+                <field name="ubicacion_id"/>
+                <field name="nota"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_inventario_form" model="ir.ui.view">
+        <field name="name">bateria.inventario.form</field>
+        <field name="model">bateria.inventario</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Detalles del Movimiento">
+                            <field name="fecha"/>
+                            <field name="tipo_movimiento"/>
+                            <field name="producto_id" options="{'no_create': True}"/>
+                            <field name="ubicacion_id"/>
+                        </group>
+                        <group string="Valores y Referencia">
+                            <field name="cantidad"/>
+                            <field name="nota"/>
+                            <field name="orden_venta_id" readonly="1" invisible="not orden_venta_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bateria_traslado_list" model="ir.ui.view">
+        <field name="name">bateria.traslado.list</field>
+        <field name="model">bateria.traslado</field>
+        <field name="arch" type="xml">
+            <list decoration-info="estado == 'borrador'" decoration-success="estado == 'realizado'">
+                <field name="name"/>
+                <field name="fecha" widget="date"/>
+                <field name="ubicacion_origen_id"/>
+                <field name="ubicacion_destino_id"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'realizado'" decoration-info="estado == 'borrador'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_traslado_form" model="ir.ui.view">
+        <field name="name">bateria.traslado.form</field>
+        <field name="model">bateria.traslado</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+<button name="action_confirmar_traslado" string="Confirmar Traslado" type="object" class="oe_highlight" invisible="estado == 'realizado'" groups="bateria_reportes.group_bateria_admin"/>                    <field name="estado" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Referencia de Traslado"/>
+                        <h1><field name="name" readonly="estado == 'realizado'"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="fecha" readonly="estado == 'realizado'"/>
+                        </group>
+                        <group>
+                            <field name="ubicacion_origen_id" readonly="estado == 'realizado'" options="{'no_create': True}"/>
+                            <field name="ubicacion_destino_id" readonly="estado == 'realizado'" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Baterías a Mover">
+                            <field name="linea_ids" readonly="estado == 'realizado'">
+                                <list editable="bottom">
+                                    <field name="producto_id" options="{'no_create': True}"/>
+                                    <field name="serial_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="Escanear o seleccionar serial..."/>
+                                    <field name="cantidad"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas">
+                            <field name="nota" readonly="estado == 'realizado'"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bateria_inventario" model="ir.actions.act_window">
+        <field name="name">Historial de Movimientos</field>
+        <field name="res_model">bateria.inventario</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_bateria_traslado" model="ir.actions.act_window">
+        <field name="name">Traslados Internos</field>
+        <field name="res_model">bateria.traslado</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_bateria_ubicacion" model="ir.actions.act_window">
+        <field name="name">Ubicaciones / Almacenes</field>
+        <field name="res_model">bateria.ubicacion</field>
+        <field name="view_mode">list,form</field> 
+    </record>
+
+    <menuitem id="menu_bateria_logistica_root" 
+              name="Logística y Almacén" 
+              parent="menu_bateria_ventas_root" 
+              sequence="30" 
+              groups="bateria_reportes.group_bateria_admin"/>
+    
+    <menuitem id="menu_bateria_traslados" 
+              name="Traslados" 
+              parent="menu_bateria_logistica_root" 
+              action="action_bateria_traslado" 
+              sequence="10"/>
+              
+    <menuitem id="menu_bateria_movimientos" 
+              name="Historial de Movimientos" 
+              parent="menu_bateria_logistica_root" 
+              action="action_bateria_inventario" 
+              sequence="20"/>
+
+    <menuitem id="menu_bateria_ubicaciones" 
+              name="Ubicaciones" 
+              parent="menu_bateria_logistica_root" 
+              action="action_bateria_ubicacion" 
+              sequence="30"/>
+    
+    </odoo>

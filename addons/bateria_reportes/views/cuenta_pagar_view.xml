@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bateria_cuenta_pagar_list" model="ir.ui.view">
+        <field name="name">bateria.cuenta.pagar.list</field>
+        <field name="model">bateria.cuenta.pagar</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="saldo_pendiente &gt; 0.01" decoration-success="estado == 'pagado'">
+                <field name="fecha"/>
+                <field name="name" string="Referencia"/>
+                <field name="proveedor"/>
+                <field name="concepto"/>
+                <field name="condicion_pago" optional="show"/>
+                <field name="moneda"/>
+                <field name="monto_total" sum="Deuda Total" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                <field name="monto_pagado" sum="Total Pagado" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                <field name="saldo_pendiente" decoration-bf="1" sum="Total por Pagar" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'pagado'" decoration-warning="estado == 'parcial'" decoration-danger="estado == 'borrador'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_cuenta_pagar_form" model="ir.ui.view">
+        <field name="name">bateria.cuenta.pagar.form</field>
+        <field name="model">bateria.cuenta.pagar</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador,parcial,pagado"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" string="Referencia / Nro. Factura"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Datos del Acreedor">
+                            <field name="proveedor"/>
+                            <field name="concepto"/>
+                            <field name="fecha"/>
+                            <field name="condicion_pago"/>
+                        </group>
+                        <group string="Detalles Financieros">
+                            <field name="moneda" widget="radio" options="{'horizontal': true}"/>
+                            <field name="monto_total" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                            <field name="monto_pagado" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                            <field name="saldo_pendiente" class="fw-bold" decoration-danger="saldo_pendiente &gt; 0.01" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                        </group>
+                    </group>
+                    <group string="Integración con Inventario de Activos">
+                        <group>
+                            <field name="es_activo_fijo"/>
+                            <field name="activo_generado" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bateria_cuenta_pagar" model="ir.actions.act_window">
+        <field name="name">Cuentas por Pagar (CxP)</field>
+        <field name="res_model">bateria.cuenta.pagar</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_bateria_cuenta_pagar_item"
+              name="Cuentas por Pagar"
+              parent="menu_bateria_compras_root"
+              action="action_bateria_cuenta_pagar"
+              sequence="30"/>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="tabla_dinamica_ventas_template">
+        <t t-call="web.external_layout">
+            <main>
+                <h2>Tabla Dinámica Análisis de Ventas</h2>
+
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Mes</th>
+                            <th>Total Ventas</th>
+                            <th>Total Punto Venta</th>
+                            <th>Total Imponible</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="docs" t-as="o">
+                            <tr>
+                                <td><span t-field="o.mes"/></td>
+                                <td><span t-field="o.total_ventas"/></td>
+                                <td><span t-field="o.total_punto_venta"/></td>
+                                <td><span t-field="o.total_imponible"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </main>
+        </t>
+    </template>
+</odoo>

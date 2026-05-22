@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menú Principal -->
+    <menuitem 
+        id="menu_bateria_root" 
+        name="Batería Reports" 
+        sequence="10"
+    />
+    
+    <!-- Cierre de Caja -->
+    <menuitem 
+        id="menu_cierre_caja" 
+        name="Cierre de Caja" 
+        parent="menu_bateria_root" 
+        sequence="20"
+        action="action_cierre_caja"
+    />
+    
+    <!-- Modelos de Batería -->
+    <menuitem 
+        id="menu_modelo_bateria" 
+        name="Modelos de Batería" 
+        parent="menu_bateria_root" 
+        sequence="30"
+        action="action_modelo_bateria"
+    />
+</odoo>

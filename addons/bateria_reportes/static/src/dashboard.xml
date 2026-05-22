@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="bateria_reportes.Dashboard" owl="1">
+        <div class="o_action_manager" style="background-color: #f4f5f7; height: 100vh; overflow-y: auto;">
+            <div class="container py-5">
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <h1 class="display-4 fw-bold" style="color: #014f96;">🔋 Gestión de Baterías</h1>
+                        <p class="lead text-muted">Selecciona un módulo para comenzar</p>
+                    </div>
+                </div>
+
+                <t t-if="state.isAdmin and state.alertasTraslado.length > 0">
+                    <div class="row justify-content-center mb-5">
+                        <div class="col-md-10">
+                            <div class="alert alert-danger shadow-sm" role="alert" style="border-left: 6px solid #dc3545; border-radius: 10px;">
+                                <h4 class="alert-heading fw-bold mb-3">
+                                    <i class="fa fa-exclamation-triangle me-2 animate__animated animate__flash animate__infinite"></i> 
+                                    ¡Atención Supervisor! Traslados Pendientes
+                                </h4>
+                                <p class="mb-3">Hay vendedores que no pueden facturar porque están esperando que apruebes el movimiento de mercancía al Racksito:</p>
+                                
+                                <div class="d-flex flex-column gap-2">
+                                    <t t-foreach="state.alertasTraslado" t-as="traslado" t-key="traslado.id">
+                                        <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded border">
+                                            <div>
+                                                <span class="badge bg-danger fs-6 me-2">PENDIENTE</span>
+                                                <strong class="fs-5" t-esc="traslado.name"/>
+                                            </div>
+                                            <button class="btn btn-outline-danger" t-on-click="() => this.abrirTraslado(traslado.id)">
+                                                Ver Traslado <i class="fa fa-arrow-right ms-1"></i>
+                                            </button>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="row g-4 justify-content-center">
+                    
+                    <div class="col-md-4 col-lg-3" t-if="state.isVentas || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openVentas">
+                            <div class="card-body py-5">
+                                <i class="fa fa-shopping-cart fa-4x mb-3" style="color: #28a745;"></i>
+                                <h3 class="card-title fw-bold">Ventas</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openCompras">
+                            <div class="card-body py-5">
+                                <i class="fa fa-shopping-bag fa-4x mb-3" style="color: #6f42c1;"></i>
+                                <h3 class="card-title fw-bold">Compras</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isContabilidad || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openContabilidad">
+                            <div class="card-body py-5">
+                                <i class="fa fa-calculator fa-4x mb-3" style="color: #e83e8c;"></i>
+                                <h3 class="card-title fw-bold">Contabilidad</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openGastos">
+                            <div class="card-body py-5">
+                                <i class="fa fa-credit-card fa-4x mb-3" style="color: #E91E63;"></i>
+                                <h3 class="card-title fw-bold">Gastos</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openServicios">
+                            <div class="card-body py-5">
+                                <i class="fa fa-plug fa-4x mb-3" style="color: #607D8B;"></i>
+                                <h3 class="card-title fw-bold">Servicios</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isVentas || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openFlota">
+                            <div class="card-body py-5">
+                                <i class="fa fa-car fa-4x mb-3" style="color: #17a2b8;"></i>
+                                <h3 class="card-title fw-bold">Flota</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openTaller">
+                            <div class="card-body py-5">
+                                <i class="fa fa-wrench fa-4x mb-3" style="color: #dc3545;"></i>
+                                <h3 class="card-title fw-bold">Taller</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin || state.isVentas">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReparaciones">
+                            <div class="card-body py-5">
+                                <i class="fa fa-cogs fa-4x mb-3" style="color: #6f42c1;"></i>
+                                <h3 class="card-title fw-bold">Reparaciones</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openEmbarques">
+                            <div class="card-body py-5">
+                                <i class="fa fa-truck fa-4x mb-3" style="color: #20c997;"></i>
+                                <h3 class="card-title fw-bold">Embarques</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin || state.isVentas">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openInventario">
+                            <div class="card-body py-5">
+                                <i class="fa fa-cubes fa-4x mb-3" style="color: #fd7e14;"></i>
+                                <h3 class="card-title fw-bold">Inventario</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openCatalogo">
+                            <div class="card-body py-5">
+                                <i class="fa fa-list fa-4x mb-3" style="color: #ffc107;"></i>
+                                <h3 class="card-title fw-bold">Catálogo</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReportes">
+                            <div class="card-body py-5">
+                                <i class="fa fa-bar-chart fa-4x mb-3" style="color: #007bff;"></i>
+                                <h3 class="card-title fw-bold">Reportes</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

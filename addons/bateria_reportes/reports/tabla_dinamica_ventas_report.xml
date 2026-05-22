@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_tabla_dinamica_ventas_report" model="ir.actions.report">
+        <field name="name">Tabla Dinámica Análisis de Ventas</field>
+        <field name="model">bateria.tabla.dinamica.ventas</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.tabla_dinamica_ventas_template</field>
+        <field name="report_file">bateria_reportes.tabla_dinamica_ventas_template</field>
+
+        <field name="binding_model_id" ref="model_bateria_tabla_dinamica_ventas"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

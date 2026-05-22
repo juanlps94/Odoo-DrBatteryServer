@@ -1,0 +1,40 @@
+<odoo>
+    <record id="view_cierre_caja_list" model="ir.ui.view">
+        <field name="name">bateria.cierre.caja.list</field>
+        <field name="model">bateria.cierre.caja</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="fecha"/>
+                <field name="total"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_cierre_caja_form" model="ir.ui.view">
+        <field name="name">bateria.cierre.caja.form</field>
+        <field name="model">bateria.cierre.caja</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="fecha"/>
+                        <field name="efectivo_usd"/>
+                        <field name="efectivo_bs"/>
+                        <field name="transferencia"/>
+                        <field name="total"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_cierre_caja" model="ir.actions.act_window">
+        <field name="name">Cierre de Caja</field>
+        <field name="res_model">bateria.cierre.caja</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+   <menuitem id="menu_cierre_caja_item" name="Cierre de Caja" parent="menu_bateria_contabilidad_root" action="action_cierre_caja" sequence="10"/>
+</odoo>

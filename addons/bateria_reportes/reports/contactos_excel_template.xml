@@ -1,0 +1,26 @@
+<odoo>
+    <template id="contactos_excel_template">
+        <t t-call="web.external_layout">
+            <main>
+                <h2>Contactos (Excel)</h2>
+
+                <table class="table table-sm o_main_table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Teléfono</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="docs" t-as="c">
+                            <td><t t-esc="c.nombre"/></td>
+                            <td><t t-esc="c.email"/></td>
+                            <td><t t-esc="c.telefono"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </main>
+        </t>
+    </template>
+</odoo>

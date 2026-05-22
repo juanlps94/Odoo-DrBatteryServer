@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vista Tree para Cierre de Caja -->
+    <record id="view_cierre_caja_tree" model="ir.ui.view">
+        <field name="name">bateria.cierre.caja.tree</field>
+        <field name="model">bateria.cierre.caja</field>
+        <field name="arch" type="xml">
+            <tree string="Cierres de Caja">
+                <field name="name"/>
+                <field name="fecha"/>
+                <field name="responsable_id"/>
+                <field name="efectivo_bs_cierre_real"/>
+                <field name="estado"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Vista Form para Cierre de Caja -->
+    <record id="view_cierre_caja_form" model="ir.ui.view">
+        <field name="name">bateria.cierre.caja.form</field>
+        <field name="model">bateria.cierre.caja</field>
+        <field name="arch" type="xml">
+            <form string="Cierre de Caja">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    
+                    <group>
+                        <group>
+                            <field name="fecha"/>
+                            <field name="responsable_id"/>
+                        </group>
+                        <group>
+                            <field name="estado"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Efectivo">
+                            <group>
+                                <field name="efectivo_bs_apertura"/>
+                                <field name="efectivo_bs_cierre_real"/>
+                                <field name="efectivo_usd_apertura"/>
+                                <field name="efectivo_usd_cierre_real"/>
+                            </group>
+                        </page>
+                        
+                        <page string="Observaciones">
+                            <field name="observaciones"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Acción para Cierre de Caja -->
+    <record id="action_cierre_caja" model="ir.actions.act_window">
+        <field name="name">Cierres de Caja</field>
+        <field name="res_model">bateria.cierre.caja</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

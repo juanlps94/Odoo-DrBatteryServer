@@ -1,0 +1,12 @@
+<odoo>
+    <record id="action_bateria_dashboard" model="ir.actions.client">
+        <field name="name">Panel Principal</field>
+        <field name="tag">bateria_dashboard_tag</field>
+    </record>
+
+    <menuitem id="menu_bateria_tablero_item"
+              name="Panel Principal"
+              parent="menu_bateria_root"
+              action="action_bateria_dashboard"
+              sequence="1"/>
+</odoo>

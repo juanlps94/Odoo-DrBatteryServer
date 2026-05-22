@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_reporte_diario_compras" model="ir.actions.report">
+        <field name="name">Reporte de Compras</field>
+        <field name="model">bateria.compra</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.reporte_diario_compras_template</field>
+        <field name="report_file">bateria_reportes.reporte_diario_compras_template</field>
+        <field name="binding_model_id" eval="False"/> 
+    </record>
+
+    <template id="reporte_diario_compras_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <div class="text-center mt-4 mb-4">
+                        <h2 style="color: #00529b; font-weight: bold;">Reporte de Compras y Gastos</h2>
+                        <p style="font-size: 16px;">
+                            <strong>Cierre Contable</strong>
+                        </p>
+                    </div>
+                    
+                    <table class="table table-sm table-striped mt-4" style="font-size: 12px;">
+                        <thead style="background-color: #00529b; color: white;">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Referencia</th>
+                                <th>Proveedor</th>
+                                <th>Centro de Costo</th>
+                                <th class="text-end">Base Exenta</th>
+                                <th class="text-end">Base Imponible</th>
+                                <th class="text-end">IVA (16%)</th>
+                                <th class="text-end">Ret. Imp.</th>
+                                <th class="text-end">Total Neto ($)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="doc">
+                                <tr>
+                                    <td><span t-field="doc.fecha" t-options='{"widget": "date"}'/></td>
+                                    <td><strong><span t-field="doc.name"/></strong></td>
+                                    <td><span t-field="doc.proveedor_id.nombre_empresa"/></td>
+                                    <td><span t-field="doc.centro_costo_id.name"/></td>
+                                    <td class="text-end"><span t-field="doc.base_exenta" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end"><span t-field="doc.base_imponible" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end"><span t-field="doc.monto_iva" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    <td class="text-end text-danger">
+                                        <span t-esc="doc.monto_retencion_iva + doc.monto_retencion_islr" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                    <td class="text-end fw-bold"><span t-field="doc.total_global_usd" t-options='{"widget": "float", "precision": 2}'/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    
+                    <div class="row justify-content-end mt-4">
+                        <div class="col-6">
+                            <table class="table table-sm table-borderless">
+                                <tr class="border-top">
+                                    <td style="font-size: 16px;"><strong>TOTAL COMPRAS (Neto $):</strong></td>
+                                    <td class="text-end fw-bold text-success" style="font-size: 16px;">
+                                        $ <span t-esc="sum(d.total_global_usd for d in docs)" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="font-size: 16px;"><strong>TOTAL COMPRAS (Neto Bs):</strong></td>
+                                    <td class="text-end fw-bold text-primary" style="font-size: 16px;">
+                                        Bs <span t-esc="sum(d.total_global_bs for d in docs)" t-options='{"widget": "float", "precision": 2}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="view_bateria_compra_diario_wizard_form" model="ir.ui.view">
+        <field name="name">bateria.compra.diario.wizard.form</field>
+        <field name="model">bateria.compra.diario.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reporte de Compras">
+                <group>
+                    <group>
+                        <field name="fecha_inicio"/>
+                    </group>
+                    <group>
+                        <field name="fecha_fin"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="🖨️ Generar PDF" name="action_generar_reporte" type="object" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bateria_compra_diario_wizard" model="ir.actions.act_window">
+        <field name="name">Reporte de Compras</field>
+        <field name="res_model">bateria.compra.diario.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

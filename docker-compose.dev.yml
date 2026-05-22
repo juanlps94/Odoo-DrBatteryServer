@@ -1,0 +1,12 @@
+services:
+  odoo-dev:
+    image: odoo:19.0
+    container_name: odoo_19_desarrollo
+    user: "1000:1000"
+    # Al usar 'host', el contenedor se fusiona con la red del servidor
+    network_mode: "host"
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - ./config/odoo.conf:/etc/odoo/odoo.conf
+      - ./data:/var/lib/odoo
+    command: odoo --dev=all

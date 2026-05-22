@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_factura_bateria" model="ir.actions.report">
+        <field name="name">Imprimir Factura / Nota de Entrega</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.report_factura_template</field>
+        <field name="report_file">bateria_reportes.report_factura_template</field>
+        <field name="binding_model_id" ref="model_bateria_orden_venta"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_factura_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <t t-set="simbolo" t-value="'Bs' if doc.moneda == 'bs' else '$'"/>
+                    
+                    <div class="page">
+                        <div class="oe_structure"/>
+
+                        <div class="row mt-4 mb-4">
+                            <div class="col-6">
+                                <strong>Cliente:</strong><br/>
+                                <span t-field="doc.cliente_id.name"/><br/>
+                                <t t-if="doc.cliente_id.rif">
+                                    <strong>C.I / R.I.F:</strong> <span t-field="doc.cliente_id.rif"/><br/>
+                                </t>
+                                <t t-if="doc.cliente_id.direccion">
+                                    <span t-field="doc.cliente_id.direccion"/><br/>
+                                </t>
+                                <t t-if="doc.cliente_id.telefono">
+                                    <span t-field="doc.cliente_id.telefono"/><br/>
+                                </t>
+                            </div>
+                            <div class="col-6 text-end">
+                                <h2 class="mt-0">
+                                    <span>Nota de Entrega</span>
+                                </h2>
+                                <strong>Compañía Origen:</strong> <span t-field="doc.company_id.name"/><br/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" id="informations">
+                            <div class="col-auto mw-100 mb-2">
+                                <strong>Fecha de Nota:</strong>
+                                <p class="m-0" t-field="doc.fecha_creacion" t-options='{"widget": "date"}'/>
+                            </div>
+                            <div class="col-auto mw-100 mb-2">
+                                <strong>Condición de Pago:</strong>
+                                <p class="m-0" t-field="doc.condiciones_pago"/>
+                            </div>
+                            <div class="col-auto mw-100 mb-2">
+                                <strong>Tiempo de Garantía:</strong>
+                                <p class="m-0 fw-bold text-uppercase" t-field="doc.meses_garantia_impresos"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm o_main_table mt-4" name="invoice_line_table">
+                            <thead>
+                                <tr>
+                                    <th name="th_description" class="text-start"><span>Descripción</span></th>
+                                    <th name="th_quantity" class="text-end"><span>Cantidad</span></th>
+                                    <th name="th_priceunit" class="text-end"><span>Precio Unitario</span></th>
+                                    <th name="th_subtotal" class="text-end"><span>Total</span></th>
+                                </tr>
+                            </thead>
+                            <tbody class="invoice_tbody">
+                                <t t-foreach="doc.linea_ids" t-as="linea">
+                                    <tr>
+                                        <td name="account_invoice_line_name">
+                                            <span t-field="linea.descripcion" t-options="{'widget': 'text'}"/>
+                                            <t t-if="linea.serial_ids">
+                                                <br/>
+                                                <span class="text-muted" style="font-size: 12px;">
+                                                    <i>Serial(es): <t t-esc="', '.join(linea.serial_ids.mapped('display_name'))"/></i>
+                                                </span>
+                                            </t>
+                                        </td>
+                                        <td class="text-end">
+                                            <span t-esc="int(linea.cantidad)"/>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="doc.moneda == 'bs'"><span t-field="linea.precio_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                            <t t-else=""><span t-field="linea.precio_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                        </td>
+                                        <td class="text-end o_price_total">
+                                            <t t-if="doc.moneda == 'bs'"><span t-field="linea.subtotal_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                            <t t-else=""><span t-field="linea.subtotal_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div class="clearfix mb-4">
+                            <div id="total" class="row">
+                                <div class="col-7">
+                                    <t t-if="doc.pago_ids">
+                                        <p class="mt-4 mb-1"><strong>Pagos Recibidos:</strong></p>
+                                        <ul class="list-unstyled">
+                                            <t t-foreach="doc.pago_ids" t-as="pago">
+                                                <li>
+                                                    <i class="fa fa-money text-muted"/> 
+                                                    <span t-field="pago.tipo_pago"/> - 
+                                                    <span t-field="pago.monto" t-options='{"widget": "float", "precision": 2}'/> <span t-esc="pago.moneda.upper()"/>
+                                                    <t t-if="pago.referencia_banco"> (Ref: <span t-field="pago.referencia_banco"/>)</t>
+                                                    <t t-if="pago.serial_billetes"> (Serial: <span t-field="pago.serial_billetes"/>)</t>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </t>
+                                </div>
+                                <div class="col-5">
+                                    <table class="table table-sm table-borderless" style="page-break-inside: avoid;">
+                                        <tr class="border-black o_subtotal">
+                                            <td><strong>Subtotal (<t t-esc="simbolo"/>)</strong></td>
+                                            <td class="text-end">
+                                                <t t-if="doc.moneda == 'bs'"><span t-field="doc.subtotal_bruto_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                                <t t-else=""><span t-field="doc.subtotal_bruto_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>IVA 16% (<t t-esc="simbolo"/>)</td>
+                                            <td class="text-end">
+                                                <t t-if="doc.moneda == 'bs'"><span t-field="doc.total_iva_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                                <t t-else=""><span t-field="doc.total_iva_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black o_total" style="font-size: 16px;">
+                                            <td><strong>Total (<t t-esc="simbolo"/>)</strong></td>
+                                            <td class="text-end">
+                                                <t t-if="doc.moneda == 'bs'"><strong><span t-field="doc.total_global_bs" t-options='{"widget": "float", "precision": 2}'/></strong></t>
+                                                <t t-else=""><strong><span t-field="doc.total_global_usd" t-options='{"widget": "float", "precision": 2}'/></strong></t>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-12 text-muted" style="font-size: 11px; text-align: justify;">
+                                <strong>Condiciones de Garantía:</strong><br/>
+                                1. La garantía cubre defectos de fabricación (Celdas Aisladas, Corto Circuito, Inversas).<br/>
+                                2. La batería debe presentar la etiqueta de compra (Serial) y/o Factura Original.<br/>
+                                3. No cubre Golpes, Bornes rotos o fundidos, abombamiento por exceso de carga, mala instalación.<br/>
+                                4. Baterías para Taxis, Autobuses, Transporte Público, Cavas, Camiones, volteos, maquinaria Agrícola o Pesada: Solo tendrán (3) meses de garantía.<br/>
+                                5. Por favor revise el sistema eléctrico de su vehículo (Alternador, Arranque, Regulador) antes de instalar su batería.<br/>
+                                6. Toda batería descargada se someterá a un proceso de carga LENTA de 24 a 48 Horas para su posterior diagnóstico SIN EXCEPCIONES.<br/>
+                                7. El tiempo de Garantía corre a partir de la fecha de compra. Ciertas Condiciones Aplican.<br/>
+                                8. La Empresa no se hace responsable por baterías dejadas en el local después de 15 días continuos.
+                            </div>
+                        </div>
+                        
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_presupuesto_bateria" model="ir.actions.report">
+        <field name="name">Imprimir Presupuesto (Estándar)</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.report_presupuesto_template</field>
+        <field name="report_file">bateria_reportes.report_presupuesto_template</field>
+        <field name="binding_model_id" ref="model_bateria_orden_venta"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_presupuesto_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="article" t-att-data-oe-model="doc and doc._name" t-att-data-oe-id="doc and doc.id">
+                    <div class="page" style="color: #000000; font-family: Arial, sans-serif;">
+                        <div class="text-center mt-4 mb-4">
+                            <h2 style="color: #333333; font-weight: bold; border-bottom: 2px solid #333333; padding-bottom: 10px; display: inline-block;">PRESUPUESTO INFORMATIVO</h2>
+                            <h4 style="color: #555555;">N° <span t-field="doc.referencia_pedido"/></h4>
+                        </div>
+                        <div class="row mt-4 mb-4" style="font-size: 14px;">
+                            <div class="col-7">
+                                <strong>Cliente:</strong> <span t-field="doc.cliente_id.name"/><br/>
+                                <strong>RIF/Cédula:</strong> <span t-field="doc.cliente_id.rif"/><br/>
+                            </div>
+                            <div class="col-5 text-end">
+                                <strong>Fecha de Emisión:</strong> <span t-field="doc.fecha_creacion" t-options='{"widget": "date"}'/><br/>
+                                <strong>Validez:</strong> 7 Días Hábiles<br/>
+                            </div>
+                        </div>
+                        <table class="table table-sm table-bordered mt-4">
+                            <thead style="background-color: #f0f0f0; color: #000000; font-weight: bold;">
+                                <tr>
+                                    <th>Descripción del Producto</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th class="text-end">Precio Unit. (Bs)</th>
+                                    <th class="text-end">Subtotal (Bs)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.linea_ids" t-as="linea">
+                                    <tr>
+                                        <td><span t-field="linea.descripcion"/></td>
+                                        <td class="text-center"><span t-field="linea.cantidad"/></td>
+                                        <td class="text-end">Bs <span t-field="linea.precio_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                        <td class="text-end">Bs <span t-field="linea.subtotal_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="row justify-content-end mt-4">
+                            <div class="col-5">
+                                <table class="table table-sm table-borderless">
+                                    <tr class="border-top" style="border-color: #333333;">
+                                        <td><strong>Subtotal:</strong></td>
+                                        <td class="text-end">Bs <span t-field="doc.subtotal_bruto_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    </tr>
+                                    <tr t-if="doc.aplica_iva">
+                                        <td><strong>IVA (16%):</strong></td>
+                                        <td class="text-end">Bs <span t-field="doc.total_iva_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    </tr>
+                                    <tr class="border-top" style="font-size: 18px; border-color: #000000;">
+                                        <td><strong>TOTAL:</strong></td>
+                                        <td class="text-end" style="color: #000000;"><strong>Bs <span t-field="doc.total_global_bs" t-options='{"widget": "float", "precision": 2}'/></strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="mt-5 text-center" style="font-size: 12px; color: #555555; border-top: 1px dashed #cccccc; padding-top: 10px;">
+                            <p>Este documento es exclusivamente un presupuesto para fines informativos.<br/>
+                            <strong>No representa una factura fiscal ni garantiza la reserva de inventario en el taller.</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_presupuesto_jjs" model="ir.actions.report">
+        <field name="name">Presupuesto Institucional (JJS)</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.report_presupuesto_jjs_template</field>
+        <field name="report_file">bateria_reportes.report_presupuesto_jjs_template</field>
+        <field name="binding_model_id" ref="model_bateria_orden_venta"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_presupuesto_jjs_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <div class="article" t-att-data-oe-model="doc and doc._name" t-att-data-oe-id="doc and doc.id">
+                    
+                    <div class="page" style="font-family: Arial, sans-serif; font-size: 12px; color: #000;">
+                        
+                        <div class="row align-items-center">
+                            <div class="col-2">
+                                <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 70px; max-width: 100%;" alt="Logo"/>
+                            </div>
+                            
+                            <div class="col-7">
+                                <h5 style="font-weight: bold; margin-bottom: 2px; text-transform: uppercase;">
+                                    <span t-field="doc.company_id.name"/>
+                                </h5>
+                                <p style="margin-bottom: 2px;"><strong>RIF.-<span t-field="doc.company_id.vat"/></strong></p>
+                                <p style="font-size: 10px; margin-bottom: 2px; text-transform: uppercase;">
+                                    <span t-field="doc.company_id.street"/><br/>
+                                    EMAIL: <span t-field="doc.company_id.email"/>
+                                </p>
+                            </div>
+                            
+                            <div class="col-3 text-end">
+                                <p style="margin-bottom: 2px;"><strong>FECHA:</strong> <span t-field="doc.fecha_creacion" t-options='{"widget": "date"}'/></p>
+                                <p style="margin-bottom: 2px;"><strong>COTIZACION:</strong> <span t-field="doc.referencia_pedido"/></p>
+                            </div>
+                        </div>
+                        
+                        <hr style="border-top: 2px solid #000; margin-top: 10px; margin-bottom: 10px;"/>
+                        
+                        <table class="table table-sm table-borderless" style="margin-bottom: 10px; font-size: 11px;">
+                            <tr>
+                                <td style="width: 20%;"><strong>NOMBRE/RAZON SOCIAL:</strong></td>
+                                <td><span t-field="doc.cliente_id.name"/></td>
+                                <td style="width: 10%;"><strong>CI/RIF:</strong></td>
+                                <td><span t-field="doc.cliente_id.rif"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>DIRECCION:</strong></td>
+                                <td colspan="3"><span t-field="doc.cliente_id.direccion"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>TELEFONO:</strong></td>
+                                <td><span t-field="doc.cliente_id.telefono"/></td>
+                                <td><strong>CONTACTO:</strong></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                        
+                        <table class="table table-sm table-bordered mt-2" style="font-size: 11px; border: 1px solid #000;">
+                            <thead style="background-color: #f0f0f0;">
+                                <tr class="text-center">
+                                    <th style="width: 5%;">ITEM</th>
+                                    <th style="width: 10%;">CANTIDAD</th>
+                                    <th style="width: 15%;">UNI</th>
+                                    <th style="width: 40%;">DESCRIPCION</th>
+                                    <th style="width: 15%;">UNITARIO (Bs)</th>
+                                    <th style="width: 15%;">TOTAL Bs.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="item_count" t-value="1"/>
+                                <t t-foreach="doc.linea_ids" t-as="linea">
+                                    <tr>
+                                        <td class="text-center"><span t-esc="item_count"/></td>
+                                        <td class="text-center"><span t-field="linea.cantidad"/></td>
+                                        <td class="text-center"><span t-field="linea.unidad_medida_texto"/></td>
+                                        <td><span t-field="linea.descripcion"/></td>
+                                        <td class="text-end"><span t-field="linea.precio_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                        <td class="text-end"><span t-field="linea.subtotal_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    </tr>
+                                    <t t-set="item_count" t-value="item_count + 1"/>
+                                </t>
+                            </tbody>
+                        </table>
+                        
+                        <div class="row justify-content-end mt-2">
+                            <div class="col-5">
+                                <table class="table table-sm table-bordered" style="font-size: 11px; border: 1px solid #000;">
+                                    <tr>
+                                        <td><strong>SUBTOTAL Bs:</strong></td>
+                                        <td class="text-end"><span t-field="doc.subtotal_bruto_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    </tr>
+                                    <tr t-if="doc.aplica_iva">
+                                        <td><strong>16% I.V.A:</strong></td>
+                                        <td class="text-end"><span t-field="doc.total_iva_bs" t-options='{"widget": "float", "precision": 2}'/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>TOTAL Bs:</strong></td>
+                                        <td class="text-end"><strong><span t-field="doc.total_global_bs" t-options='{"widget": "float", "precision": 2}'/></strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="view_bateria_orden_venta_list" model="ir.ui.view">
+        <field name="name">bateria.orden.venta.list</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="arch" type="xml">
+            <list decoration-info="estado == 'borrador'" decoration-muted="estado == 'pagado'" decoration-warning="estado == 'parcial'">
+                <header>
+                    <button name="action_recalcular_graficos" type="object" string="🔄 Sincronizar Historial de Gráficos" class="btn-info" display="always" groups="base.group_erp_manager"/>
+                </header>
+                <field name="referencia_pedido" string="No. Operación"/>
+                <field name="fecha_creacion" string="Fecha" widget="date"/>
+                <field name="cliente_id" string="Cliente"/>
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                
+                <field name="es_institucional" widget="boolean_toggle"/>
+                <field name="lista_seriales" string="Seriales Vendidos" decoration-bf="1"/>
+
+                <field name="lista_precios" string="P. Unit" optional="hide"/>
+                <field name="descuento_visual" string="Descuento" decoration-danger="descuento_visual != '$ 0.00'"/>
+                <field name="cantidad_chatarras" string="Chatarras" widget="badge" decoration-danger="cantidad_chatarras != '0'" optional="show"/>
+                
+                <field name="total_ganancia_usd" string="Ganancia ($)" groups="base.group_erp_manager" decoration-success="1" decoration-bf="1" optional="show"/>
+                
+                <field name="pago_divisa" string="Divisa" decoration-bf="1"/>
+                <field name="pago_inicial_texto" string="Pago Inicial (Abonos)"/>
+                
+                <field name="saldo_pendiente" string="Falta por Pagar" sum="Por Cobrar" decoration-danger="saldo_pendiente &gt; 0.01" decoration-bf="1" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                
+                <field name="total_global_bs" string="Total en Bs" sum="Total en Bs" widget="monetary" options="{'currency_symbol': ''}"/>
+                <field name="total_global_usd" string="Total en $" sum="Total en $" widget="monetary" options="{'currency_symbol': ''}"/>
+                
+                <field name="estado" string="Estado" widget="badge" 
+                       decoration-success="estado == 'pagado'" 
+                       decoration-warning="estado == 'parcial'" 
+                       decoration-info="estado == 'borrador'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_institucional_list" model="ir.ui.view">
+        <field name="name">bateria.institucional.list</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="arch" type="xml">
+            <list decoration-info="estado == 'borrador'" decoration-success="estado == 'pagado'" decoration-warning="estado == 'parcial'">
+                <header>
+                    <button name="%(action_report_presupuesto_jjs)d" type="action" string="🖨️ Imprimir Presupuestos" class="btn-primary" display="always"/>
+                </header>
+                <field name="referencia_pedido" string="N° Cotización"/>
+                <field name="fecha_creacion" string="Fecha" widget="date"/>
+                <field name="cliente_id" string="Institución / Cliente"/>
+                
+                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                
+                <field name="tasa_aplicada" string="Tasa (Bs)"/>
+                <field name="total_global_bs" string="Total Factura (Bs)" sum="Total Bs" widget="monetary" options="{'currency_symbol': 'Bs'}" decoration-bf="1"/>
+                <field name="saldo_pendiente" string="Falta por Pagar" decoration-danger="saldo_pendiente &gt; 0" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                <field name="estado" string="Estado" widget="badge" 
+                       decoration-success="estado == 'pagado'" 
+                       decoration-warning="estado == 'parcial'" 
+                       decoration-info="estado == 'borrador'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_orden_venta_form" model="ir.ui.view">
+        <field name="name">bateria.orden.venta.form</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_solicitar_traslado" type="object" string="🚨 Solicitar Traslado a Galpón" class="btn-danger" invisible="not traslado_necesario or traslado_id"/>
+                    <button string="✅ Confirmar y Despachar" name="action_confirmar_venta_y_descargar" type="object" class="oe_highlight btn-success" invisible="despachado"/>
+                    
+                    <button name="%(action_report_presupuesto_bateria)d" string="🖨️ Presupuesto Estándar" type="action" class="btn-info" invisible="estado != 'borrador' or es_institucional == True"/>
+                    
+                    <button name="%(action_report_presupuesto_jjs)d" string="🖨️ Presupuesto Institucional" type="action" class="btn-secondary" invisible="es_institucional == False"/>
+                    <button name="%(action_report_factura_bateria)d" string="🖨️ Imprimir Factura" type="action" class="btn-primary"/>
+                    <button string="💰 Ir a Pagar" name="action_ir_a_pagar" type="object" class="oe_highlight" invisible="estado != 'borrador'"/>
+                    
+                    <field name="estado" widget="statusbar" statusbar_visible="borrador,parcial,pagado"/>
+                </header>
+                <sheet>
+                    <field name="traslado_necesario" invisible="1"/>
+                    <field name="traslado_estado" invisible="1"/>
+                    
+                    <div class="alert alert-warning" role="alert" invisible="not traslado_id or traslado_estado == 'realizado' or estado != 'borrador'">
+                        <strong>⏳ Traslado en Espera:</strong> Has solicitado mercancía. Esperando que el administrador apruebe el traslado <field name="traslado_id" readonly="1" class="fw-bold"/>.
+                    </div>
+                    
+                    <div class="alert alert-success" role="alert" invisible="not traslado_id or traslado_estado != 'realizado' or estado != 'borrador'">
+                        <strong>✅ ¡Traslado Aprobado!</strong> El administrador ya procesó el traslado <field name="traslado_id" readonly="1" class="fw-bold"/>. Ya puedes escanear los seriales y confirmar la venta.
+                    </div>
+                    
+                    <field name="despachado" invisible="1"/>
+                    
+                    <div class="oe_title">
+                        <label for="referencia_pedido" string="Número de Factura"/>
+                        <h1><field name="referencia_pedido" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Datos de la Venta">
+                            <field name="cliente_id" placeholder="Seleccionar o crear cliente..."/>
+                            <field name="rif"/>
+                            <field name="telefono"/>
+                            <field name="direccion"/>
+                            <field name="tipo_venta" widget="radio" options="{'horizontal': true}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+
+                            <field name="tipo_documento" widget="radio" options="{'horizontal': true}" readonly="estado != 'borrador'"/>
+                            
+                            
+                            <separator string="Garantía y Aplicación"/>
+                            <field name="tipo_bateria_garantia" widget="radio" options="{'horizontal': true}" readonly="estado != 'borrador'"/>
+                            <field name="meses_garantia_impresos" invisible="1"/>
+
+                            <field name="es_institucional" widget="boolean_toggle"/>
+                            <field name="ubicacion_id" options="{'no_create': True}"/>
+                            <separator string="Promociones y Descuentos"/>
+                            <field name="aplica_promocion" widget="boolean_toggle"/>
+                            <field name="precio_promocional_usd" invisible="not aplica_promocion" required="aplica_promocion" style="font-weight: bold; color: green;"/>
+                            <field name="meses_garantia_promo" invisible="not aplica_promocion" required="aplica_promocion" style="font-weight: bold; color: #d9534f;"/>
+                            
+                            <div class="alert alert-info mt-2" role="alert" invisible="not aplica_promocion">
+                                ℹ️ <b>Promoción Activa:</b> El sistema ajustará el descuento para que el precio total sea exactamente el indicado arriba, y la garantía del serial se reducirá automáticamente al confirmar la venta.
+                            </div>
+                            <field name="cantidad_chatarras"/>
+
+                            <field name="ingresar_chatarra" widget="boolean_toggle" invisible="cantidad_chatarras == '0'"/>
+
+                            <field name="descripcion_chatarra" string="Chatarra 1" invisible="cantidad_chatarras == '0'" required="cantidad_chatarras != '0'" placeholder="Ej: Batería Duncan 34MR vieja..."/>
+                            <field name="descripcion_chatarra_2" string="Chatarra 2" invisible="cantidad_chatarras not in ('2', '3')" required="cantidad_chatarras in ('2', '3')" placeholder="Ej: Batería Fulgor 24MR vieja..."/>
+                            <field name="descripcion_chatarra_3" string="Chatarra 3" invisible="cantidad_chatarras != '3'" required="cantidad_chatarras == '3'" placeholder="Ej: Batería Titán 4D vieja..."/>
+                            
+                            <field name="promo_instagram" widget="boolean_toggle"/>
+
+                            <separator string="Proyección de Próxima Venta"/>
+                            <field name="agendar_recambio" widget="boolean_toggle"/>
+                            <field name="fecha_vencimiento" invisible="not agendar_recambio" required="agendar_recambio" decoration-danger="1"/>
+                        </group>
+                        <group string="Condiciones y Tasas">
+                            <field name="es_venta_historica" widget="boolean_toggle"/>
+                            <field name="fecha_historica" invisible="not es_venta_historica" required="es_venta_historica" decoration-bf="1" decoration-danger="1"/>
+                            <field name="fecha_creacion" invisible="es_venta_historica"/>
+
+                            <field name="fecha_despacho_real" invisible="not despachado" decoration-bf="1" decoration-success="1"/>
+                            <field name="asiento_id" invisible="not asiento_id" decoration-bf="1"/>
+                            <field name="condiciones_pago"/>
+                            <field name="nota_canon" invisible="condiciones_pago != 'canon'" required="condiciones_pago == 'canon'" placeholder="Ej: Regalo para el dueño, Garantía aprobada, etc."/>
+                            <field name="tarifa_id"/>
+                            <field name="monto_inicial_requerido" widget="monetary" options="{'currency_field': 'moneda'}" decoration-bf="1" decoration-info="1" invisible="condiciones_pago not in ('cashea_60', 'cashea_50', 'cashea_40')"/>
+                            <field name="moneda" widget="radio" options="{'horizontal': true}"/>
+                            
+                            <label for="moneda_referencia" string="Tasa de Conversión (USDT/BCV/EURO)"/>
+                            <div class="o_row">
+                                <field name="moneda_referencia" widget="radio" options="{'horizontal': true}"/>
+                                <button name="action_actualizar_tasa_bcv_manual" type="object" icon="fa-refresh" class="btn btn-sm btn-primary" title="Traer precio actual del BCV"/>
+                            </div>
+                            
+                            <field name="usar_tasa_personalizada" widget="boolean_toggle"/>
+                            <field name="tasa_cambio" invisible="not usar_tasa_personalizada" required="usar_tasa_personalizada"/>
+                            <field name="tasa_aplicada" string="Tasa Activa" readonly="1" force_save="1" decoration-bf="1" decoration-success="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Líneas de Pedido">
+                            <field name="linea_ids">
+                                <list editable="bottom">
+                                    <field name="moneda" column_invisible="True"/> 
+                                    <field name="requiere_serial" column_invisible="True"/>
+                                    <field name="producto_id" string="Catálogo (Opcional)" required="0" options="{'no_create': True}"/>
+                                    <field name="articulo_historial_id" options="{'no_create': True}" optional="show"/>
+                                    <field name="descripcion" string="Descripción del Artículo" required="1"/>
+                                    <field name="unidad_medida_texto" string="U.M." optional="show"/>
+                                    <field name="seriales_masivos" invisible="not parent.es_venta_historica" optional="show" placeholder="Pegar seriales..."/>
+                                    <field name="serial_ids" widget="many2many_tags" options="{'no_create': True}" placeholder="Escanear seriales..." invisible="not requiere_serial"/>
+                                    <field name="info_disponibilidad" string="¿Dónde están?" decoration-info="not requiere_serial" decoration-danger="requiere_serial" optional="hide"/>
+                                    <field name="cantidad"/>
+                                    <field name="usar_tasa_linea" widget="boolean_toggle" string="Tasa Indiv." optional="show"/>
+                                    <field name="tasa_linea" string="Tasa a Aplicar" invisible="not usar_tasa_linea" required="usar_tasa_linea" optional="show"/>
+                                    <field name="texto_tasa" decoration-bf="1" decoration-info="texto_tasa != 'Tasa BCV'" readonly="1" force_save="1" optional="hide"/>
+                                    <field name="costo_unitario_usd" groups="base.group_erp_manager" optional="hide" string="Costo Ref ($)"/>
+                                    <field name="precio_usd" string="Precio Base ($)" widget="monetary" options="{'currency_symbol': '$'}" optional="hide"/>
+                                    <field name="precio_bs" string="Precio Editable (Bs)" widget="monetary" options="{'currency_symbol': 'Bs'}"/>
+                                    <field name="ganancia_usd" groups="base.group_erp_manager" decoration-success="1" optional="hide"/>
+                                    <field name="subtotal_usd" readonly="1" force_save="1" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                    <field name="subtotal_bs" readonly="1" force_save="1" widget="monetary" options="{'currency_symbol': 'Bs'}"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="aplica_iva" invisible="1"/>
+                                <div colspan="2" class="text-end">
+                                    <button name="action_agregar_iva" type="object" string="➕ Añadir IVA (16%)" class="btn btn-sm btn-info mb-2" invisible="aplica_iva or estado in ('pagado', 'cancelado')"/>
+                                    <button name="action_quitar_iva" type="object" string="❌ Quitar IVA" class="btn btn-sm btn-danger mb-2" invisible="not aplica_iva or estado in ('pagado', 'cancelado')"/>
+                                </div>
+                                <field name="total_ganancia_usd" string="Ganancia del Cierre ($)" groups="base.group_erp_manager" widget="monetary" options="{'currency_symbol': '$'}" decoration-bf="1" decoration-success="1"/>
+                                <field name="subtotal_bruto_usd" string="Subtotal ($)" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                <field name="monto_descuento_usd" string="Descuento ($)" widget="monetary" options="{'currency_symbol': '$'}" decoration-danger="monto_descuento_usd &gt; 0" invisible="monto_descuento_usd == 0"/>
+                                <field name="total_iva_usd" string="IVA (16%) ($)" widget="monetary" options="{'currency_symbol': '$'}" invisible="not aplica_iva"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="total_global_usd" string="Total ($)"/>
+                                </div>
+                                <field name="total_global_usd" nolabel="1" class="oe_subtotal_footer_separator text-success" widget="monetary" options="{'currency_symbol': '$'}"/>
+                                <hr colspan="2" style="border-top: 1px solid #ccc; margin: 10px 0;"/>
+                                <field name="subtotal_bruto_bs" string="Subtotal (Bs)" widget="monetary" options="{'currency_symbol': 'Bs'}"/>
+                                <field name="monto_descuento_bs" string="Descuento (Bs)" widget="monetary" options="{'currency_symbol': 'Bs'}" decoration-danger="monto_descuento_bs &gt; 0" invisible="monto_descuento_bs == 0"/>
+                                <field name="total_iva_bs" string="IVA (16%) (Bs)" widget="monetary" options="{'currency_symbol': 'Bs'}" invisible="not aplica_iva"/>
+                                <div class="oe_subtotal_footer_separator oe_inline o_td_label">
+                                    <label for="total_global_bs" string="Total (Bs)"/>
+                                </div>
+                                <field name="total_global_bs" nolabel="1" class="oe_subtotal_footer_separator text-primary" widget="monetary" options="{'currency_symbol': 'Bs'}"/>
+                            </group>
+                        </page>
+                        <page string="Registro de Pagos" invisible="condiciones_pago == 'canon'">
+                            <field name="pago_ids" context="{'default_tasa_cambio': tasa_cambio}">
+                                <list editable="bottom">
+                                    <field name="fecha_pago"/>
+                                    <field name="tipo_pago"/>
+                                    <field name="monto" string="Monto Recibido"/>
+                                    <field name="moneda"/>
+                                    <field name="monto_usd" string="Valor en $" sum="Total $" widget="monetary" options="{'currency_symbol': '$'}" decoration-bf="1" decoration-success="1"/>
+                                    <field name="tasa_cambio" placeholder="Tasa" invisible="moneda != 'bs'" required="moneda == 'bs'"/>
+                                    <field name="banco" string="Banco" invisible="tipo_pago not in ('pago_movil', 'zelle', 'cashea', 'transferencia', 'punto')"/>
+                                    <field name="referencia_banco" string="Ref" invisible="tipo_pago == 'efectivo'"/>
+                                    <field name="serial_billetes" string="Serial" invisible="tipo_pago != 'efectivo' or moneda != 'usd'"/>
+                                </list>
+                            </field>
+                            <separator string="Desglose de Vuelto a Entregar (Efectivo)"/>
+                            <field name="billetes_vuelto_ids">
+                                <list editable="bottom">
+                                    <field name="denominacion"/>
+                                    <field name="cantidad"/>
+                                    <field name="seriales" placeholder="Ej: AB123456789, MB987654321..."/>
+                                    <field name="subtotal" sum="Total Vuelto"/>
+                                </list>
+                            </field>
+                            <separator string="Vuelto a Entregar (Pago Móvil / Transferencia)"/>
+                            <group>
+                                <group>
+                                    <field name="vuelto_pago_movil_bs" string="Monto a Transferir (Bs)" widget="monetary" options="{'currency_symbol': 'Bs'}"/>
+                                    <field name="referencia_vuelto_pm" string="Referencia del Pago" placeholder="Ej: Banco Vzla - Ref 123456..." invisible="vuelto_pago_movil_bs == 0" required="vuelto_pago_movil_bs &gt; 0"/>
+                                </group>
+                            </group>
+                            <group class="oe_subtotal_footer oe_right mt-3">
+                                <field name="pago_inicial" string="Dinero Bruto Recibido" widget="monetary" options="{'currency_field': 'moneda'}"/>
+                                <field name="vuelto_entregado_usd" string="(-) Vuelto Efectivo Restado" widget="monetary" options="{'currency_symbol': '$'}" decoration-danger="vuelto_entregado_usd &gt; 0" invisible="vuelto_entregado_usd == 0"/>
+                                <field name="vuelto_pago_movil_bs" string="(-) Vuelto Pago Móvil Restado" widget="monetary" options="{'currency_symbol': 'Bs'}" decoration-danger="vuelto_pago_movil_bs &gt; 0" invisible="vuelto_pago_movil_bs == 0"/>
+                                <field name="saldo_pendiente" string="Deuda Restante" class="oe_subtotal_footer_separator" widget="monetary" decoration-danger="saldo_pendiente &gt; 0.01"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_bateria_cuentas_cobrar_list" model="ir.ui.view">
+        <field name="name">bateria.cuentas.cobrar.list</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="saldo_pendiente &gt; 0.01" create="false">
+                <field name="fecha_creacion" string="Fecha"/>
+                <field name="referencia_pedido" string="Operación"/>
+                <field name="cliente_id" string="Cliente"/>
+                <field name="tarifa_id" string="Tipo de Cliente" optional="show"/> 
+                <field name="condiciones_pago" string="Condición"/>
+                <field name="saldo_pendiente" string="Deuda Pendiente ($)" decoration-bf="1" sum="Por Cobrar"/>
+                <field name="tipo_documento" widget="radio" options="{'horizontal': true}" readonly="estado != 'borrador'"/>
+                <field name="estado" widget="badge" decoration-warning="saldo_pendiente &gt; 0"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_cliente_list" model="ir.ui.view">
+        <field name="name">bateria.cliente.list</field>
+        <field name="model">bateria.cliente</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" string="Nombre / Razón Social"/>
+                <field name="rif"/>
+                <field name="telefono"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_bateria_cliente_form" model="ir.ui.view">
+        <field name="name">bateria.cliente.form</field>
+        <field name="model">bateria.cliente</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" string="Nombre / Razón Social"/>
+                        <field name="rif"/>
+                        <field name="telefono"/>
+                        <field name="direccion"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bateria_cliente" model="ir.actions.act_window">
+        <field name="name">Directorio de Clientes</field>
+        <field name="res_model">bateria.cliente</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_bateria_orden_venta_graph" model="ir.ui.view">
+        <field name="name">bateria.orden.venta.graph</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="arch" type="xml">
+            <graph string="Baterías Más Vendidas" type="pie">
+                <field name="producto_principal_id" type="row"/>
+                <field name="total_global_usd" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_bateria_orden_venta_pivot" model="ir.ui.view">
+        <field name="name">bateria.orden.venta.pivot</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="arch" type="xml">
+            <pivot string="Análisis de Ventas" display_quantity="1">
+                <field name="producto_principal_id" type="row"/>
+                <field name="fecha_creacion" type="col" interval="month"/>
+                <field name="total_global_usd" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+    
+    <record id="action_bateria_orden_venta" model="ir.actions.act_window">
+        <field name="name">Pedidos de Venta</field>
+        <field name="res_model">bateria.orden.venta</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="view_id" ref="view_bateria_orden_venta_list"/>
+        <field name="domain">[('estado', '!=', 'borrador')]</field>
+    </record>
+
+    <record id="action_bateria_cuentas_cobrar" model="ir.actions.act_window">
+        <field name="name">Cuentas por Cobrar (CxC)</field>
+        <field name="res_model">bateria.orden.venta</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="view_id" ref="view_bateria_cuentas_cobrar_list"/>
+        <field name="domain">[('estado', '=', 'parcial')]</field>
+        <field name="context">{'search_default_cliente_id': 1}</field>
+    </record>
+
+    <record id="action_bateria_presupuestos" model="ir.actions.act_window">
+        <field name="name">Presupuestos</field>
+        <field name="res_model">bateria.orden.venta</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('estado', '=', 'borrador'), ('es_institucional', '=', False)]</field>
+        <field name="context">{'default_es_institucional': False}</field>
+    </record>
+
+    <record id="action_bateria_orden_institucional" model="ir.actions.act_window">
+        <field name="name">Cotizaciones Institucionales</field>
+        <field name="res_model">bateria.orden.venta</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="domain">[('es_institucional', '=', True)]</field>
+        <field name="context">{'default_es_institucional': True, 'default_moneda': 'bs'}</field>
+    </record>
+
+    <record id="view_bateria_proyeccion_recambio_list" model="ir.ui.view">
+        <field name="name">bateria.proyeccion.recambio.list</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="fecha_vencimiento &lt; current_date" decoration-warning="fecha_vencimiento &gt;= current_date" default_order="fecha_vencimiento asc" create="false">
+                <field name="fecha_vencimiento" string="Fecha de Vencimiento" widget="date"/>
+                <field name="cliente_id" string="Cliente"/>
+                <field name="telefono" string="Teléfono a Llamar" decoration-bf="1"/>
+                <field name="referencia_pedido" string="Factura Original"/>
+                <field name="lista_productos" string="Batería que Compró"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'pagado'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_bateria_proyeccion_recambio" model="ir.actions.act_window">
+        <field name="name">Proyección de Recambios (Llamadas)</field>
+        <field name="res_model">bateria.orden.venta</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_bateria_proyeccion_recambio_list"/>
+        <field name="domain">[('agendar_recambio', '=', True), ('estado', '!=', 'borrador')]</field>
+    </record>
+
+    <record id="view_bateria_chatarra_list" model="ir.ui.view">
+        <field name="name">bateria.chatarra.list</field>
+        <field name="model">bateria.chatarra</field>
+        <field name="arch" type="xml">
+            <list decoration-info="estado == 'almacen'" decoration-muted="estado == 'enviada'">
+                <field name="fecha" string="Fecha Recibida"/>
+                <field name="name" string="Ref. Chatarra"/>
+                <field name="orden_venta_id" string="Factura de Venta"/>
+                <field name="cliente_id" string="Entregada por"/>
+                <field name="descripcion" string="Marca/Modelo Chatarra"/>
+                <field name="cantidad" sum="Total Chatarras Físicas"/>
+                <field name="estado" widget="badge" decoration-success="estado == 'enviada'" decoration-info="estado == 'almacen'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_bateria_chatarra" model="ir.actions.act_window">
+        <field name="name">Chatarras Recibidas</field>
+        <field name="res_model">bateria.chatarra</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    
+    </odoo>

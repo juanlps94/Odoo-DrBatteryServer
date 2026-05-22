@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_factura_bateria" model="ir.actions.report">
+        <field name="name">Imprimir Factura / Nota de Entrega</field>
+        <field name="model">bateria.orden.venta</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">bateria_reportes.report_factura_template</field>
+        <field name="report_file">bateria_reportes.report_factura_template</field>
+        <field name="binding_model_id" ref="model_bateria_orden_venta"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_factura_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    
+                    <t t-set="simbolo" t-value="'Bs' if o.moneda == 'bs' else '$'"/>
+                    
+                    <t t-set="address">
+                        <div style="font-size: 14px;">
+                            <strong t-field="o.cliente_id.name" style="text-transform: uppercase;"/><br/>
+                            <t t-if="o.cliente_id.direccion">
+                                <span t-field="o.cliente_id.direccion"/><br/>
+                            </t>
+                            <t t-if="o.cliente_id.rif">
+                                RIF/C.I: <span t-field="o.cliente_id.rif"/><br/>
+                            </t>
+                            <t t-if="o.cliente_id.telefono">
+                                Teléfono: <span t-field="o.cliente_id.telefono"/>
+                            </t>
+                        </div>
+                    </t>
+
+                    <div class="page">
+                        
+                        <h2 class="mt-4 mb-4">
+                            <span t-if="o.estado != 'borrador'">Nota de Entrega</span>
+                            <span t-if="o.estado == 'borrador'">Presupuesto</span>
+                            <span t-field="o.referencia_pedido"/>
+                        </h2>
+
+                        <div id="informations" class="row mt-4 mb-4">
+                            <div class="col-auto col-3 mw-100 mb-2" t-if="o.fecha_creacion">
+                                <strong>Fecha de Emisión:</strong>
+                                <p class="m-0" t-field="o.fecha_creacion" t-options='{"widget": "date"}'/>
+                            </div>
+                            <div class="col-auto col-3 mw-100 mb-2" t-if="o.condiciones_pago">
+                                <strong>Condición de Pago:</strong>
+                                <p class="m-0"><span t-esc="dict(o.fields_get(allfields=['condiciones_pago'])['condiciones_pago']['selection']).get(o.condiciones_pago, o.condiciones_pago)"/></p>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm o_main_table table-borderless mt-4">
+                            <thead style="display: table-row-group">
+                                <tr class="border-bottom" style="border-color: #000;">
+                                    <th name="th_description" class="text-start">Descripción</th>
+                                    <th name="th_quantity" class="text-end">Cantidad</th>
+                                    <th name="th_priceunit" class="text-end">Precio Unit. (<t t-esc="simbolo"/>)</th>
+                                    <th name="th_subtotal" class="text-end">Monto (<t t-esc="simbolo"/>)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="sale_tbody">
+                                <t t-foreach="o.linea_ids" t-as="line">
+                                    <tr t-att-class="'bg-200 fw-bold o_line_section' if not line.producto_id and not line.descripcion else ''">
+                                        <td name="td_name">
+                                            <span t-field="line.producto_id.nombre" t-if="line.producto_id"/>
+                                            <span t-field="line.descripcion" t-if="not line.producto_id"/>
+                                            
+                                            <t t-if="line.serial_ids">
+                                                <br/>
+                                                <span class="text-muted" style="font-size: 11px;">
+                                                    Serial(es): <t t-esc="', '.join(line.serial_ids.mapped('display_name'))"/>
+                                                </span>
+                                            </t>
+                                        </td>
+                                        <td name="td_quantity" class="text-end">
+                                            <span t-esc="int(line.cantidad)"/>
+                                        </td>
+                                        <td name="td_priceunit" class="text-end">
+                                            <t t-if="o.moneda == 'bs'"><span t-field="line.precio_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                            <t t-else=""><span t-field="line.precio_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                        </td>
+                                        <td name="td_subtotal" class="text-end">
+                                            <t t-if="o.moneda == 'bs'"><span t-field="line.subtotal_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                            <t t-else=""><span t-field="line.subtotal_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div class="clearfix" name="so_total_summary">
+                            <div id="total" class="row" name="total">
+                                <div class="col-6 ms-auto">
+                                    <table class="table table-sm table-borderless">
+                                        <t t-if="o.monto_descuento_usd > 0 or o.monto_descuento_bs > 0">
+                                            <tr class="border-black o_subtotal">
+                                                <td><strong>Subtotal Bruto</strong></td>
+                                                <td class="text-end">
+                                                    <t t-if="o.moneda == 'bs'"><span t-esc="o.subtotal_bruto_bs + o.monto_descuento_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                                    <t t-else=""><span t-esc="o.subtotal_bruto_usd + o.monto_descuento_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Descuento</strong></td>
+                                                <td class="text-end text-success">
+                                                    <t t-if="o.moneda == 'bs'">-<span t-field="o.monto_descuento_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                                    <t t-else="">-<span t-field="o.monto_descuento_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                        
+                                        <tr class="border-black o_subtotal">
+                                            <td><strong>Base Imponible</strong></td>
+                                            <td class="text-end">
+                                                <t t-if="o.moneda == 'bs'"><span t-field="o.subtotal_bruto_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                                <t t-else=""><span t-field="o.subtotal_bruto_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                            </td>
+                                        </tr>
+                                        <tr t-if="o.aplica_iva">
+                                            <td>16% I.V.A.</td>
+                                            <td class="text-end">
+                                                <t t-if="o.moneda == 'bs'"><span t-field="o.total_iva_bs" t-options='{"widget": "float", "precision": 2}'/></t>
+                                                <t t-else=""><span t-field="o.total_iva_usd" t-options='{"widget": "float", "precision": 2}'/></t>
+                                            </td>
+                                        </tr>
+                                        <tr class="border-black o_total">
+                                            <td><strong>Total a Pagar</strong></td>
+                                            <td class="text-end">
+                                                <t t-if="o.moneda == 'bs'"><strong><span t-field="o.total_global_bs" t-options='{"widget": "float", "precision": 2}'/></strong></t>
+                                                <t t-else=""><strong><span t-field="o.total_global_usd" t-options='{"widget": "float", "precision": 2}'/></strong></t>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <t t-if="o.pago_ids">
+                            <div class="mt-4" style="page-break-inside: avoid;">
+                                <p style="margin-bottom: 5px; font-size: 13px;"><strong>Pagos Recibidos:</strong></p>
+                                <ul style="list-style-type: none; padding-left: 0; font-size: 12px;">
+                                    <t t-foreach="o.pago_ids" t-as="pago">
+                                        <li>
+                                            - <span t-field="pago.fecha_pago" t-options='{"widget": "date"}'/>: 
+                                            <span t-field="pago.tipo_pago"/> 
+                                            (<span t-field="pago.monto" t-options='{"widget": "float", "precision": 2}'/> <span t-esc="pago.moneda.upper()"/>)
+                                            <t t-if="pago.referencia_banco"> | Ref: <span t-field="pago.referencia_banco"/></t>
+                                            <t t-if="pago.serial_billetes"> | Serial: <span t-field="pago.serial_billetes"/></t>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </t>
+
+                        <div class="mt-5" style="page-break-inside: avoid; border-top: 1px solid #dee2e6; padding-top: 15px;">
+                            
+                            <div class="text-center mt-3" style="font-size: 12px; font-weight: bold;">
+                                <p class="mb-0">FAVOR REVISAR SU MERCANCIA, DESPUES DE ENTREGADO NO ACEPTAMOS DEVOLUCIONES DE DINERO. SIN EXCEPCIÓN.</p>
+                            </div>
+                            
+                            <div class="row text-center mt-5" style="font-size: 12px; margin-top: 40px;">
+                                <div class="col-6 offset-3">
+                                    <hr style="border-top: 1px solid black; width: 100%; margin-bottom: 5px;"/>
+                                    <strong>RECIBE CONFORME (CLIENTE)</strong>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

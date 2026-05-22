@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Secuencia para Cierre de Caja -->
+    <record id="seq_cierre_caja" model="ir.sequence">
+        <field name="name">Cierre de Caja</field>
+        <field name="code">bateria.cierre.caja</field>
+        <field name="prefix">CC/%(year)s/%(month)s/</field>
+        <field name="padding">4</field>
+    </record>
+</odoo>
