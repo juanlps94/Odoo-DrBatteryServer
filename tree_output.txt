@@ -1,0 +1,5739 @@
+.
+├── addons
+│   ├── account
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── doc
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── account_add_gln
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── account_check_printing
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── account_debit_note
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── account_edi
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── account_edi_proxy_client
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── i18n_extra
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── views
+│   ├── account_edi_ubl_cii
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── report
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── account_fleet
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── account_payment
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizards
+│   ├── account_peppol
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── exceptions.py
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── account_peppol_advanced_fields
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── account_peppol_response
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── account_qr_code_emv
+│   │   ├── const.py
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── account_qr_code_sepa
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── account_tax_python
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── views
+│   ├── account_test
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   └── views
+│   ├── account_update_tax_tags
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── analytic
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── api_doc
+│   │   ├── controllers
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── attachment_indexation
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── auth_ldap
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.rst
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── auth_oauth
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── auth_passkey
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── _vendor
+│   │   └── views
+│   ├── auth_passkey_portal
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── auth_password_policy
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── auth_password_policy_portal
+│   │   ├── controllers.py
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── auth_password_policy_signup
+│   │   ├── controllers.py
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── auth_signup
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── auth_timeout
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── auth_totp
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── auth_totp_mail
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── auth_totp_portal
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── barcodes
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── barcodes_gs1_nomenclature
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── base_address_extended
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── base_automation
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── base_geolocalize
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── base_iban
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── views
+│   ├── base_import
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   └── static
+│   ├── base_import_module
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── base_install_request
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── views
+│   │   └── wizard
+│   ├── base_setup
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── base_sparse_field
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── base_vat
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   └── views
+│   ├── bateria_reportes
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── README.md
+│   │   ├── reports
+│   │   ├── security
+│   │   ├── static
+│   │   ├── views
+│   │   └── wizard
+│   ├── baterias_reports
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── reports
+│   │   ├── security
+│   │   ├── static
+│   │   ├── views
+│   │   └── wizards
+│   ├── board
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── bus
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── websocket.py
+│   ├── calendar
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── calendar_sms
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── certificate
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── views
+│   ├── cloud_storage
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── cloud_storage_azure
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   ├── utils
+│   │   └── views
+│   ├── cloud_storage_google
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils
+│   │   └── views
+│   ├── cloud_storage_migration
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── views
+│   ├── contacts
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── crm
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── doc
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── crm_iap_enrich
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── crm_iap_mine
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── crm_livechat
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── crm_mail_plugin
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── crm_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── data_recycle
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── delivery
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── delivery_mondialrelay
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── views
+│   │   └── wizard
+│   ├── delivery_stock_picking_batch
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── digest
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── event
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── event_booth
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── event_booth_sale
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── event_crm
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── event_crm_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── event_product
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── event_sale
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── event_sms
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── tests
+│   ├── fleet
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── gamification
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── gamification_sale_crm
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── google_account
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── google_address_autocomplete
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── google_calendar
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils
+│   │   ├── views
+│   │   └── wizard
+│   ├── google_gmail
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools.py
+│   │   └── views
+│   ├── google_recaptcha
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── views
+│   ├── hr
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_attendance
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── hr_calendar
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── hr_expense
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_fleet
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_gamification
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_holidays
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── upgrades
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_holidays_attendance
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── hr_holidays_homeworking
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── static
+│   ├── hr_homeworking
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── hr_homeworking_calendar
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── wizard
+│   ├── hr_hourly_cost
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── hr_livechat
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── views
+│   ├── hr_maintenance
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_org_chart
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── hr_presence
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── hr_recruitment
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_recruitment_skills
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── hr_recruitment_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── hr_recruitment_survey
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_skills
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_skills_event
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── hr_skills_slides
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── hr_skills_survey
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── hr_timesheet
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_timesheet_attendance
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── tests
+│   │   └── upgrades
+│   ├── hr_work_entry
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── hr_work_entry_holidays
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── html_builder
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── tests
+│   ├── html_editor
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── tools.py
+│   ├── http_routing
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── iap
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── views
+│   ├── iap_crm
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── iap_mail
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── views
+│   ├── im_livechat
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── views
+│   ├── iot_base
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── static
+│   ├── iot_box_image
+│   │   ├── build_image.sh
+│   │   ├── build_utils
+│   │   ├── configuration
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── overwrite_after_init
+│   │   └── overwrite_before_init
+│   ├── iot_drivers
+│   │   ├── browser.py
+│   │   ├── cli
+│   │   ├── connection_manager.py
+│   │   ├── controllers
+│   │   ├── driver.py
+│   │   ├── event_manager.py
+│   │   ├── exception_logger.py
+│   │   ├── http.py
+│   │   ├── __init__.py
+│   │   ├── interface.py
+│   │   ├── iot_handlers
+│   │   ├── main.py
+│   │   ├── __manifest__.py
+│   │   ├── server_logger.py
+│   │   ├── static
+│   │   ├── tools
+│   │   ├── views
+│   │   ├── webrtc_client.py
+│   │   └── websocket_client.py
+│   ├── l10n_account_edi_ubl_cii_tests
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── tests
+│   ├── l10n_account_withholding_tax
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizards
+│   ├── l10n_account_withholding_tax_pos
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── l10n_ae
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_ae_pos
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── static
+│   ├── l10n_anz_ubl_pint
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── l10n_ar
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── report
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ar_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ar_stock
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ar_website_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ar_withholding
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizards
+│   ├── l10n_at
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_au
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_bd
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_be
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_be_pos_restaurant
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── l10n_be_pos_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── l10n_bf
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_bg
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_bg_ledger
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_bh
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_bj
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_bo
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_br
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_br_sales
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   └── views
+│   ├── l10n_br_website_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── l10n_ca
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_cd
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_cf
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_cg
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_ch
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_ch_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── l10n_ci
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_cl
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_cm
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_cn
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_cn_city
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── l10n_co
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_co_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── static
+│   ├── l10n_cr
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_cy
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_cz
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_de
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_din5008
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── static
+│   │   └── views
+│   ├── l10n_din5008_expense
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── report
+│   ├── l10n_din5008_purchase
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── report
+│   ├── l10n_din5008_repair
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── report
+│   ├── l10n_din5008_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── report
+│   ├── l10n_din5008_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── report
+│   ├── l10n_dk
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_dk_fik
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── l10n_dk_nemhandel
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_dk_nemhandel_response
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_dk_oioubl
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── l10n_do
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_dz
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_ec
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ec_sale
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ec_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── l10n_ee
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_eg
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── views
+│   ├── l10n_eg_edi_eta
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_es
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── upgrades
+│   │   └── views
+│   ├── l10n_es_edi_facturae
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   ├── wizard
+│   │   └── xml_utils.py
+│   ├── l10n_es_edi_sii
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizards
+│   ├── l10n_es_edi_tbai
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizards
+│   ├── l10n_es_edi_tbai_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_es_edi_verifactu
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_es_edi_verifactu_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_es_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_et
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_eu_oss
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── l10n_fi
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_fi_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── l10n_fr
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_fr_account
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_fr_facturx_chorus_pro
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_fr_hr_holidays
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_fr_hr_work_entry_holidays
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── l10n_fr_pos_cert
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ga
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_gcc_invoice
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_gcc_invoice_stock_account
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── views
+│   ├── l10n_gcc_pos
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_gn
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_gq
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_gr
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_gr_edi
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_gt
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_gw
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_hk
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_hn
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_hr
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_hr_edi
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── tools.py
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_hr_kuna
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_hu
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_hu_edi
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_id
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_id_efaktur_coretax
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_id_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── l10n_ie
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_il
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_in
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_in_edi
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_in_ewaybill
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_in_ewaybill_irn
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_in_ewaybill_stock
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_in_hr_holidays
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_in_pos
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_in_purchase_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── l10n_in_sale
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_in_sale_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── l10n_in_stock
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── l10n_iq
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_it
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_it_edi
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── views
+│   ├── l10n_it_edi_doi
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_it_edi_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_it_stock_ddt
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_jo
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_jo_edi
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_jo_edi_pos
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_jp
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_jp_ubl_pint
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── l10n_ke
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   └── views
+│   ├── l10n_ke_edi_tremol
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_kh
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_km
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_kr
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_kw
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_kz
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_latam_base
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── l10n_latam_check
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizards
+│   ├── l10n_latam_invoice_document
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── views
+│   │   └── wizards
+│   ├── l10n_lb_account
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_lk
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_lt
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_lu
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_lv
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── Readme.txt
+│   ├── l10n_ma
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_mc
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── __pycache__
+│   ├── l10n_ml
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_mn
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_mr
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_mt
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_mt_pos
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── reports
+│   │   ├── security
+│   │   └── wizards
+│   ├── l10n_mu_account
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_mx
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_my
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_my_edi
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_my_edi_pos
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_my_ubl_pint
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_mz
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_ne
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_ng
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_nl
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── README.md
+│   │   └── views
+│   ├── l10n_no
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_nz
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_om
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_pa
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_pe
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── README.rst
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── l10n_pe_pos
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ph
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_pk
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_pl
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_pl_bank_verification
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_pl_edi
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── exceptions.py
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── views
+│   ├── l10n_pt
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── tests
+│   ├── l10n_qa
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_ro
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_ro_cpv_code
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ro_edi
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_ro_edi_stock
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_ro_edi_stock_batch
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_rs
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_rs_edi
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_rw
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_sa
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_sa_edi
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_sa_edi_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── l10n_sa_pos
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── l10n_sa_withholding_tax
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── __pycache__
+│   ├── l10n_se
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_sg
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_sg_ubl_pint
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── l10n_si
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── tests
+│   ├── l10n_sk
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_sn
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_syscohada
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── static
+│   ├── l10n_td
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_test_pos_qr_payment
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── tests
+│   ├── l10n_tg
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_th
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_tn
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_tr
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_tr_nilvera
+│   │   ├── const.py
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── lib
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── views
+│   ├── l10n_tr_nilvera_base_vat
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── l10n_tr_nilvera_edispatch
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── templates
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_tr_nilvera_einvoice
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_tr_nilvera_einvoice_extended
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── views
+│   ├── l10n_tw
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_tw_edi_ecpay
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_tw_edi_ecpay_website_sale
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_tz_account
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_ua
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_ug
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_uk
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_us
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_us_account
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── l10n_uy
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_uy_pos
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── static
+│   ├── l10n_uz
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── l10n_ve
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_vn
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_vn_edi_viettel
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── l10n_vn_edi_viettel_pos
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── l10n_za
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── __pycache__
+│   ├── l10n_zm_account
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── link_tracker
+│   │   ├── controller
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── tools
+│   │   └── views
+│   ├── loyalty
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── lunch
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── mail
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── push-to-talk-extension
+│   │   ├── __pycache__
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── mail_bot
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── views
+│   ├── mail_bot_hr
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── views
+│   ├── mail_group
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── mail_plugin
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── maintenance
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── marketing_card
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizards
+│   ├── mass_mailing
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── doc
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── mass_mailing_crm
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── mass_mailing_crm_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── mass_mailing_event
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── mass_mailing_event_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── mass_mailing_event_track
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── mass_mailing_event_track_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── mass_mailing_sale
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── mass_mailing_sale_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── mass_mailing_slides
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── mass_mailing_sms
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── mass_mailing_themes
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── views
+│   ├── microsoft_account
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── microsoft_calendar
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils
+│   │   ├── views
+│   │   └── wizard
+│   ├── microsoft_outlook
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── mrp
+│   │   ├── controller
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── mrp_account
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── mrp_landed_costs
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── mrp_product_expiry
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── wizard
+│   ├── mrp_repair
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── mrp_subcontracting
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── mrp_subcontracting_account
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── tests
+│   ├── mrp_subcontracting_dropshipping
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── mrp_subcontracting_landed_costs
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── mrp_subcontracting_purchase
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── tests
+│   │   └── views
+│   ├── mrp_subcontracting_repair
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── security
+│   ├── onboarding
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── partner_autocomplete
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── partnership
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── logging.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   ├── views
+│   │   └── wizards
+│   ├── payment_adyen
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   ├── views
+│   │   └── wizards
+│   ├── payment_aps
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   └── views
+│   ├── payment_asiapay
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_authorize
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_buckaroo
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_custom
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_demo
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_dpo
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_ecpay
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_flutterwave
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_iyzico
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_mercado_pago
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_mollie
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_nuvei
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_paymob
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_paypal
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   └── views
+│   ├── payment_razorpay
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_redsys
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_stripe
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   └── views
+│   ├── payment_toss_payments
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_worldline
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── payment_xendit
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── phone_validation
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── lib
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── point_of_sale
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── doc
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── upgrades
+│   │   ├── views
+│   │   └── wizard
+│   ├── portal
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   ├── views
+│   │   └── wizard
+│   ├── portal_rating
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_account_tax_python
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── pos_adyen
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_cashdro
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_discount
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_dpopay
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_edi_ubl
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── pos_event
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_event_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── pos_glory_cash
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_hr
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── pos_hr_restaurant
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── tests
+│   ├── pos_imin
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_loyalty
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_mercado_pago
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_mollie
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_mrp
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── tests
+│   ├── pos_online_payment
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_online_payment_self_order
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_pine_labs
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_qfpay
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_razorpay
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_repair
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── pos_restaurant
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_restaurant_adyen
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_restaurant_loyalty
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── tests
+│   ├── pos_restaurant_stripe
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── static
+│   ├── pos_safaricom
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_sale
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_sale_loyalty
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── pos_sale_margin
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── report
+│   │   └── tests
+│   ├── pos_self_order
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_self_order_adyen
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── pos_self_order_pine_labs
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── static
+│   ├── pos_self_order_qfpay
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── pos_self_order_razorpay
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── static
+│   ├── pos_self_order_sale
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── pos_self_order_stripe
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_self_order_viva_com
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── static
+│   ├── pos_sms
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── pos_stripe
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── pos_viva_com
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── privacy_lookup
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── product
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── product_email_template
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── product_expiry
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── product_margin
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── product_matrix
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── project
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── doc
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── upgrades
+│   │   ├── views
+│   │   └── wizard
+│   ├── project_account
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── project_hr_expense
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── project_hr_skills
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   └── views
+│   ├── project_mail_plugin
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── project_mrp
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── views
+│   ├── project_mrp_account
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── project_mrp_sale
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── tests
+│   ├── project_mrp_stock_landed_costs
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── project_purchase
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── project_purchase_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── project_sale_expense
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── project_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── upgrades
+│   │   └── views
+│   ├── project_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── project_stock_account
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── project_stock_landed_costs
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── project_timesheet_holidays
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── project_todo
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── purchase
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── purchase_edi_ubl_bis3
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── purchase_mrp
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── purchase_product_matrix
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── purchase_repair
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── purchase_requisition
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── purchase_requisition_sale
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── tests
+│   │   └── wizard
+│   ├── purchase_requisition_stock
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── purchase_stock
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── rating
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── repair
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── resource
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── resource_mail
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── static
+│   ├── rpc
+│   │   ├── controllers
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── __pycache__
+│   │   └── tests
+│   ├── sale
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── sale_crm
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── sale_edi_ubl
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── sale_expense
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_expense_margin
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── sale_gelato
+│   │   ├── const.py
+│   │   ├── controlers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   ├── views
+│   │   └── wizards
+│   ├── sale_gelato_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── sale_loyalty
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── sale_loyalty_delivery
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_management
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_margin
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_mrp
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_mrp_margin
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── tests
+│   ├── sale_pdf_quote_builder
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   ├── views
+│   │   └── wizards
+│   ├── sale_product_matrix
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── static
+│   │   └── views
+│   ├── sale_project
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── sale_project_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_project_stock_account
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── sale_purchase
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_purchase_project
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── sale_purchase_stock
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_service
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── sale_sms
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── security
+│   ├── sales_team
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── sale_stock
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── sale_stock_margin
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── sale_stock_product_expiry
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── sale_timesheet
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── sale_timesheet_margin
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── sms
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── sms_twilio
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── tools
+│   │   ├── views
+│   │   └── wizard
+│   ├── snailmail
+│   │   ├── country_utils.py
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── snailmail_account
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── social_media
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── spreadsheet
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils
+│   │   └── views
+│   ├── spreadsheet_account
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── tests
+│   ├── spreadsheet_dashboard
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── spreadsheet_dashboard_account
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── __pycache__
+│   ├── spreadsheet_dashboard_event_sale
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_hr_expense
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_hr_timesheet
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_im_livechat
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_pos_hr
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_pos_restaurant
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_sale
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_sale_timesheet
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_stock_account
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_website_sale
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── spreadsheet_dashboard_website_sale_slides
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── stock
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils
+│   │   ├── views
+│   │   └── wizard
+│   ├── stock_account
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── stock_delivery
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── stock_dropshipping
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── stock_fleet
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   └── views
+│   ├── stock_landed_costs
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── stock_maintenance
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── stock_picking_batch
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── stock_sms
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── views
+│   │   └── wizard
+│   ├── survey
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── survey_crm
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── test_base_automation
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── tests
+│   ├── test_crm_full
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── tests
+│   ├── test_discuss_full
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── tests
+│   ├── test_event_full
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── test_html_field_history
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── tests
+│   ├── test_import_export
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── tests
+│   ├── test_mail
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── tests
+│   ├── test_mail_full
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── test_mail_sms
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── tests
+│   ├── test_mass_mailing
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── tests
+│   ├── test_resource
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── tests
+│   ├── test_sale_product_configurators
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── tests
+│   ├── test_sale_purchase_edi_ubl
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── tests
+│   ├── test_spreadsheet
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   └── tests
+│   ├── test_website
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── test_website_modules
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── tests
+│   ├── test_website_slides_full
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── tests
+│   ├── theme_default
+│   │   ├── data
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── static
+│   ├── transifex
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── uom
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── utm
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── web
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tooling
+│   │   └── views
+│   ├── web_hierarchy
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── static
+│   ├── website
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── doc
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── tools.py
+│   │   ├── views
+│   │   └── wizard
+│   ├── website_blog
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_cf_turnstile
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── website_crm
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_crm_iap_reveal
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── tests
+│   │   └── views
+│   ├── website_crm_livechat
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── views
+│   ├── website_crm_partner_assign
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── website_crm_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── website_customer
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_event
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_event_booth
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── website_event_booth_exhibitor
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_event_booth_sale
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_event_booth_sale_exhibitor
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── static
+│   ├── website_event_crm
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── website_event_exhibitor
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_event_sale
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_event_track
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_event_track_live
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── website_event_track_live_quiz
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── views
+│   ├── website_event_track_quiz
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── website_forum
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_google_map
+│   │   ├── controllers
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── views
+│   ├── website_hr_recruitment
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── migrations
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_hr_recruitment_livechat
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   └── __manifest__.py
+│   ├── website_links
+│   │   ├── controller
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_livechat
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── demo
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_mail
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   └── views
+│   ├── website_mail_group
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_mass_mailing
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_mass_mailing_sms
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── views
+│   ├── website_partner
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── website_payment
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_profile
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_project
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_sale
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── README.md
+│   │   ├── report
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   └── views
+│   ├── website_sale_autocomplete
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_sale_collect
+│   │   ├── const.py
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── utils.py
+│   │   └── views
+│   ├── website_sale_collect_wishlist
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── views
+│   ├── website_sale_comparison
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_sale_comparison_wishlist
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── static
+│   │   └── views
+│   ├── website_sale_gelato
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   └── tests
+│   ├── website_sale_loyalty
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── website_sale_mass_mailing
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── tests
+│   │   └── views
+│   ├── website_sale_mondialrelay
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── website_sale_mrp
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── tests
+│   ├── website_sale_slides
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── report
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_sale_stock
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_sale_stock_wishlist
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── static
+│   │   └── views
+│   ├── website_sale_wishlist
+│   │   ├── controllers
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_slides
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   ├── views
+│   │   └── wizard
+│   ├── website_slides_forum
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   └── views
+│   ├── website_slides_survey
+│   │   ├── controllers
+│   │   ├── data
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   ├── website_sms
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   └── views
+│   ├── website_timesheet
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   └── models
+│   ├── web_tour
+│   │   ├── i18n
+│   │   ├── __init__.py
+│   │   ├── __manifest__.py
+│   │   ├── models
+│   │   ├── __pycache__
+│   │   ├── security
+│   │   ├── static
+│   │   ├── tests
+│   │   └── views
+│   └── web_unsplash
+│       ├── controllers
+│       ├── i18n
+│       ├── __init__.py
+│       ├── __manifest__.py
+│       ├── models
+│       ├── __pycache__
+│       ├── static
+│       ├── tests
+│       └── views
+├── config
+│   └── odoo.conf
+├── data
+│   ├── addons
+│   │   ├── account_asset_management
+│   │   ├── report_xlsx
+│   │   └── report_xlsx_helper
+│   ├── filestore
+│   │   └── database_dev
+│   └── sessions
+│       ├── 0J
+│       ├── 0O
+│       ├── 2Q
+│       ├── 35
+│       ├── 3o
+│       ├── 55
+│       ├── 5t
+│       ├── 7k
+│       ├── 9G
+│       ├── AM
+│       ├── bM
+│       ├── Cb
+│       ├── cu
+│       ├── DK
+│       ├── _e
+│       ├── f_
+│       ├── fj
+│       ├── Fr
+│       ├── Gf
+│       ├── hr
+│       ├── HR
+│       ├── jj
+│       ├── kf
+│       ├── lG
+│       ├── LY
+│       ├── nQ
+│       ├── O-
+│       ├── O1
+│       ├── ou
+│       ├── pZ
+│       ├── -q
+│       ├── Q-
+│       ├── q1
+│       ├── q8
+│       ├── R6
+│       ├── rG
+│       ├── SX
+│       ├── T7
+│       ├── vM
+│       ├── W1
+│       ├── xI
+│       ├── xN
+│       ├── YN
+│       ├── Z3
+│       ├── Zb
+│       ├── ZG
+│       ├── zj
+│       └── Zk
+├── detener_dev.sh
+├── docker-compose.dev.yml
+├── iniciar_dev_detached.sh
+├── iniciar_dev.sh
+├── logs.sh
+├── restart.sh
+└── tree_output.txt
+
+4368 directories, 1369 files
