@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <menuitem id="menu_mis_modulos_raiz"
-                  name="Mis Módulos"
-                  sequence="1"
-                  web_icon="stock,static/description/icon.png"/>
+    <record id="action_bateria_dashboard" model="ir.actions.client">
+        <field name="name">Gestión de Baterías</field>
+        <field name="tag">bateria_reportes.dashboard</field> 
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_bateria_dashboard_root"
+              name="Gestión de Baterías"
+              action="action_bateria_dashboard"
+              web_icon="stock,static/description/icon.png"
+              sequence="1"/>
+
 
         <record id="stock.menu_stock_root" model="ir.ui.menu">
-            <field name="parent_id" ref="menu_mis_modulos_raiz"/>
+            <field name="parent_id" ref="menu_bateria_dashboard_root"/>
             <field name="sequence">10</field>
         </record>
 
         <record id="purchase.menu_purchase_root" model="ir.ui.menu">
-            <field name="parent_id" ref="menu_mis_modulos_raiz"/>
+            <field name="parent_id" ref="menu_bateria_dashboard_root"/>
             <field name="sequence">20</field>
         </record>
 
         <record id="account.menu_finance" model="ir.ui.menu">
-            <field name="parent_id" ref="menu_mis_modulos_raiz"/>
+            <field name="parent_id" ref="menu_bateria_dashboard_root"/>
             <field name="sequence">30</field>
         </record>
 
         <record id="contacts.menu_contacts" model="ir.ui.menu">
-            <field name="parent_id" ref="menu_mis_modulos_raiz"/>
+            <field name="parent_id" ref="menu_bateria_dashboard_root"/>
             <field name="sequence">40</field>
         </record>
 
         <record id="mail.menu_root_discuss" model="ir.ui.menu">
-            <field name="parent_id" ref="menu_mis_modulos_raiz"/>
+            <field name="parent_id" ref="menu_bateria_dashboard_root"/>
             <field name="sequence">50</field>
         </record>
 
@@ -43,5 +50,6 @@
             <field name="active" eval="False"/>
         </record>
 
-    </data>
 </odoo>
+
+

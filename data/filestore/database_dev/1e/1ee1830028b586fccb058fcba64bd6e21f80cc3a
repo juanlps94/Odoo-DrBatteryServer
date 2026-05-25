@@ -228362,6 +228362,982 @@ return __exports;
 });
 ;
 
+/********************************************************
+*  Filepath: /bateria_reportes/static/src/dashboard.js  *
+*  Lines: 75                                            *
+********************************************************/
+odoo.define('@bateria_reportes/dashboard', ['@web/core/registry', '@odoo/owl', '@web/core/utils/hooks', '@web/core/user'], function (require) {
+'use strict';
+let __exports = {};
+/** @odoo-module **/
+const { registry } = require("@web/core/registry");
+const { Component, useState, onWillStart } = require("@odoo/owl");
+const { useService } = require("@web/core/utils/hooks");
+const { user } = require("@web/core/user");
+
+class BateriaDashboard extends Component {
+    setup() {
+        this.action = useService("action");
+        this.orm = useService("orm");
+        
+        // Estado reactivo de las variables
+        this.state = useState({
+            alertasTraslado: [],
+            isVentas: false,
+            isCompras: false,
+            isContabilidad: false,
+            isAdmin: false,
+        });
+
+        onWillStart(async () => {
+            this.state.isVentas = await user.hasGroup("bateria_reportes.group_bateria_venta");
+            this.state.isCompras = await user.hasGroup("bateria_reportes.group_bateria_compra");
+            this.state.isContabilidad = await user.hasGroup("bateria_reportes.group_bateria_contabilidad");
+            this.state.isAdmin = await user.hasGroup("bateria_reportes.group_bateria_admin");
+
+            // Solo el administrador busca las alertas en la base de datos
+            if (this.state.isAdmin) {
+                await this.buscarTrasladosPendientes();
+            }
+        });
+    }
+
+    async buscarTrasladosPendientes() {
+        const traslados = await this.orm.searchRead(
+            "bateria.traslado",
+            [["estado", "=", "borrador"]], 
+            ["id", "name", "fecha"]
+        );
+        this.state.alertasTraslado = traslados;
+    }
+
+    abrirTraslado(traslado_id) {
+        this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: "bateria.traslado",
+            res_id: traslado_id,
+            views: [[false, "form"]],
+            target: "current"
+        });
+    }
+
+    // --- ACCIONES DE NAVEGACIÓN ---
+    openVentas() { this.action.doAction("bateria_reportes.action_bateria_orden_venta", { clearBreadcrumbs: true }); }
+    openInventario() { this.action.doAction("bateria_reportes.action_bateria_inventario", { clearBreadcrumbs: true }); }
+    openCatalogo() { this.action.doAction("bateria_reportes.action_bateria_producto", { clearBreadcrumbs: true }); }
+    openReportes() { this.action.doAction("bateria_reportes.action_reportes_gerenciales", { clearBreadcrumbs: true }); }
+    openCompras() { this.action.doAction("bateria_reportes.action_bateria_compra", { clearBreadcrumbs: true }); }
+    openEmbarques() { this.action.doAction("bateria_reportes.action_bateria_embarque", { clearBreadcrumbs: true }); } // 👇 Nueva Acción
+    openServicios() { this.action.doAction("bateria_reportes.action_bateria_servicio", { clearBreadcrumbs: true }); }
+    openGastos() { this.action.doAction("bateria_reportes.action_bateria_gasto", { clearBreadcrumbs: true }); }
+    openActivos() { this.action.doAction("bateria_reportes.action_bateria_activo", { clearBreadcrumbs: true }); }
+    openFlota() { this.action.doAction("bateria_reportes.action_bateria_vehiculo", { clearBreadcrumbs: true }); }
+    openTaller() { this.action.doAction("bateria_reportes.action_bateria_taller_articulo", { clearBreadcrumbs: true }); }
+    openContabilidad() { this.action.doAction("bateria_reportes.action_bateria_auditor_bdt", { clearBreadcrumbs: true }); }
+    openReparaciones() { this.action.doAction("bateria_reportes.action_bateria_reparacion", { clearBreadcrumbs: true }); }
+}
+
+BateriaDashboard.template = "bateria_reportes.Dashboard";
+registry.category("actions").add("bateria_reportes.dashboard", BateriaDashboard);
+return __exports;
+});
+;
+
+/******************************************************************
+*  Filepath: /stock_account/static/src/fields/boolean_confirm.js  *
+*  Lines: 63                                                      *
+******************************************************************/
+odoo.define('@stock_account/fields/boolean_confirm', ['@web/core/l10n/translation', '@web/core/registry', '@web/core/utils/hooks', '@web/core/checkbox/checkbox', '@web/core/confirmation_dialog/confirmation_dialog', '@web/views/fields/boolean_toggle/boolean_toggle_field'], function (require) {
+'use strict';
+let __exports = {};
+const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "stock_account", ...args);
+const { registry } = require('@web/core/registry');
+const { useService } = require("@web/core/utils/hooks");
+
+const { CheckBox } = require("@web/core/checkbox/checkbox");
+const { ConfirmationDialog } = require("@web/core/confirmation_dialog/confirmation_dialog");
+const {
+    BooleanToggleField,
+    booleanToggleField,
+} = require("@web/views/fields/boolean_toggle/boolean_toggle_field");
+
+const ConfirmCheckBox = __exports.ConfirmCheckBox = class ConfirmCheckBox extends CheckBox {
+    onClick(ev) {
+        ev.preventDefault();
+
+        if (ev.target.tagName !== "INPUT") {
+            return;
+        }
+        this.props.onChange(ev.target.checked);
+    }
+}
+
+const BooleanToggleConfirm = __exports.BooleanToggleConfirm = class BooleanToggleConfirm extends BooleanToggleField {
+    static template = "stock_account.BooleanToggleConfirm";
+    static components = { ConfirmCheckBox };
+
+    setup() {
+        super.setup();
+        this.dialogService = useService('dialog');
+    }
+
+    onChange(value) {
+        const record = this.props.record.data;
+        const updateAndSave = () => {
+            this.props.record.update({ [this.props.name]: value }, { save: true });
+        };
+
+        if (record.lot_valuated && !value) {
+            this.dialogService.add(ConfirmationDialog, {
+                body: _t("This operation might lead in a loss of data. Valuation will be identical for all lots/SN. Do you want to proceed ? "),
+                confirm: updateAndSave,
+                cancel: () => {},
+            });
+
+        }
+        else {
+            updateAndSave();
+        }
+    }
+}
+
+const booleanToggleConfirm = __exports.booleanToggleConfirm = {
+    ...booleanToggleField,
+    component: BooleanToggleConfirm,
+};
+
+registry.category("fields").add("confirm_boolean", booleanToggleConfirm);
+
+return __exports;
+});
+;
+
+/**************************************************************************************
+*  Filepath: /stock_account/static/src/stock_account_forecasted/forecasted_header.js  *
+*  Lines: 40                                                                          *
+**************************************************************************************/
+odoo.define('@stock_account/stock_account_forecasted/forecasted_header', ['@web/core/l10n/translation', '@web/core/utils/patch', '@stock/stock_forecasted/forecasted_header'], function (require) {
+'use strict';
+let __exports = {};
+const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "stock_account", ...args);
+const { patch } = require("@web/core/utils/patch");
+
+const { ForecastedHeader: Parent } = require("@stock/stock_forecasted/forecasted_header");
+
+const StockAccountForecastedHeader = __exports.StockAccountForecastedHeader = class StockAccountForecastedHeader extends Parent {
+    static template = "stock_account.ForecastedHeader";
+}
+
+patch(Parent.prototype, {
+    async _onClickValuation() {
+        const context = this._getActionContext();
+        return this.action.doAction({
+            name: _t('Stock Valuation'),
+            res_model: 'stock.move',
+            type: 'ir.actions.act_window',
+            view_mode: 'list,form',
+            views: [[false, 'list'], [false, 'form']],
+            target: 'current',
+            context: context,
+        });
+    },
+
+    _getActionContext() {
+        const context = { ...this.context };
+        const templates = this.props.docs.product_templates_ids;
+        if (templates) {
+            context.search_default_product_tmpl_id = templates;
+        } else {
+            context.search_default_product_id = this.props.docs.product_variants_ids;
+        }
+        return context;
+    }
+});
+
+return __exports;
+});
+;
+
+/***********************************************************************************
+*  Filepath: /stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.js  *
+*  Lines: 24                                                                       *
+***********************************************************************************/
+odoo.define('@stock_account/stock_valuation/buttons_bar/buttons_bar', ['@odoo/owl'], function (require) {
+'use strict';
+let __exports = {};
+const { Component } = require("@odoo/owl");
+
+const StockValuationReportButtonsBar = __exports.StockValuationReportButtonsBar = class StockValuationReportButtonsBar extends Component {
+    static template = "stock_account.StockValuationReportButtonsBar";
+    static props = {};
+
+    onClickGenerateEntry() {
+        return this.env.controller.actionGenerateEntry();
+    }
+
+    onClickPDF() {
+        return this.env.controller.actionPrintReport("pdf");
+    }
+
+    onClickXLSX() {
+        return this.env.controller.actionPrintReport("xlsx");
+    }
+}
+
+return __exports;
+});
+;
+
+/**********************************************************************
+*  Filepath: /stock_account/static/src/stock_valuation/controller.js  *
+*  Lines: 99                                                          *
+**********************************************************************/
+odoo.define('@stock_account/stock_valuation/controller', ['@odoo/owl', '@web/core/utils/hooks', '@web/core/l10n/dates'], function (require) {
+'use strict';
+let __exports = {};
+const { reactive } = require("@odoo/owl");
+const { useService } = require("@web/core/utils/hooks");
+const { serializeDate } = require("@web/core/l10n/dates");
+const { DateTime } = luxon;
+
+
+const StockValuationReportController = __exports.StockValuationReportController = class StockValuationReportController {
+    constructor(action) {
+        this.action = action;
+        this.actionService = useService("action");
+        this.dialog = useService("dialog");
+        this.orm = useService("orm");
+        this.state = reactive({
+            date: DateTime.now(),
+        });
+    }
+
+    async load() {
+        await this.loadReportData();
+        this.currencyId = this.data.currency_id;
+        this.companyId = this.data.company_id;
+    }
+
+    async loadReportData() {
+        const kwargs = {
+            date: this.state.date.toISODate() || false,
+        };
+        const res = await this.orm.call(
+            "stock_account.stock.valuation.report",
+            "get_report_values",
+            [],
+            kwargs
+        );
+        this.data = res.data;
+        // Prepare the "Inventory Loss" lines.
+        if (this.data.inventory_loss) {
+            for (const line of this.data.inventory_loss.lines) {
+                line.account = this.data.accounts_by_id[line.account_id];
+            }
+        }
+        // Prepare "Stock Variation" lines.
+        for (const line of this.data.stock_variation.lines) {
+            line.account = this.data.accounts_by_id[line.account_id];
+        }
+        // Prepare the "Initial Balance" lines.
+        this.data.initial_balance.lines = [];
+        for (let [accountId, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
+            const account = this.data.accounts_by_id[accountId];
+            this.data.initial_balance.lines.push({
+                label: account.display_name,
+                value: data.value,
+                account_id: accountId,
+            });
+        }
+        // Prepare the "Ending Stock" lines.
+        this.data.ending_stock.lines = [];
+        for (let [accountId, data] of Object.entries(this.data.ending_stock.lines_by_account_id)) {
+            const account = this.data.accounts_by_id[accountId];
+            this.data.ending_stock.lines.push({
+                label: account?.display_name,
+                value: data.value,
+                account_id: accountId,
+            });
+        }
+    }
+
+    async setDate(date) {
+        this.state.date = date;
+        this.dateAsString = serializeDate(date);
+        await this.loadReportData();
+    }
+
+    // Actions -----------------------------------------------------------------
+    async actionGenerateEntry() {
+        const args = [[this.companyId]];
+        const date = serializeDate(this.state.date);
+        if (date != serializeDate(DateTime.now())) {
+            args.push(date);
+        }
+        const action = await this.orm.call("res.company", "action_close_stock_valuation", args);
+        if (action) {
+            this.actionService.doAction(action);
+        }
+    }
+
+    actionPrintReport(format="pdf") {
+        if (format === "pdf") {
+            return this.orm.call("stock_account.stock.valuation.report", "action_print_as_pdf");
+        } else if (format === "xlsx") {
+            return this.orm.call("stock_account.stock.valuation.report", "action_print_as_xlsx");
+        }
+    }
+}
+
+return __exports;
+});
+;
+
+/***************************************************************************
+*  Filepath: /stock_account/static/src/stock_valuation/filters/filters.js  *
+*  Lines: 48                                                               *
+***************************************************************************/
+odoo.define('@stock_account/stock_valuation/filters/filters', ['@odoo/owl', '@web/core/dropdown/dropdown', '@web/core/datetime/datetime_picker_hook'], function (require) {
+'use strict';
+let __exports = {};
+const { Component, useRef } = require("@odoo/owl");
+const { Dropdown } = require("@web/core/dropdown/dropdown");
+const { useDateTimePicker } = require("@web/core/datetime/datetime_picker_hook");
+
+const StockValuationReportFilters = __exports.StockValuationReportFilters = class StockValuationReportFilters extends Component {
+    static template = "stock_account.StockValuationReport.Filters";
+    static components = {
+        Dropdown,
+    };
+    static props = {};
+
+    setup() {
+        this.dateFilterRef = useRef("filterDate");
+        const getPickerProps = () => {
+            const pickerProps = {
+                value: this.env.controller.state.date,
+                type: "date",
+            };
+            return pickerProps;
+        };
+        this.dateTimePicker = useDateTimePicker({
+            target: "filterDate",
+            get pickerProps() {
+                return getPickerProps();
+            },
+            onApply: (newDate) => {
+                if (newDate) {
+                    this.env.controller.setDate(newDate);
+                    this.render();
+                }
+            },
+        });
+    }
+
+    onDateClick() {
+        this.dateTimePicker.open();
+    }
+
+    get date() {
+        return this.env.controller.state.date.toLocaleString();
+    }
+}
+
+return __exports;
+});
+;
+
+/*********************************************************************
+*  Filepath: /stock_account/static/src/stock_valuation/line/line.js  *
+*  Lines: 97                                                         *
+*********************************************************************/
+odoo.define('@stock_account/stock_valuation/line/line', ['@odoo/owl'], function (require) {
+'use strict';
+let __exports = {};
+const { Component, useState } = require("@odoo/owl");
+
+
+const StockValuationReportLine = __exports.StockValuationReportLine = class StockValuationReportLine extends Component {
+    static template = "stock_account.StockValuationReport.InventoryValuationLine";
+    static props = {
+        class: { type: String, optional: true },
+        displayDebitCredit: { type: Boolean, optional: true },
+        label: { type: String, optional: true },
+        level: { type: Number, optional: true },
+        line: { type: Object, optional: true },
+        sublines: { type: Array, optional: true },
+        onClickMethod: { type: Function, optional: true },
+        value: { type: Number, optional: true },
+    };
+    static defaultProps = {
+        level: 0,
+    };
+
+    setup() {
+        this.hasSublines = Boolean(this.props.sublines?.length);
+        this.state = useState({ displaySublines: this.hasSublines });
+    }
+
+    // Getters -----------------------------------------------------------------
+    get accounts() {
+        if (! this.hasSublines) { return []; }
+        return this.props.sublines.map(line => parseInt(line.account_id));
+    }
+
+    get credit() {
+        if (this.props.line?.credit) {
+            return this.env.formatMonetary(this.props.line.credit);
+        }
+        return false;
+    }
+
+    get cssClass() {
+        let cssClass = this.props.class || "";
+        cssClass += ` line_level_${this.props.level}`;
+        return cssClass;
+    }
+
+    get debit() {
+        if (this.props.line?.debit) {
+            return this.env.formatMonetary(this.props.line.debit);
+        }
+        return false;
+    }
+
+    get displayTotalOnSeparateLine() {
+        return Boolean(this.props.value && this.state.displaySublines);
+    }
+
+    get formattedValue() {
+        if (this.props.value !== undefined) {
+            return this.env.formatMonetary(this.props.value);
+        }
+        return false;
+    }
+
+    get label() {
+        return this.props.label || this.props.line.account?.display_name;
+    }
+
+    get totalProps() {
+        const props = {
+            class: "total",
+            label: this.env._t("Total"),
+            level: this.props.level,
+            value: this.props.value,
+        };
+        if (this.props.onClickMethod) {
+            props.onClickMethod = this.props.onClickMethod;
+        }
+        return props;
+    }
+
+    // On Click Methods --------------------------------------------------------
+    onClick() {
+        this.props.onClickMethod && this.props.onClickMethod(this.accounts);
+    }
+
+    onClickToggle() {
+        if (this.props.sublines && this.props.sublines.length) {
+            this.state.displaySublines = !this.state.displaySublines;
+        }
+    }
+}
+
+StockValuationReportLine.components = { StockValuationReportLine };
+
+return __exports;
+});
+;
+
+/****************************************************************************
+*  Filepath: /stock_account/static/src/stock_valuation/line/toggle_line.js  *
+*  Lines: 13                                                                *
+****************************************************************************/
+odoo.define('@stock_account/stock_valuation/line/toggle_line', ['@stock_account/stock_valuation/line/line'], function (require) {
+'use strict';
+let __exports = {};
+const { StockValuationReportLine } = require("@stock_account/stock_valuation/line/line");
+
+
+const StockValuationReportToggleLine = __exports.StockValuationReportToggleLine = class StockValuationReportToggleLine extends StockValuationReportLine {
+    static template = "stock_account.StockValuationReport.InventoryValuationToggleLine";
+}
+
+StockValuationReportToggleLine.components.StockValuationReportToggleLine = StockValuationReportToggleLine;
+return __exports;
+});
+;
+
+/**********************************************************************************
+*  Filepath: /stock_account/static/src/stock_valuation/stock_valuation_report.js  *
+*  Lines: 148                                                                     *
+**********************************************************************************/
+odoo.define('@stock_account/stock_valuation/stock_valuation_report', ['@web/core/l10n/translation', '@web/core/registry', '@web/core/utils/hooks', '@web/search/control_panel/control_panel', '@web/views/fields/formatters', '@web/webclient/actions/action_service', '@web/core/l10n/dates', '@odoo/owl', '@stock_account/stock_valuation/buttons_bar/buttons_bar', '@stock_account/stock_valuation/controller', '@stock_account/stock_valuation/filters/filters', '@stock_account/stock_valuation/line/line', '@stock_account/stock_valuation/line/toggle_line'], function (require) {
+'use strict';
+let __exports = {};
+const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "stock_account", ...args);
+const { registry } = require("@web/core/registry");
+const { useService } = require("@web/core/utils/hooks");
+const { ControlPanel } = require("@web/search/control_panel/control_panel");
+const { formatMonetary } = require("@web/views/fields/formatters");
+const { standardActionServiceProps } = require("@web/webclient/actions/action_service");
+const { serializeDate } = require("@web/core/l10n/dates");
+const { DateTime } = luxon;
+
+const { Component, onWillStart, useChildSubEnv, useState } = require("@odoo/owl");
+
+const { StockValuationReportButtonsBar } = require("@stock_account/stock_valuation/buttons_bar/buttons_bar")
+const { StockValuationReportController } = require("@stock_account/stock_valuation/controller")
+const { StockValuationReportFilters } = require("@stock_account/stock_valuation/filters/filters")
+const { StockValuationReportLine } = require("@stock_account/stock_valuation/line/line")
+const { StockValuationReportToggleLine } = require("@stock_account/stock_valuation/line/toggle_line")
+
+
+const StockValuationReport = __exports.StockValuationReport = class StockValuationReport extends Component {
+    static template = "stock_account.StockValuationReport";
+    static props = { ...standardActionServiceProps };
+    static components = {
+        ControlPanel,
+        StockValuationReportButtonsBar,
+        StockValuationReportFilters,
+        StockValuationReportLine,
+        StockValuationReportToggleLine,
+    };
+
+    setup() {
+        this.controller = useState(new StockValuationReportController(this.props.action));
+        this.state = useState({
+            displayInventoryValuationLine: false,
+        })
+        this.orm = useService("orm");
+        this.actionService = useService("action");
+        this._t = _t;
+
+        onWillStart(async () => {
+            await this.controller.load(this.data);
+        })
+
+        useChildSubEnv({
+            _t,
+            controller: this.controller,
+            formatMonetary: this.formatMonetary.bind(this),
+        });
+    }
+
+    formatMonetary(value) {
+        return formatMonetary(value, {
+            currencyId: this.data.currency_id,
+        });
+    }
+
+    get accrual() {
+        return { label: _t("Accrual"), lines: [], value: 0 };
+    }
+
+    // Getters -----------------------------------------------------------------
+    get data() {
+        return this.controller.data || {};
+    }
+
+    get accountingStockValuation() {
+        return this.formatMonetary(this.data.accounting_stock_valuation);
+    }
+
+    get inventoryValuation() {
+        return formatMonetary(this.data.inventory_valuation.value, {
+            currencyId: this.data.currency_id,
+        });
+    }
+
+    get stockInitial() {
+        return this.formatMonetary(this.data.stock_initial);
+    }
+
+    get stockVariation() {
+        return this.formatMonetary(this.data.stock_variation);
+    }
+
+    // On Click Methods --------------------------------------------------------
+    async openAccountMoves(accountIds=false) {
+        const action = await this.actionService.loadAction("account.action_account_moves_all");
+        const domain = [...(action.domain || [])];
+        if (accountIds) {
+            domain.push(['account_id', 'in', accountIds]);
+        }
+        if (serializeDate(this.controller.state.date) !== serializeDate(DateTime.now())) {
+            domain.push(['date', '<=', serializeDate(this.controller.state.date)]);
+        }
+        action.domain = domain;
+        action.context = {
+            ...action.context,
+            search_default_group_by_account: 1,
+            search_default_groupby_date: 'month',
+        };
+        return this.actionService.doAction(action);
+    }
+
+    openStockMoveView(title, usage) {
+        const domain = [
+            "|",
+            ["location_id.usage", "=", usage],
+            ["location_dest_id.usage", "=", usage],
+        ];
+        if (this.controller.dateAsString) {
+            domain.unshift("&");
+            domain.push(["date", "<=", this.controller.dateAsString]);
+        }
+        return this.actionService.doAction({
+            name: title,
+            type: "ir.actions.act_window",
+            res_model: "stock.move",
+            domain,
+            views: [[false, 'list'], [false, 'form']],
+            target: 'current',
+        });
+    }
+
+    openInventoryLoss() {
+        return this.openStockMoveView(_t("Inventory Loss"), "inventory");
+    }
+
+    openStockReport() {
+        const additionalContext = {};
+        if (this.controller.dateAsString) {
+            additionalContext.to_date = this.controller.dateAsString;
+        }
+        return this.actionService.doAction(
+            "stock.action_product_stock_view",
+            { additionalContext }
+        );
+    }
+
+    toggleInventoryValuationFold() {
+        this.state.displayInventoryValuationLine = !this.state.displayInventoryValuationLine;
+    }
+}
+
+registry.category("actions").add("stock_valuation_report", StockValuationReport);
+
+return __exports;
+});
+;
+
+/**********************************************************************
+*  Filepath: /sale_stock/static/src/product_catalog/kanban_record.js  *
+*  Lines: 35                                                          *
+**********************************************************************/
+odoo.define('@sale_stock/product_catalog/kanban_record', ['@product/product_catalog/kanban_record', '@sale_stock/product_catalog/sale_order_line/sale_order_line', '@web/core/utils/patch'], function (require) {
+'use strict';
+let __exports = {};
+const { ProductCatalogKanbanRecord } = require("@product/product_catalog/kanban_record");
+const { ProductCatalogSaleOrderLine } = require("@sale_stock/product_catalog/sale_order_line/sale_order_line");
+const { patch } = require("@web/core/utils/patch");
+
+patch(ProductCatalogKanbanRecord.prototype, {
+    updateQuantity(quantity) {
+        if (this.env.orderResModel !== "sale.order" || this.productCatalogData.productType == "service") {
+            super.updateQuantity(...arguments);
+        } else if (
+            this.productCatalogData.quantity === this.productCatalogData.deliveredQty &&
+            quantity < this.productCatalogData.quantity
+        ) {
+            // This condition is only triggered when the product was already at the minimum quantity
+            // possible, as stated in the sale_stock module, then the user inputs a quantity lower
+            // than this limit, in this case we need the record to forcefully update the record.
+            this.props.record.load();
+            this.props.record.model.notify();
+        } else {
+            super.updateQuantity(Math.max(quantity, this.productCatalogData.deliveredQty));
+        }
+    },
+
+    get orderLineComponent() {
+        if (this.env.orderResModel === "sale.order") {
+            return ProductCatalogSaleOrderLine;
+        }
+        return super.orderLineComponent;
+    },
+});
+
+return __exports;
+});
+;
+
+/****************************************************************************************
+*  Filepath: /sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js  *
+*  Lines: 26                                                                            *
+****************************************************************************************/
+odoo.define('@sale_stock/product_catalog/sale_order_line/sale_order_line', ['@web/core/l10n/translation', '@product/product_catalog/order_line/order_line'], function (require) {
+'use strict';
+let __exports = {};
+const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "sale_stock", ...args);
+const { ProductCatalogOrderLine } = require("@product/product_catalog/order_line/order_line");
+
+const ProductCatalogSaleOrderLine = __exports.ProductCatalogSaleOrderLine = class ProductCatalogSaleOrderLine extends ProductCatalogOrderLine {
+    static props = {
+        ...ProductCatalogOrderLine.props,
+        deliveredQty: Number,
+    }
+
+    get disableRemove() {
+        return this.props.quantity === this.props.deliveredQty;
+    }
+
+    get disabledButtonTooltip() {
+        if (this.disableRemove) {
+            return _t("The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory.");
+        }
+        return super.disabledButtonTooltip;
+    }
+}
+
+return __exports;
+});
+;
+
+/*******************************************************************************
+*  Filepath: /sale_stock/static/src/stock_valuation/stock_valuation_report.js  *
+*  Lines: 43                                                                   *
+*******************************************************************************/
+odoo.define('@sale_stock/stock_valuation/stock_valuation_report', ['@web/core/l10n/translation', '@web/core/utils/patch', '@stock_account/stock_valuation/stock_valuation_report'], function (require) {
+'use strict';
+let __exports = {};
+const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "sale_stock", ...args);
+const { patch } = require("@web/core/utils/patch");
+
+const { StockValuationReport } = require("@stock_account/stock_valuation/stock_valuation_report");
+
+
+patch(StockValuationReport.prototype, {
+    get accrual() {
+        const accrual = super.accrual;
+        const notInvoicedDeliveredGoods = this.data.not_invoiced_delivered_goods;
+        notInvoicedDeliveredGoods.display_name = _t("Goods Delivered Not Invoiced");
+        notInvoicedDeliveredGoods.method = this.openSaleOrder.bind(this);
+        notInvoicedDeliveredGoods.index = accrual.lines.length;
+        accrual.value += notInvoicedDeliveredGoods.value;
+        accrual.lines.push(notInvoicedDeliveredGoods);
+        this.saleOrderIds = notInvoicedDeliveredGoods.lines.map((line) => line.id);
+        return accrual;
+    },
+
+    // On Click Methods --------------------------------------------------------
+    openSaleOrder(line=false) {
+        const action = {
+            type: "ir.actions.act_window",
+            name: _t("Sale Orders"),
+            res_model: "sale.order",
+            views: [[false, "list"], [false, "form"]],
+            target: "current",
+        }
+        if (line?.id) {
+            action.views = [[false, "form"]],
+            action.res_id = line.id;
+        } else {
+            action.domain = [["id", "in", this.saleOrderIds]];
+        }
+        return this.actionService.doAction(action);
+    },
+});
+
+return __exports;
+});
+;
+
+/*******************************************************************
+*  Filepath: /sale_stock/static/src/widgets/qty_at_date_widget.js  *
+*  Lines: 142                                                      *
+*******************************************************************/
+odoo.define('@sale_stock/widgets/qty_at_date_widget', ['@web/core/l10n/dates', '@web/core/l10n/localization', '@web/core/registry', '@web/core/utils/hooks', '@web/core/popover/popover_hook', '@odoo/owl', '@web/views/widgets/standard_widget_props', '@web/core/utils/numbers', '@web/core/l10n/translation'], function (require) {
+'use strict';
+let __exports = {};
+const { formatDateTime } = require("@web/core/l10n/dates");
+const { localization } = require("@web/core/l10n/localization");
+const { registry } = require("@web/core/registry");
+const { useService } = require("@web/core/utils/hooks");
+const { usePopover } = require("@web/core/popover/popover_hook");
+const { Component, onWillRender } = require("@odoo/owl");
+const { standardWidgetProps } = require("@web/views/widgets/standard_widget_props");
+const { roundPrecision } = require("@web/core/utils/numbers");
+const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "sale_stock", ...args);
+
+const QtyAtDatePopover = __exports.QtyAtDatePopover = class QtyAtDatePopover extends Component {
+    static template = "sale_stock.QtyAtDatePopover";
+    static props = {
+        record: Object,
+        calcData: Object,
+        close: Function,
+    };
+    setup() {
+        this.actionService = useService("action");
+    }
+
+    openForecast() {
+        this.actionService.doAction("stock.stock_forecasted_product_product_action", {
+            additionalContext: {
+                active_model: 'product.product',
+                active_id: this.props.record.data.product_id.id,
+                warehouse_id: this.props.record.data.warehouse_id && this.props.record.data.warehouse_id.id,
+                move_to_match_ids: this.props.record.data.move_ids.currentIds,
+                sale_line_to_match_id: this.props.record.resId,
+            },
+        });
+    }
+
+    get forecastedLabel() {
+        return _t('Forecasted Stock')
+    }
+
+    get availableLabel() {
+        return _t('Available')
+    }
+}
+
+const QtyAtDateWidget = __exports.QtyAtDateWidget = class QtyAtDateWidget extends Component {
+    static components = { Popover: QtyAtDatePopover };
+    static template = "sale_stock.QtyAtDate";
+    static props = {...standardWidgetProps};
+    setup() {
+        this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
+        this.orm = useService("orm");
+        this.calcData = {};
+        onWillRender(() => {
+            this.initCalcData();
+        });
+    }
+
+    initCalcData() {
+        // calculate data not in record
+        const { data } = this.props.record;
+        if (data.scheduled_date) {
+            // TODO: might need some round_decimals to avoid errors
+            if (data.state === 'sale') {
+                this.calcData.will_be_fulfilled = data.free_qty_today >= data.qty_to_deliver;
+            } else {
+                this.calcData.will_be_fulfilled = data.virtual_available_at_date >= data.qty_to_deliver;
+            }
+            this.calcData.will_be_late = data.forecast_expected_date && data.forecast_expected_date > data.scheduled_date;
+            if (['draft', 'sent'].includes(data.state)) {
+                // Moves aren't created yet, then the forecasted is only based on virtual_available of quant
+                this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled && !data.is_mto;
+            } else {
+                // Moves are created, using the forecasted data of related moves
+                this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled || this.calcData.will_be_late;
+            }
+        }
+    }
+
+    async calcDataForDisplay() {
+        const { data } = this.props.record;
+        let lineUom;
+        if (data.product_uom_id?.[0]) {
+            lineUom = (await this.orm.read("uom.uom", [data.product_uom_id[0]], ["factor", "rounding"]))[0];
+        }
+        let lineProduct;
+        if (data.product_id?.[0]) {
+            lineProduct = await this.orm.searchRead("product.product", [["id", "=", data.product_id[0]]], ["uom_id"]);
+        }
+        let productUom;
+        if (lineProduct?.[0]?.uom_id?.[0]) {
+            productUom = (await this.orm.searchRead("uom.uom", [["id", "=", lineProduct[0].uom_id[0]]], ["factor", "name"]))[0];
+        }
+        if (lineUom && productUom) {
+            this.calcData.product_uom_virtual_available_at_date = roundPrecision(data.virtual_available_at_date * lineUom.factor / productUom.factor, 1);
+            this.calcData.product_uom_free_qty_today = roundPrecision(data.free_qty_today * lineUom.factor / productUom.factor, 1);
+            this.calcData.product_uom_name = productUom.name;
+        }
+    }
+
+    updateCalcData() {
+        // popup specific data
+        const { data } = this.props.record;
+        if (!data.scheduled_date) {
+            return;
+        }
+        this.calcData.delivery_date = formatDateTime(data.scheduled_date, { format: localization.dateFormat });
+        if (data.forecast_expected_date) {
+            this.calcData.forecast_expected_date_str = formatDateTime(data.forecast_expected_date, { format: localization.dateFormat });
+        }
+    }
+
+    async showPopup(ev) {
+        const target = ev.currentTarget;
+        await this.calcDataForDisplay();
+        this.updateCalcData();
+        this.popover.open(target, {
+            record: this.props.record,
+            calcData: this.calcData,
+        });
+    }
+}
+
+const qtyAtDateWidget = __exports.qtyAtDateWidget = {
+    component: QtyAtDateWidget,
+    fieldDependencies: [
+        { name: 'display_qty_widget', type: 'boolean'},
+        { name: 'free_qty_today', type: 'float'},
+        { name: 'forecast_expected_date', type: 'datetime'},
+        { name: 'is_mto', type: 'boolean'},
+        { name: 'move_ids', type: 'one2many'},
+        { name: 'qty_available_today', type: 'float'},
+        { name: 'qty_to_deliver', type: 'float'},
+        { name: 'scheduled_date', type: 'datetime'},
+        { name: 'virtual_available_at_date', type: 'float'},
+        { name: 'warehouse_id', type: 'many2one'},
+    ],
+};
+registry.category("view_widgets").add("qty_at_date_widget", qtyAtDateWidget);
+
+return __exports;
+});
+;
+
+/*********************************************************************************
+*  Filepath: /repair/static/src/components/product_catalog/kanban_controller.js  *
+*  Lines: 19                                                                     *
+*********************************************************************************/
+odoo.define('@repair/components/product_catalog/kanban_controller', ['@product/product_catalog/kanban_controller', '@web/core/utils/patch', '@web/core/l10n/translation'], function (require) {
+'use strict';
+let __exports = {};
+const { ProductCatalogKanbanController } = require("@product/product_catalog/kanban_controller");
+const { patch } = require("@web/core/utils/patch");
+const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "repair", ...args);
+
+patch(ProductCatalogKanbanController.prototype, {
+    _defineButtonContent() {
+        if (this.orderResModel === "repair.order") {
+            this.buttonString = _t("Back to Repair");
+        } else {
+            super._defineButtonContent();
+        }
+    },
+});
+
+return __exports;
+});
+;
+
+/**************************************************************************
+*  Filepath: /repair/static/src/components/product_catalog/order_line.js  *
+*  Lines: 14                                                              *
+**************************************************************************/
+odoo.define('@repair/components/product_catalog/order_line', ['@product/product_catalog/order_line/order_line', '@web/core/utils/patch'], function (require) {
+'use strict';
+let __exports = {};
+const { ProductCatalogOrderLine } = require("@product/product_catalog/order_line/order_line");
+const { patch } = require("@web/core/utils/patch");
+
+patch(ProductCatalogOrderLine.prototype, {
+    get showPrice() {
+        return super.showPrice && this.env.orderResModel !== "repair.order";
+    }
+});
+
+return __exports;
+});
+;
+
 /******************************************************************************
 *  Filepath: /hr_skills/static/src/fields/skills_one2many/skills_one2many.js  *
 *  Lines: 127                                                                 *
@@ -229014,586 +229990,6 @@ const internalResumeLinesComponent = __exports.internalResumeLinesComponent = {
 };
 
 registry.category("view_widgets").add("internal_resume_lines", internalResumeLinesComponent);
-
-return __exports;
-});
-;
-
-/******************************************************************
-*  Filepath: /stock_account/static/src/fields/boolean_confirm.js  *
-*  Lines: 63                                                      *
-******************************************************************/
-odoo.define('@stock_account/fields/boolean_confirm', ['@web/core/l10n/translation', '@web/core/registry', '@web/core/utils/hooks', '@web/core/checkbox/checkbox', '@web/core/confirmation_dialog/confirmation_dialog', '@web/views/fields/boolean_toggle/boolean_toggle_field'], function (require) {
-'use strict';
-let __exports = {};
-const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "stock_account", ...args);
-const { registry } = require('@web/core/registry');
-const { useService } = require("@web/core/utils/hooks");
-
-const { CheckBox } = require("@web/core/checkbox/checkbox");
-const { ConfirmationDialog } = require("@web/core/confirmation_dialog/confirmation_dialog");
-const {
-    BooleanToggleField,
-    booleanToggleField,
-} = require("@web/views/fields/boolean_toggle/boolean_toggle_field");
-
-const ConfirmCheckBox = __exports.ConfirmCheckBox = class ConfirmCheckBox extends CheckBox {
-    onClick(ev) {
-        ev.preventDefault();
-
-        if (ev.target.tagName !== "INPUT") {
-            return;
-        }
-        this.props.onChange(ev.target.checked);
-    }
-}
-
-const BooleanToggleConfirm = __exports.BooleanToggleConfirm = class BooleanToggleConfirm extends BooleanToggleField {
-    static template = "stock_account.BooleanToggleConfirm";
-    static components = { ConfirmCheckBox };
-
-    setup() {
-        super.setup();
-        this.dialogService = useService('dialog');
-    }
-
-    onChange(value) {
-        const record = this.props.record.data;
-        const updateAndSave = () => {
-            this.props.record.update({ [this.props.name]: value }, { save: true });
-        };
-
-        if (record.lot_valuated && !value) {
-            this.dialogService.add(ConfirmationDialog, {
-                body: _t("This operation might lead in a loss of data. Valuation will be identical for all lots/SN. Do you want to proceed ? "),
-                confirm: updateAndSave,
-                cancel: () => {},
-            });
-
-        }
-        else {
-            updateAndSave();
-        }
-    }
-}
-
-const booleanToggleConfirm = __exports.booleanToggleConfirm = {
-    ...booleanToggleField,
-    component: BooleanToggleConfirm,
-};
-
-registry.category("fields").add("confirm_boolean", booleanToggleConfirm);
-
-return __exports;
-});
-;
-
-/**************************************************************************************
-*  Filepath: /stock_account/static/src/stock_account_forecasted/forecasted_header.js  *
-*  Lines: 40                                                                          *
-**************************************************************************************/
-odoo.define('@stock_account/stock_account_forecasted/forecasted_header', ['@web/core/l10n/translation', '@web/core/utils/patch', '@stock/stock_forecasted/forecasted_header'], function (require) {
-'use strict';
-let __exports = {};
-const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "stock_account", ...args);
-const { patch } = require("@web/core/utils/patch");
-
-const { ForecastedHeader: Parent } = require("@stock/stock_forecasted/forecasted_header");
-
-const StockAccountForecastedHeader = __exports.StockAccountForecastedHeader = class StockAccountForecastedHeader extends Parent {
-    static template = "stock_account.ForecastedHeader";
-}
-
-patch(Parent.prototype, {
-    async _onClickValuation() {
-        const context = this._getActionContext();
-        return this.action.doAction({
-            name: _t('Stock Valuation'),
-            res_model: 'stock.move',
-            type: 'ir.actions.act_window',
-            view_mode: 'list,form',
-            views: [[false, 'list'], [false, 'form']],
-            target: 'current',
-            context: context,
-        });
-    },
-
-    _getActionContext() {
-        const context = { ...this.context };
-        const templates = this.props.docs.product_templates_ids;
-        if (templates) {
-            context.search_default_product_tmpl_id = templates;
-        } else {
-            context.search_default_product_id = this.props.docs.product_variants_ids;
-        }
-        return context;
-    }
-});
-
-return __exports;
-});
-;
-
-/***********************************************************************************
-*  Filepath: /stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.js  *
-*  Lines: 24                                                                       *
-***********************************************************************************/
-odoo.define('@stock_account/stock_valuation/buttons_bar/buttons_bar', ['@odoo/owl'], function (require) {
-'use strict';
-let __exports = {};
-const { Component } = require("@odoo/owl");
-
-const StockValuationReportButtonsBar = __exports.StockValuationReportButtonsBar = class StockValuationReportButtonsBar extends Component {
-    static template = "stock_account.StockValuationReportButtonsBar";
-    static props = {};
-
-    onClickGenerateEntry() {
-        return this.env.controller.actionGenerateEntry();
-    }
-
-    onClickPDF() {
-        return this.env.controller.actionPrintReport("pdf");
-    }
-
-    onClickXLSX() {
-        return this.env.controller.actionPrintReport("xlsx");
-    }
-}
-
-return __exports;
-});
-;
-
-/**********************************************************************
-*  Filepath: /stock_account/static/src/stock_valuation/controller.js  *
-*  Lines: 99                                                          *
-**********************************************************************/
-odoo.define('@stock_account/stock_valuation/controller', ['@odoo/owl', '@web/core/utils/hooks', '@web/core/l10n/dates'], function (require) {
-'use strict';
-let __exports = {};
-const { reactive } = require("@odoo/owl");
-const { useService } = require("@web/core/utils/hooks");
-const { serializeDate } = require("@web/core/l10n/dates");
-const { DateTime } = luxon;
-
-
-const StockValuationReportController = __exports.StockValuationReportController = class StockValuationReportController {
-    constructor(action) {
-        this.action = action;
-        this.actionService = useService("action");
-        this.dialog = useService("dialog");
-        this.orm = useService("orm");
-        this.state = reactive({
-            date: DateTime.now(),
-        });
-    }
-
-    async load() {
-        await this.loadReportData();
-        this.currencyId = this.data.currency_id;
-        this.companyId = this.data.company_id;
-    }
-
-    async loadReportData() {
-        const kwargs = {
-            date: this.state.date.toISODate() || false,
-        };
-        const res = await this.orm.call(
-            "stock_account.stock.valuation.report",
-            "get_report_values",
-            [],
-            kwargs
-        );
-        this.data = res.data;
-        // Prepare the "Inventory Loss" lines.
-        if (this.data.inventory_loss) {
-            for (const line of this.data.inventory_loss.lines) {
-                line.account = this.data.accounts_by_id[line.account_id];
-            }
-        }
-        // Prepare "Stock Variation" lines.
-        for (const line of this.data.stock_variation.lines) {
-            line.account = this.data.accounts_by_id[line.account_id];
-        }
-        // Prepare the "Initial Balance" lines.
-        this.data.initial_balance.lines = [];
-        for (let [accountId, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
-            const account = this.data.accounts_by_id[accountId];
-            this.data.initial_balance.lines.push({
-                label: account.display_name,
-                value: data.value,
-                account_id: accountId,
-            });
-        }
-        // Prepare the "Ending Stock" lines.
-        this.data.ending_stock.lines = [];
-        for (let [accountId, data] of Object.entries(this.data.ending_stock.lines_by_account_id)) {
-            const account = this.data.accounts_by_id[accountId];
-            this.data.ending_stock.lines.push({
-                label: account?.display_name,
-                value: data.value,
-                account_id: accountId,
-            });
-        }
-    }
-
-    async setDate(date) {
-        this.state.date = date;
-        this.dateAsString = serializeDate(date);
-        await this.loadReportData();
-    }
-
-    // Actions -----------------------------------------------------------------
-    async actionGenerateEntry() {
-        const args = [[this.companyId]];
-        const date = serializeDate(this.state.date);
-        if (date != serializeDate(DateTime.now())) {
-            args.push(date);
-        }
-        const action = await this.orm.call("res.company", "action_close_stock_valuation", args);
-        if (action) {
-            this.actionService.doAction(action);
-        }
-    }
-
-    actionPrintReport(format="pdf") {
-        if (format === "pdf") {
-            return this.orm.call("stock_account.stock.valuation.report", "action_print_as_pdf");
-        } else if (format === "xlsx") {
-            return this.orm.call("stock_account.stock.valuation.report", "action_print_as_xlsx");
-        }
-    }
-}
-
-return __exports;
-});
-;
-
-/***************************************************************************
-*  Filepath: /stock_account/static/src/stock_valuation/filters/filters.js  *
-*  Lines: 48                                                               *
-***************************************************************************/
-odoo.define('@stock_account/stock_valuation/filters/filters', ['@odoo/owl', '@web/core/dropdown/dropdown', '@web/core/datetime/datetime_picker_hook'], function (require) {
-'use strict';
-let __exports = {};
-const { Component, useRef } = require("@odoo/owl");
-const { Dropdown } = require("@web/core/dropdown/dropdown");
-const { useDateTimePicker } = require("@web/core/datetime/datetime_picker_hook");
-
-const StockValuationReportFilters = __exports.StockValuationReportFilters = class StockValuationReportFilters extends Component {
-    static template = "stock_account.StockValuationReport.Filters";
-    static components = {
-        Dropdown,
-    };
-    static props = {};
-
-    setup() {
-        this.dateFilterRef = useRef("filterDate");
-        const getPickerProps = () => {
-            const pickerProps = {
-                value: this.env.controller.state.date,
-                type: "date",
-            };
-            return pickerProps;
-        };
-        this.dateTimePicker = useDateTimePicker({
-            target: "filterDate",
-            get pickerProps() {
-                return getPickerProps();
-            },
-            onApply: (newDate) => {
-                if (newDate) {
-                    this.env.controller.setDate(newDate);
-                    this.render();
-                }
-            },
-        });
-    }
-
-    onDateClick() {
-        this.dateTimePicker.open();
-    }
-
-    get date() {
-        return this.env.controller.state.date.toLocaleString();
-    }
-}
-
-return __exports;
-});
-;
-
-/*********************************************************************
-*  Filepath: /stock_account/static/src/stock_valuation/line/line.js  *
-*  Lines: 97                                                         *
-*********************************************************************/
-odoo.define('@stock_account/stock_valuation/line/line', ['@odoo/owl'], function (require) {
-'use strict';
-let __exports = {};
-const { Component, useState } = require("@odoo/owl");
-
-
-const StockValuationReportLine = __exports.StockValuationReportLine = class StockValuationReportLine extends Component {
-    static template = "stock_account.StockValuationReport.InventoryValuationLine";
-    static props = {
-        class: { type: String, optional: true },
-        displayDebitCredit: { type: Boolean, optional: true },
-        label: { type: String, optional: true },
-        level: { type: Number, optional: true },
-        line: { type: Object, optional: true },
-        sublines: { type: Array, optional: true },
-        onClickMethod: { type: Function, optional: true },
-        value: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        level: 0,
-    };
-
-    setup() {
-        this.hasSublines = Boolean(this.props.sublines?.length);
-        this.state = useState({ displaySublines: this.hasSublines });
-    }
-
-    // Getters -----------------------------------------------------------------
-    get accounts() {
-        if (! this.hasSublines) { return []; }
-        return this.props.sublines.map(line => parseInt(line.account_id));
-    }
-
-    get credit() {
-        if (this.props.line?.credit) {
-            return this.env.formatMonetary(this.props.line.credit);
-        }
-        return false;
-    }
-
-    get cssClass() {
-        let cssClass = this.props.class || "";
-        cssClass += ` line_level_${this.props.level}`;
-        return cssClass;
-    }
-
-    get debit() {
-        if (this.props.line?.debit) {
-            return this.env.formatMonetary(this.props.line.debit);
-        }
-        return false;
-    }
-
-    get displayTotalOnSeparateLine() {
-        return Boolean(this.props.value && this.state.displaySublines);
-    }
-
-    get formattedValue() {
-        if (this.props.value !== undefined) {
-            return this.env.formatMonetary(this.props.value);
-        }
-        return false;
-    }
-
-    get label() {
-        return this.props.label || this.props.line.account?.display_name;
-    }
-
-    get totalProps() {
-        const props = {
-            class: "total",
-            label: this.env._t("Total"),
-            level: this.props.level,
-            value: this.props.value,
-        };
-        if (this.props.onClickMethod) {
-            props.onClickMethod = this.props.onClickMethod;
-        }
-        return props;
-    }
-
-    // On Click Methods --------------------------------------------------------
-    onClick() {
-        this.props.onClickMethod && this.props.onClickMethod(this.accounts);
-    }
-
-    onClickToggle() {
-        if (this.props.sublines && this.props.sublines.length) {
-            this.state.displaySublines = !this.state.displaySublines;
-        }
-    }
-}
-
-StockValuationReportLine.components = { StockValuationReportLine };
-
-return __exports;
-});
-;
-
-/****************************************************************************
-*  Filepath: /stock_account/static/src/stock_valuation/line/toggle_line.js  *
-*  Lines: 13                                                                *
-****************************************************************************/
-odoo.define('@stock_account/stock_valuation/line/toggle_line', ['@stock_account/stock_valuation/line/line'], function (require) {
-'use strict';
-let __exports = {};
-const { StockValuationReportLine } = require("@stock_account/stock_valuation/line/line");
-
-
-const StockValuationReportToggleLine = __exports.StockValuationReportToggleLine = class StockValuationReportToggleLine extends StockValuationReportLine {
-    static template = "stock_account.StockValuationReport.InventoryValuationToggleLine";
-}
-
-StockValuationReportToggleLine.components.StockValuationReportToggleLine = StockValuationReportToggleLine;
-return __exports;
-});
-;
-
-/**********************************************************************************
-*  Filepath: /stock_account/static/src/stock_valuation/stock_valuation_report.js  *
-*  Lines: 148                                                                     *
-**********************************************************************************/
-odoo.define('@stock_account/stock_valuation/stock_valuation_report', ['@web/core/l10n/translation', '@web/core/registry', '@web/core/utils/hooks', '@web/search/control_panel/control_panel', '@web/views/fields/formatters', '@web/webclient/actions/action_service', '@web/core/l10n/dates', '@odoo/owl', '@stock_account/stock_valuation/buttons_bar/buttons_bar', '@stock_account/stock_valuation/controller', '@stock_account/stock_valuation/filters/filters', '@stock_account/stock_valuation/line/line', '@stock_account/stock_valuation/line/toggle_line'], function (require) {
-'use strict';
-let __exports = {};
-const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "stock_account", ...args);
-const { registry } = require("@web/core/registry");
-const { useService } = require("@web/core/utils/hooks");
-const { ControlPanel } = require("@web/search/control_panel/control_panel");
-const { formatMonetary } = require("@web/views/fields/formatters");
-const { standardActionServiceProps } = require("@web/webclient/actions/action_service");
-const { serializeDate } = require("@web/core/l10n/dates");
-const { DateTime } = luxon;
-
-const { Component, onWillStart, useChildSubEnv, useState } = require("@odoo/owl");
-
-const { StockValuationReportButtonsBar } = require("@stock_account/stock_valuation/buttons_bar/buttons_bar")
-const { StockValuationReportController } = require("@stock_account/stock_valuation/controller")
-const { StockValuationReportFilters } = require("@stock_account/stock_valuation/filters/filters")
-const { StockValuationReportLine } = require("@stock_account/stock_valuation/line/line")
-const { StockValuationReportToggleLine } = require("@stock_account/stock_valuation/line/toggle_line")
-
-
-const StockValuationReport = __exports.StockValuationReport = class StockValuationReport extends Component {
-    static template = "stock_account.StockValuationReport";
-    static props = { ...standardActionServiceProps };
-    static components = {
-        ControlPanel,
-        StockValuationReportButtonsBar,
-        StockValuationReportFilters,
-        StockValuationReportLine,
-        StockValuationReportToggleLine,
-    };
-
-    setup() {
-        this.controller = useState(new StockValuationReportController(this.props.action));
-        this.state = useState({
-            displayInventoryValuationLine: false,
-        })
-        this.orm = useService("orm");
-        this.actionService = useService("action");
-        this._t = _t;
-
-        onWillStart(async () => {
-            await this.controller.load(this.data);
-        })
-
-        useChildSubEnv({
-            _t,
-            controller: this.controller,
-            formatMonetary: this.formatMonetary.bind(this),
-        });
-    }
-
-    formatMonetary(value) {
-        return formatMonetary(value, {
-            currencyId: this.data.currency_id,
-        });
-    }
-
-    get accrual() {
-        return { label: _t("Accrual"), lines: [], value: 0 };
-    }
-
-    // Getters -----------------------------------------------------------------
-    get data() {
-        return this.controller.data || {};
-    }
-
-    get accountingStockValuation() {
-        return this.formatMonetary(this.data.accounting_stock_valuation);
-    }
-
-    get inventoryValuation() {
-        return formatMonetary(this.data.inventory_valuation.value, {
-            currencyId: this.data.currency_id,
-        });
-    }
-
-    get stockInitial() {
-        return this.formatMonetary(this.data.stock_initial);
-    }
-
-    get stockVariation() {
-        return this.formatMonetary(this.data.stock_variation);
-    }
-
-    // On Click Methods --------------------------------------------------------
-    async openAccountMoves(accountIds=false) {
-        const action = await this.actionService.loadAction("account.action_account_moves_all");
-        const domain = [...(action.domain || [])];
-        if (accountIds) {
-            domain.push(['account_id', 'in', accountIds]);
-        }
-        if (serializeDate(this.controller.state.date) !== serializeDate(DateTime.now())) {
-            domain.push(['date', '<=', serializeDate(this.controller.state.date)]);
-        }
-        action.domain = domain;
-        action.context = {
-            ...action.context,
-            search_default_group_by_account: 1,
-            search_default_groupby_date: 'month',
-        };
-        return this.actionService.doAction(action);
-    }
-
-    openStockMoveView(title, usage) {
-        const domain = [
-            "|",
-            ["location_id.usage", "=", usage],
-            ["location_dest_id.usage", "=", usage],
-        ];
-        if (this.controller.dateAsString) {
-            domain.unshift("&");
-            domain.push(["date", "<=", this.controller.dateAsString]);
-        }
-        return this.actionService.doAction({
-            name: title,
-            type: "ir.actions.act_window",
-            res_model: "stock.move",
-            domain,
-            views: [[false, 'list'], [false, 'form']],
-            target: 'current',
-        });
-    }
-
-    openInventoryLoss() {
-        return this.openStockMoveView(_t("Inventory Loss"), "inventory");
-    }
-
-    openStockReport() {
-        const additionalContext = {};
-        if (this.controller.dateAsString) {
-            additionalContext.to_date = this.controller.dateAsString;
-        }
-        return this.actionService.doAction(
-            "stock.action_product_stock_view",
-            { additionalContext }
-        );
-    }
-
-    toggleInventoryValuationFold() {
-        this.state.displayInventoryValuationLine = !this.state.displayInventoryValuationLine;
-    }
-}
-
-registry.category("actions").add("stock_valuation_report", StockValuationReport);
 
 return __exports;
 });
@@ -233852,276 +234248,6 @@ const quotationDocumentX2ManyField = __exports.quotationDocumentX2ManyField = {
 };
 
 registry.category('fields').add('quotation_document_many2many', quotationDocumentX2ManyField);
-
-return __exports;
-});
-;
-
-/**********************************************************************
-*  Filepath: /sale_stock/static/src/product_catalog/kanban_record.js  *
-*  Lines: 35                                                          *
-**********************************************************************/
-odoo.define('@sale_stock/product_catalog/kanban_record', ['@product/product_catalog/kanban_record', '@sale_stock/product_catalog/sale_order_line/sale_order_line', '@web/core/utils/patch'], function (require) {
-'use strict';
-let __exports = {};
-const { ProductCatalogKanbanRecord } = require("@product/product_catalog/kanban_record");
-const { ProductCatalogSaleOrderLine } = require("@sale_stock/product_catalog/sale_order_line/sale_order_line");
-const { patch } = require("@web/core/utils/patch");
-
-patch(ProductCatalogKanbanRecord.prototype, {
-    updateQuantity(quantity) {
-        if (this.env.orderResModel !== "sale.order" || this.productCatalogData.productType == "service") {
-            super.updateQuantity(...arguments);
-        } else if (
-            this.productCatalogData.quantity === this.productCatalogData.deliveredQty &&
-            quantity < this.productCatalogData.quantity
-        ) {
-            // This condition is only triggered when the product was already at the minimum quantity
-            // possible, as stated in the sale_stock module, then the user inputs a quantity lower
-            // than this limit, in this case we need the record to forcefully update the record.
-            this.props.record.load();
-            this.props.record.model.notify();
-        } else {
-            super.updateQuantity(Math.max(quantity, this.productCatalogData.deliveredQty));
-        }
-    },
-
-    get orderLineComponent() {
-        if (this.env.orderResModel === "sale.order") {
-            return ProductCatalogSaleOrderLine;
-        }
-        return super.orderLineComponent;
-    },
-});
-
-return __exports;
-});
-;
-
-/****************************************************************************************
-*  Filepath: /sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js  *
-*  Lines: 26                                                                            *
-****************************************************************************************/
-odoo.define('@sale_stock/product_catalog/sale_order_line/sale_order_line', ['@web/core/l10n/translation', '@product/product_catalog/order_line/order_line'], function (require) {
-'use strict';
-let __exports = {};
-const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "sale_stock", ...args);
-const { ProductCatalogOrderLine } = require("@product/product_catalog/order_line/order_line");
-
-const ProductCatalogSaleOrderLine = __exports.ProductCatalogSaleOrderLine = class ProductCatalogSaleOrderLine extends ProductCatalogOrderLine {
-    static props = {
-        ...ProductCatalogOrderLine.props,
-        deliveredQty: Number,
-    }
-
-    get disableRemove() {
-        return this.props.quantity === this.props.deliveredQty;
-    }
-
-    get disabledButtonTooltip() {
-        if (this.disableRemove) {
-            return _t("The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory.");
-        }
-        return super.disabledButtonTooltip;
-    }
-}
-
-return __exports;
-});
-;
-
-/*******************************************************************************
-*  Filepath: /sale_stock/static/src/stock_valuation/stock_valuation_report.js  *
-*  Lines: 43                                                                   *
-*******************************************************************************/
-odoo.define('@sale_stock/stock_valuation/stock_valuation_report', ['@web/core/l10n/translation', '@web/core/utils/patch', '@stock_account/stock_valuation/stock_valuation_report'], function (require) {
-'use strict';
-let __exports = {};
-const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "sale_stock", ...args);
-const { patch } = require("@web/core/utils/patch");
-
-const { StockValuationReport } = require("@stock_account/stock_valuation/stock_valuation_report");
-
-
-patch(StockValuationReport.prototype, {
-    get accrual() {
-        const accrual = super.accrual;
-        const notInvoicedDeliveredGoods = this.data.not_invoiced_delivered_goods;
-        notInvoicedDeliveredGoods.display_name = _t("Goods Delivered Not Invoiced");
-        notInvoicedDeliveredGoods.method = this.openSaleOrder.bind(this);
-        notInvoicedDeliveredGoods.index = accrual.lines.length;
-        accrual.value += notInvoicedDeliveredGoods.value;
-        accrual.lines.push(notInvoicedDeliveredGoods);
-        this.saleOrderIds = notInvoicedDeliveredGoods.lines.map((line) => line.id);
-        return accrual;
-    },
-
-    // On Click Methods --------------------------------------------------------
-    openSaleOrder(line=false) {
-        const action = {
-            type: "ir.actions.act_window",
-            name: _t("Sale Orders"),
-            res_model: "sale.order",
-            views: [[false, "list"], [false, "form"]],
-            target: "current",
-        }
-        if (line?.id) {
-            action.views = [[false, "form"]],
-            action.res_id = line.id;
-        } else {
-            action.domain = [["id", "in", this.saleOrderIds]];
-        }
-        return this.actionService.doAction(action);
-    },
-});
-
-return __exports;
-});
-;
-
-/*******************************************************************
-*  Filepath: /sale_stock/static/src/widgets/qty_at_date_widget.js  *
-*  Lines: 142                                                      *
-*******************************************************************/
-odoo.define('@sale_stock/widgets/qty_at_date_widget', ['@web/core/l10n/dates', '@web/core/l10n/localization', '@web/core/registry', '@web/core/utils/hooks', '@web/core/popover/popover_hook', '@odoo/owl', '@web/views/widgets/standard_widget_props', '@web/core/utils/numbers', '@web/core/l10n/translation'], function (require) {
-'use strict';
-let __exports = {};
-const { formatDateTime } = require("@web/core/l10n/dates");
-const { localization } = require("@web/core/l10n/localization");
-const { registry } = require("@web/core/registry");
-const { useService } = require("@web/core/utils/hooks");
-const { usePopover } = require("@web/core/popover/popover_hook");
-const { Component, onWillRender } = require("@odoo/owl");
-const { standardWidgetProps } = require("@web/views/widgets/standard_widget_props");
-const { roundPrecision } = require("@web/core/utils/numbers");
-const { appTranslateFn } = require("@web/core/l10n/translation");const _t = (str, ...args) => appTranslateFn(str, "sale_stock", ...args);
-
-const QtyAtDatePopover = __exports.QtyAtDatePopover = class QtyAtDatePopover extends Component {
-    static template = "sale_stock.QtyAtDatePopover";
-    static props = {
-        record: Object,
-        calcData: Object,
-        close: Function,
-    };
-    setup() {
-        this.actionService = useService("action");
-    }
-
-    openForecast() {
-        this.actionService.doAction("stock.stock_forecasted_product_product_action", {
-            additionalContext: {
-                active_model: 'product.product',
-                active_id: this.props.record.data.product_id.id,
-                warehouse_id: this.props.record.data.warehouse_id && this.props.record.data.warehouse_id.id,
-                move_to_match_ids: this.props.record.data.move_ids.currentIds,
-                sale_line_to_match_id: this.props.record.resId,
-            },
-        });
-    }
-
-    get forecastedLabel() {
-        return _t('Forecasted Stock')
-    }
-
-    get availableLabel() {
-        return _t('Available')
-    }
-}
-
-const QtyAtDateWidget = __exports.QtyAtDateWidget = class QtyAtDateWidget extends Component {
-    static components = { Popover: QtyAtDatePopover };
-    static template = "sale_stock.QtyAtDate";
-    static props = {...standardWidgetProps};
-    setup() {
-        this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
-        this.orm = useService("orm");
-        this.calcData = {};
-        onWillRender(() => {
-            this.initCalcData();
-        });
-    }
-
-    initCalcData() {
-        // calculate data not in record
-        const { data } = this.props.record;
-        if (data.scheduled_date) {
-            // TODO: might need some round_decimals to avoid errors
-            if (data.state === 'sale') {
-                this.calcData.will_be_fulfilled = data.free_qty_today >= data.qty_to_deliver;
-            } else {
-                this.calcData.will_be_fulfilled = data.virtual_available_at_date >= data.qty_to_deliver;
-            }
-            this.calcData.will_be_late = data.forecast_expected_date && data.forecast_expected_date > data.scheduled_date;
-            if (['draft', 'sent'].includes(data.state)) {
-                // Moves aren't created yet, then the forecasted is only based on virtual_available of quant
-                this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled && !data.is_mto;
-            } else {
-                // Moves are created, using the forecasted data of related moves
-                this.calcData.forecasted_issue = !this.calcData.will_be_fulfilled || this.calcData.will_be_late;
-            }
-        }
-    }
-
-    async calcDataForDisplay() {
-        const { data } = this.props.record;
-        let lineUom;
-        if (data.product_uom_id?.[0]) {
-            lineUom = (await this.orm.read("uom.uom", [data.product_uom_id[0]], ["factor", "rounding"]))[0];
-        }
-        let lineProduct;
-        if (data.product_id?.[0]) {
-            lineProduct = await this.orm.searchRead("product.product", [["id", "=", data.product_id[0]]], ["uom_id"]);
-        }
-        let productUom;
-        if (lineProduct?.[0]?.uom_id?.[0]) {
-            productUom = (await this.orm.searchRead("uom.uom", [["id", "=", lineProduct[0].uom_id[0]]], ["factor", "name"]))[0];
-        }
-        if (lineUom && productUom) {
-            this.calcData.product_uom_virtual_available_at_date = roundPrecision(data.virtual_available_at_date * lineUom.factor / productUom.factor, 1);
-            this.calcData.product_uom_free_qty_today = roundPrecision(data.free_qty_today * lineUom.factor / productUom.factor, 1);
-            this.calcData.product_uom_name = productUom.name;
-        }
-    }
-
-    updateCalcData() {
-        // popup specific data
-        const { data } = this.props.record;
-        if (!data.scheduled_date) {
-            return;
-        }
-        this.calcData.delivery_date = formatDateTime(data.scheduled_date, { format: localization.dateFormat });
-        if (data.forecast_expected_date) {
-            this.calcData.forecast_expected_date_str = formatDateTime(data.forecast_expected_date, { format: localization.dateFormat });
-        }
-    }
-
-    async showPopup(ev) {
-        const target = ev.currentTarget;
-        await this.calcDataForDisplay();
-        this.updateCalcData();
-        this.popover.open(target, {
-            record: this.props.record,
-            calcData: this.calcData,
-        });
-    }
-}
-
-const qtyAtDateWidget = __exports.qtyAtDateWidget = {
-    component: QtyAtDateWidget,
-    fieldDependencies: [
-        { name: 'display_qty_widget', type: 'boolean'},
-        { name: 'free_qty_today', type: 'float'},
-        { name: 'forecast_expected_date', type: 'datetime'},
-        { name: 'is_mto', type: 'boolean'},
-        { name: 'move_ids', type: 'one2many'},
-        { name: 'qty_available_today', type: 'float'},
-        { name: 'qty_to_deliver', type: 'float'},
-        { name: 'scheduled_date', type: 'datetime'},
-        { name: 'virtual_available_at_date', type: 'float'},
-        { name: 'warehouse_id', type: 'many2one'},
-    ],
-};
-registry.category("view_widgets").add("qty_at_date_widget", qtyAtDateWidget);
 
 return __exports;
 });
@@ -251321,6 +251447,447 @@ registerTemplate("hr_expense.DashboardListRenderer", `/hr_expense/static/src/vie
         </xpath>
     </t>
 `);
+registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/dashboard.xml`, `<t t-name="bateria_reportes.Dashboard" owl="1" xml:space="preserve">
+        <div class="o_action_manager" style="background-color: #f4f5f7; height: 100vh; overflow-y: auto;">
+            <div class="container py-5">
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <h1 class="display-4 fw-bold" style="color: #014f96;">🔋 Gestión de Baterías</h1>
+                        <p class="lead text-muted">Selecciona un módulo para comenzar</p>
+                    </div>
+                </div>
+
+                <t t-if="state.isAdmin and state.alertasTraslado.length &gt; 0">
+                    <div class="row justify-content-center mb-5">
+                        <div class="col-md-10">
+                            <div class="alert alert-danger shadow-sm" role="alert" style="border-left: 6px solid #dc3545; border-radius: 10px;">
+                                <h4 class="alert-heading fw-bold mb-3">
+                                    <i class="fa fa-exclamation-triangle me-2 animate__animated animate__flash animate__infinite"/> 
+                                    ¡Atención Supervisor! Traslados Pendientes
+                                </h4>
+                                <p class="mb-3">Hay vendedores que no pueden facturar porque están esperando que apruebes el movimiento de mercancía al Racksito:</p>
+
+                                <div class="d-flex flex-column gap-2">
+                                    <t t-foreach="state.alertasTraslado" t-as="traslado" t-key="traslado.id">
+                                        <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded border">
+                                            <div>
+                                                <span class="badge bg-danger fs-6 me-2">PENDIENTE</span>
+                                                <strong class="fs-5" t-esc="traslado.name"/>
+                                            </div>
+                                            <button class="btn btn-outline-danger" t-on-click="() =&gt; this.abrirTraslado(traslado.id)">
+                                                Ver Traslado <i class="fa fa-arrow-right ms-1"/>
+                                            </button>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="row g-4 justify-content-center">
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isVentas || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openVentas">
+                            <div class="card-body py-5">
+                                <i class="fa fa-shopping-cart fa-4x mb-3" style="color: #28a745;"/>
+                                <h3 class="card-title fw-bold">Ventas</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin || state.isVentas">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReparaciones">
+                            <div class="card-body py-5">
+                                <i class="fa fa-cogs fa-4x mb-3" style="color: #6f42c1;"/>
+                                <h3 class="card-title fw-bold">Reparaciones</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isVentas || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openFlota">
+                            <div class="card-body py-5">
+                                <i class="fa fa-car fa-4x mb-3" style="color: #17a2b8;"/>
+                                <h3 class="card-title fw-bold">Flota</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openCompras">
+                            <div class="card-body py-5">
+                                <i class="fa fa-shopping-bag fa-4x mb-3" style="color: #6f42c1;"/>
+                                <h3 class="card-title fw-bold">Compras</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openEmbarques">
+                            <div class="card-body py-5">
+                                <i class="fa fa-truck fa-4x mb-3" style="color: #20c997;"/>
+                                <h3 class="card-title fw-bold">Embarques</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openServicios">
+                            <div class="card-body py-5">
+                                <i class="fa fa-plug fa-4x mb-3" style="color: #607D8B;"/>
+                                <h3 class="card-title fw-bold">Servicios</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openGastos">
+                            <div class="card-body py-5">
+                                <i class="fa fa-credit-card fa-4x mb-3" style="color: #E91E63;"/>
+                                <h3 class="card-title fw-bold">Gastos</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isContabilidad || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openContabilidad">
+                            <div class="card-body py-5">
+                                <i class="fa fa-calculator fa-4x mb-3" style="color: #e83e8c;"/>
+                                <h3 class="card-title fw-bold">Contabilidad</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin || state.isVentas">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openInventario">
+                            <div class="card-body py-5">
+                                <i class="fa fa-cubes fa-4x mb-3" style="color: #fd7e14;"/>
+                                <h3 class="card-title fw-bold">Inventario</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openTaller">
+                            <div class="card-body py-5">
+                                <i class="fa fa-wrench fa-4x mb-3" style="color: #dc3545;"/>
+                                <h3 class="card-title fw-bold">Taller</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReportes">
+                            <div class="card-body py-5">
+                                <i class="fa fa-bar-chart fa-4x mb-3" style="color: #007bff;"/>
+                                <h3 class="card-title fw-bold">Reportes</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openCatalogo">
+                            <div class="card-body py-5">
+                                <i class="fa fa-list fa-4x mb-3" style="color: #ffc107;"/>
+                                <h3 class="card-title fw-bold">Catálogo</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </t>
+`);
+registerTemplate("stock_account.BooleanToggleConfirm", `/stock_account/static/src/fields/boolean_confirm.xml`, `<t t-name="stock_account.BooleanToggleConfirm" xml:space="preserve">
+        <ConfirmCheckBox className="'o_field_boolean o_boolean_toggle'" id="props.id" value="props.record.data[props.name] or false" disabled="isReadonly" onChange="(value) =&gt; this.onChange(value)"/>
+    </t>
+`);
+registerTemplateExtension("stock.ForecastedHeader", `/stock_account/static/src/stock_account_forecasted/forecasted_header.xml`, `<t t-name="stock_account.ForecastedHeader" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension" xml:space="preserve">
+        <xpath expr="//h3[@name='product_name']" position="after">
+            <h6 t-if="() =&gt; env.user.has_group('stock.group_stock_manager')">
+                Value On Hand:
+                <a href="#" t-out="props.docs.value" t-on-click.prevent="_onClickValuation"/>
+            </h6>
+        </xpath>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReportButtonsBar", `/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml`, `<t t-name="stock_account.StockValuationReportButtonsBar" xml:space="preserve">
+
+        <button class="o_report_button_generate_entry btn text-nowrap btn-secondary" t-on-click="onClickGenerateEntry">
+            Generate Entry
+        </button>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.FilterDate", `/stock_account/static/src/stock_valuation/filters/filter_date.xml`, `<t t-name="stock_account.StockValuationReport.FilterDate" xml:space="preserve">
+        <div id="filter_date" t-ref="filterDate" class="d-print-none" t-on-click="onDateClick">
+            <button class="btn btn-secondary">
+                <i class="fa fa-calendar me-1"/>As of <t t-out="date"/>
+            </button>
+        </div>
+        <div class="d-none d-print-block">
+            At the date of <t t-out="date"/>
+        </div>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.FilterOptions", `/stock_account/static/src/stock_valuation/filters/filter_options.xml`, `<t t-name="stock_account.StockValuationReport.FilterOptions" xml:space="preserve">
+        <Dropdown>
+            <button class="btn btn-secondary" disabled="true">
+                <i class="fa fa-sliders me-1"/>Options
+            </button>
+
+
+        </Dropdown>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.FilterWarehouses", `/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml`, `<t t-name="stock_account.StockValuationReport.FilterWarehouses" xml:space="preserve">
+        <Dropdown>
+            <button class="btn btn-secondary" disabled="true">
+                <i class="fa fa-filter me-1"/>All Warehouses
+            </button>
+
+
+        </Dropdown>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.Filters", `/stock_account/static/src/stock_valuation/filters/filters.xml`, `<t t-name="stock_account.StockValuationReport.Filters" xml:space="preserve">
+        <t t-call="stock_account.StockValuationReport.FilterDate"/>
+
+
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.InventoryValuationLine", `/stock_account/static/src/stock_valuation/line/line.xml`, `<t t-name="stock_account.StockValuationReport.InventoryValuationLine" xml:space="preserve">
+        <tr t-att-class="cssClass">
+            <td class="line_name w-50" t-on-click="onClick">
+                <div class="wrapper">
+                    <t t-if="label">
+                        <a t-if="props.onClickMethod" href="#" t-out="label"/>
+                        <span t-else="" t-out="label"/>
+                    </t>
+                </div>
+            </td>
+            <td class="w-25">
+                <div t-if="formattedValue" t-out="formattedValue"/>
+                <div t-elif="debit" t-out="debit"/>
+            </td>
+            <td t-if="credit" class="w-25">
+                <div t-out="credit"/>
+            </td>
+            <td t-else="" t-on-click="onClickToggle" class="w-25">
+                <button t-attf-class="btn btn_foldable#{props.sublines ? '' : '_empty'}" t-att-tabindex="props.lines ? 0 : -1">
+                    <i t-if="hasSublines" t-attf-class="fa fa-folder#{state.displaySublines ? '-open' : ''}-o"/>
+                </button>
+            </td>
+        </tr>
+        <t t-if="state.displaySublines &amp;&amp; hasSublines">
+            <t t-if="props.displayDebitCredit">
+                <tr>
+                    <td/>
+                    <td>Debit</td>
+                    <td>Credit</td>
+                </tr>
+            </t>
+            <t t-foreach="props.sublines" t-as="line" t-key="line.account_id">
+                <StockValuationReportLine label="line.display_name || line.label" line="line" sublines="line.lines" level="props.level + 2" onClickMethod="line.method" value="line.value"/>
+            </t>
+        </t>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.InventoryValuationToggleLine", `/stock_account/static/src/stock_valuation/line/toggle_line.xml`, `<t t-name="stock_account.StockValuationReport.InventoryValuationToggleLine" t-inherit="stock_account.StockValuationReport.InventoryValuationLine" t-inherit-mode="primary" xml:space="preserve">
+        <xpath expr="//div[hasclass('wrapper')]//button//i" position="attributes">
+            <attribute name="t-attf-class">fa fa-#{state.displaySublines ? 'check-' : ''}square-o</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='props.sublines']//StockValuationReportLine" position="replace">
+            <t t-if="line.lines">
+                <StockValuationReportToggleLine label="line.display_name" line="line" sublines="line.lines" level="props.level + 2" onClickMethod="props.onClickMethod || line.method" value="line.value"/>
+            </t>
+            <t t-else="">
+                <StockValuationReportLine label="line.display_name" line="line" level="props.level + 2" onClickMethod="props.onClickMethod || line.method" value="line.value"/>
+            </t>
+        </xpath>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport" xml:space="preserve">
+        <div class="o_action account_report">
+            <ControlPanel>
+
+                <t t-set-slot="control-panel-create-button">
+                    <StockValuationReportButtonsBar/>
+                </t>
+
+
+
+                <t t-set-slot="layout-actions">
+                   <div class="d-flex gap-1 flex-wrap">
+                       <StockValuationReportFilters/>
+                   </div>
+                </t>
+            </ControlPanel>
+             <div class="o_content">
+                <div id="warnings" class="warnings d-print-none"/>
+                <div class="fit-content w-print-100">
+                    <table class="table table-borderless table-hover w-print-100 mx-auto">
+                        <tbody>
+                            <t t-call="stock_account.StockValuationReport.InitialBalance"/>
+                            <t t-if="data.inventory_loss" t-call="stock_account.StockValuationReport.InventoryLoss"/>
+                            <t t-call="stock_account.StockValuationReport.StockVariation"/>
+                            <t t-call="stock_account.StockValuationReport.EndingStock"/>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.EmptyLine", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.EmptyLine" xml:space="preserve">
+        <tr class="empty"><td colspan="3"/></tr>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.InitialBalance", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.InitialBalance" xml:space="preserve">
+        <StockValuationReportLine label.translate="Initial Balance" level="0" onClickMethod="data.initial_balance.lines.length ? openAccountMoves.bind(this) : undefined" sublines="data.initial_balance.lines" value="data.initial_balance.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.StockVariation", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.StockVariation" xml:space="preserve">
+        <StockValuationReportLine label.translate="Stock Variation" level="0" sublines="data.stock_variation.lines" displayDebitCredit="true" value="data.stock_variation.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.EndingStock", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.EndingStock" xml:space="preserve">
+        <StockValuationReportLine label.translate="Ending Stock" level="0" onClickMethod="data.ending_stock.lines.length ? openStockReport.bind(this) : undefined" sublines="data.ending_stock.lines" value="data.ending_stock.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.InventoryLoss", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.InventoryLoss" xml:space="preserve">
+        <StockValuationReportLine label.translate="Inventory Loss" level="0" displayDebitCredit="true" onClickMethod.bind="openInventoryLoss" sublines="data.inventory_loss.lines" value="data.inventory_loss.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.Accrual", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.Accrual" xml:space="preserve">
+        <t t-if="accrual.lines.length">
+            <StockValuationReportToggleLine label.translate="Accrual" sublines="accrual.lines" level="0"/>
+        </t>
+    </t>
+`);
+registerTemplateExtension("stock.ForecastedDetails", `/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml`, `<t t-name="sale_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension" xml:space="preserve">
+        <xpath expr="//tr[@name='draft_picking_out']" position="after">
+            <tr t-if="currentProduct.draft_sale_qty.out" name="draft_so_out" t-attf-class="#{currentProduct.draft_sale_orders_matched and 'table-info'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                <td/>
+                <td>
+                <t t-set="draft_so_out_count" t-value="currentProduct.draft_sale_orders.length"/>
+                <a t-if="draft_so_out_count == 1" href="#" t-on-click.prevent="() =&gt; this.props.openView('sale.order', 'form', currentProduct.draft_sale_orders[0].id)">
+                    1 Quotation</a>
+                <a t-else="" href="#" t-on-click.prevent="() =&gt; this.props.openView('sale.order', 'list', false, [['id', 'in', currentProduct.draft_sale_orders.map((so) =&gt; so.id)]])">
+                    <t t-out="draft_so_out_count"/> Quotations</a>
+                </td>
+                <td class="text-end">
+                    <span class="text-danger">
+                        <t t-out="_formatFloat(-currentProduct.draft_sale_qty.out)"/> <t t-out="line.uom_id.display_name"/>
+                    </span>
+                </td>
+                <td colspan="3"/>
+            </tr>
+        </xpath>
+        <xpath expr="//td[@name='usedby_cell']" position="inside">
+            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id" t-out="' - ' + line.move_out.picking_id.sale_id.partner_id.display_name"/>
+            <t t-if="line.reservation and (line.document_out._name != line.reservation._name or line.document_out.id != line.reservation.id)">
+                <span t-out="' - '"/>
+                <a t-if="line.reservation" t-out="line.reservation.name" href="#" class="fw-bold" t-on-click.prevent="() =&gt; this.props.openView(line.reservation._name, 'form', line.reservation.id)"/>
+            </t>
+            <span t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'" t-out="' (Your SO)'"/>
+        </xpath>
+    </t>
+`);
+registerTemplate("sale_stock.QtyAtDate", `/sale_stock/static/src/widgets/qty_at_date_widget.xml`, `<t t-name="sale_stock.QtyAtDate" xml:space="preserve">
+        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'" t-on-click="showPopup" t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''" t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue ? 'text-danger' : '' }}"/>
+    </t>
+
+    `);
+registerTemplate("sale_stock.QtyAtDatePopover", `/sale_stock/static/src/widgets/qty_at_date_widget.xml`, `<t t-name="sale_stock.QtyAtDatePopover" xml:space="preserve">
+        <div class="p-2">
+        <h6>Availability</h6>
+        <table class="table table-borderless table-sm">
+            <tbody>
+                <t t-if="!props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
+                    <tr>
+                        <td><strong t-out="forecastedLabel"/><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
+                        <td class="text-end">
+                            <b t-out="props.record.data.virtual_available_at_date"/> <t t-out="props.record.data.product_uom_id[1]"/>
+                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
+                                <br/><span class="fs-7 text-muted" t-out="props.calcData.product_uom_virtual_available_at_date"/> <span class="fs-7 text-muted" t-out="props.calcData.product_uom_name"/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong t-out="availableLabel"/><br/><small>All planned operations included</small></td>
+                        <td class="text-end">
+                            <b t-out="props.record.data.free_qty_today" t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out="props.record.data.product_uom_id[1]"/>
+                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
+                                <br/><span t-out="props.calcData.product_uom_free_qty_today" t-att-class="\`fs-7 text-muted \${!props.calcData.will_be_fulfilled ? 'text-danger': ''}\`"/> <span class="fs-7 text-muted" t-out="props.calcData.product_uom_name"/>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+                <t t-elif="props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
+                    <tr>
+                        <td><strong>Expected Delivery</strong></td>
+                        <td class="oe-right"><span t-out="props.calcData.delivery_date"/></td>
+                    </tr>
+                    <tr>
+                        <p>This product is replenished on demand.</p>
+                    </tr>
+                </t>
+                <t t-elif="props.record.data.state == 'sale'">
+                    <tr>
+                        <td>
+                            <strong>Reserved</strong><br/>
+                        </td>
+                        <td style="min-width: 50px; text-align: right;">
+                            <b t-out="props.record.data.qty_available_today"/> <t t-out="props.record.data.product_uom_id[1]"/>
+                        </td>
+                    </tr>
+                    <tr t-if="props.record.data.qty_available_today &lt; props.record.data.qty_to_deliver">
+                        <td>
+                            <span t-if="props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str">
+                                Remaining demand available at <b t-out="props.calcData.forecast_expected_date_str" t-att-class="props.record.data.scheduled_date &lt; props.record.data.forecast_expected_date ? 'text-danger' : ''"/>
+                            </span>
+                            <span t-elif="!props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str" class="text-danger">
+                                Not enough future availability
+                            </span>
+                            <span t-elif="!props.calcData.will_be_fulfilled" class="text-danger">
+                                No future availability
+                            </span>
+                            <span t-else="">
+                                Available in stock
+                            </span>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+        <button t-if="!props.record.data.is_mto" class="text-start btn btn-link" type="button" t-on-click="openForecast">
+            <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+            View Forecast
+        </button>
+        </div>
+    </t>
+`);
+registerTemplate("sale_stock.DelayAlertWidget", `/sale_stock/static/src/xml/delay_alert.xml`, `<div t-name="sale_stock.DelayAlertWidget" class="m-1" xml:space="preserve">
+        <p>The delivery
+            <t t-foreach="props.late_elements" t-as="late_element" t-key="late_element.id">
+                <a t-esc="late_element.name" href="#" t-on-click="openElement" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
+            </t> will be late.
+        </p>
+    </div>
+`);
 registerTemplate("hr_skills.SkillsListRenderer", `/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml`, `<t t-name="hr_skills.SkillsListRenderer" t-inherit-mode="primary" t-inherit="web.ListRenderer" xml:space="preserve">
         <xpath expr="//table" position="attributes">
             <attribute name="t-attf-class" add="mb-1 {{ !isEditable ? 'cursor-default' : '' }} {{ !showTable ? 'd-none' : ''}} o_skill_table overflow-hidden" separator=" "/>
@@ -251546,183 +252113,6 @@ registerTemplate("hr_skills.InternalResumeLineComponent", `/hr_skills/static/src
             </t>
         </div>
     </div>
-`);
-registerTemplate("stock_account.BooleanToggleConfirm", `/stock_account/static/src/fields/boolean_confirm.xml`, `<t t-name="stock_account.BooleanToggleConfirm" xml:space="preserve">
-        <ConfirmCheckBox className="'o_field_boolean o_boolean_toggle'" id="props.id" value="props.record.data[props.name] or false" disabled="isReadonly" onChange="(value) =&gt; this.onChange(value)"/>
-    </t>
-`);
-registerTemplateExtension("stock.ForecastedHeader", `/stock_account/static/src/stock_account_forecasted/forecasted_header.xml`, `<t t-name="stock_account.ForecastedHeader" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension" xml:space="preserve">
-        <xpath expr="//h3[@name='product_name']" position="after">
-            <h6 t-if="() =&gt; env.user.has_group('stock.group_stock_manager')">
-                Value On Hand:
-                <a href="#" t-out="props.docs.value" t-on-click.prevent="_onClickValuation"/>
-            </h6>
-        </xpath>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReportButtonsBar", `/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml`, `<t t-name="stock_account.StockValuationReportButtonsBar" xml:space="preserve">
-
-        <button class="o_report_button_generate_entry btn text-nowrap btn-secondary" t-on-click="onClickGenerateEntry">
-            Generate Entry
-        </button>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.FilterDate", `/stock_account/static/src/stock_valuation/filters/filter_date.xml`, `<t t-name="stock_account.StockValuationReport.FilterDate" xml:space="preserve">
-        <div id="filter_date" t-ref="filterDate" class="d-print-none" t-on-click="onDateClick">
-            <button class="btn btn-secondary">
-                <i class="fa fa-calendar me-1"/>As of <t t-out="date"/>
-            </button>
-        </div>
-        <div class="d-none d-print-block">
-            At the date of <t t-out="date"/>
-        </div>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.FilterOptions", `/stock_account/static/src/stock_valuation/filters/filter_options.xml`, `<t t-name="stock_account.StockValuationReport.FilterOptions" xml:space="preserve">
-        <Dropdown>
-            <button class="btn btn-secondary" disabled="true">
-                <i class="fa fa-sliders me-1"/>Options
-            </button>
-
-
-        </Dropdown>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.FilterWarehouses", `/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml`, `<t t-name="stock_account.StockValuationReport.FilterWarehouses" xml:space="preserve">
-        <Dropdown>
-            <button class="btn btn-secondary" disabled="true">
-                <i class="fa fa-filter me-1"/>All Warehouses
-            </button>
-
-
-        </Dropdown>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.Filters", `/stock_account/static/src/stock_valuation/filters/filters.xml`, `<t t-name="stock_account.StockValuationReport.Filters" xml:space="preserve">
-        <t t-call="stock_account.StockValuationReport.FilterDate"/>
-
-
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.InventoryValuationLine", `/stock_account/static/src/stock_valuation/line/line.xml`, `<t t-name="stock_account.StockValuationReport.InventoryValuationLine" xml:space="preserve">
-        <tr t-att-class="cssClass">
-            <td class="line_name w-50" t-on-click="onClick">
-                <div class="wrapper">
-                    <t t-if="label">
-                        <a t-if="props.onClickMethod" href="#" t-out="label"/>
-                        <span t-else="" t-out="label"/>
-                    </t>
-                </div>
-            </td>
-            <td class="w-25">
-                <div t-if="formattedValue" t-out="formattedValue"/>
-                <div t-elif="debit" t-out="debit"/>
-            </td>
-            <td t-if="credit" class="w-25">
-                <div t-out="credit"/>
-            </td>
-            <td t-else="" t-on-click="onClickToggle" class="w-25">
-                <button t-attf-class="btn btn_foldable#{props.sublines ? '' : '_empty'}" t-att-tabindex="props.lines ? 0 : -1">
-                    <i t-if="hasSublines" t-attf-class="fa fa-folder#{state.displaySublines ? '-open' : ''}-o"/>
-                </button>
-            </td>
-        </tr>
-        <t t-if="state.displaySublines &amp;&amp; hasSublines">
-            <t t-if="props.displayDebitCredit">
-                <tr>
-                    <td/>
-                    <td>Debit</td>
-                    <td>Credit</td>
-                </tr>
-            </t>
-            <t t-foreach="props.sublines" t-as="line" t-key="line.account_id">
-                <StockValuationReportLine label="line.display_name || line.label" line="line" sublines="line.lines" level="props.level + 2" onClickMethod="line.method" value="line.value"/>
-            </t>
-        </t>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.InventoryValuationToggleLine", `/stock_account/static/src/stock_valuation/line/toggle_line.xml`, `<t t-name="stock_account.StockValuationReport.InventoryValuationToggleLine" t-inherit="stock_account.StockValuationReport.InventoryValuationLine" t-inherit-mode="primary" xml:space="preserve">
-        <xpath expr="//div[hasclass('wrapper')]//button//i" position="attributes">
-            <attribute name="t-attf-class">fa fa-#{state.displaySublines ? 'check-' : ''}square-o</attribute>
-        </xpath>
-        <xpath expr="//t[@t-foreach='props.sublines']//StockValuationReportLine" position="replace">
-            <t t-if="line.lines">
-                <StockValuationReportToggleLine label="line.display_name" line="line" sublines="line.lines" level="props.level + 2" onClickMethod="props.onClickMethod || line.method" value="line.value"/>
-            </t>
-            <t t-else="">
-                <StockValuationReportLine label="line.display_name" line="line" level="props.level + 2" onClickMethod="props.onClickMethod || line.method" value="line.value"/>
-            </t>
-        </xpath>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport" xml:space="preserve">
-        <div class="o_action account_report">
-            <ControlPanel>
-
-                <t t-set-slot="control-panel-create-button">
-                    <StockValuationReportButtonsBar/>
-                </t>
-
-
-
-                <t t-set-slot="layout-actions">
-                   <div class="d-flex gap-1 flex-wrap">
-                       <StockValuationReportFilters/>
-                   </div>
-                </t>
-            </ControlPanel>
-             <div class="o_content">
-                <div id="warnings" class="warnings d-print-none"/>
-                <div class="fit-content w-print-100">
-                    <table class="table table-borderless table-hover w-print-100 mx-auto">
-                        <tbody>
-                            <t t-call="stock_account.StockValuationReport.InitialBalance"/>
-                            <t t-if="data.inventory_loss" t-call="stock_account.StockValuationReport.InventoryLoss"/>
-                            <t t-call="stock_account.StockValuationReport.StockVariation"/>
-                            <t t-call="stock_account.StockValuationReport.EndingStock"/>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.EmptyLine", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.EmptyLine" xml:space="preserve">
-        <tr class="empty"><td colspan="3"/></tr>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.InitialBalance", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.InitialBalance" xml:space="preserve">
-        <StockValuationReportLine label.translate="Initial Balance" level="0" onClickMethod="data.initial_balance.lines.length ? openAccountMoves.bind(this) : undefined" sublines="data.initial_balance.lines" value="data.initial_balance.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.StockVariation", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.StockVariation" xml:space="preserve">
-        <StockValuationReportLine label.translate="Stock Variation" level="0" sublines="data.stock_variation.lines" displayDebitCredit="true" value="data.stock_variation.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.EndingStock", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.EndingStock" xml:space="preserve">
-        <StockValuationReportLine label.translate="Ending Stock" level="0" onClickMethod="data.ending_stock.lines.length ? openStockReport.bind(this) : undefined" sublines="data.ending_stock.lines" value="data.ending_stock.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.InventoryLoss", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.InventoryLoss" xml:space="preserve">
-        <StockValuationReportLine label.translate="Inventory Loss" level="0" displayDebitCredit="true" onClickMethod.bind="openInventoryLoss" sublines="data.inventory_loss.lines" value="data.inventory_loss.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.Accrual", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.Accrual" xml:space="preserve">
-        <t t-if="accrual.lines.length">
-            <StockValuationReportToggleLine label.translate="Accrual" sublines="accrual.lines" level="0"/>
-        </t>
-    </t>
 `);
 registerTemplate("purchase_stock.ProductCatalogSearchPanel", `/purchase_stock/static/src/product_catalog/search/search_panel.xml`, `<t t-name="purchase_stock.ProductCatalogSearchPanel" t-inherit="account.ProductCatalogSearchPanel" t-inherit-mode="primary" xml:space="preserve">
         <xpath expr="//t[@t-call='account.ProductCatalogSearchPanelContent']" position="attributes">
@@ -252579,117 +252969,6 @@ registerTemplate("sale_pdf_quote_builder.QuotationDocumentX2ManyField", `/sale_p
         </xpath>
     </t>
 `);
-registerTemplateExtension("stock.ForecastedDetails", `/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml`, `<t t-name="sale_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension" xml:space="preserve">
-        <xpath expr="//tr[@name='draft_picking_out']" position="after">
-            <tr t-if="currentProduct.draft_sale_qty.out" name="draft_so_out" t-attf-class="#{currentProduct.draft_sale_orders_matched and 'table-info'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
-                <td/>
-                <td>
-                <t t-set="draft_so_out_count" t-value="currentProduct.draft_sale_orders.length"/>
-                <a t-if="draft_so_out_count == 1" href="#" t-on-click.prevent="() =&gt; this.props.openView('sale.order', 'form', currentProduct.draft_sale_orders[0].id)">
-                    1 Quotation</a>
-                <a t-else="" href="#" t-on-click.prevent="() =&gt; this.props.openView('sale.order', 'list', false, [['id', 'in', currentProduct.draft_sale_orders.map((so) =&gt; so.id)]])">
-                    <t t-out="draft_so_out_count"/> Quotations</a>
-                </td>
-                <td class="text-end">
-                    <span class="text-danger">
-                        <t t-out="_formatFloat(-currentProduct.draft_sale_qty.out)"/> <t t-out="line.uom_id.display_name"/>
-                    </span>
-                </td>
-                <td colspan="3"/>
-            </tr>
-        </xpath>
-        <xpath expr="//td[@name='usedby_cell']" position="inside">
-            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id" t-out="' - ' + line.move_out.picking_id.sale_id.partner_id.display_name"/>
-            <t t-if="line.reservation and (line.document_out._name != line.reservation._name or line.document_out.id != line.reservation.id)">
-                <span t-out="' - '"/>
-                <a t-if="line.reservation" t-out="line.reservation.name" href="#" class="fw-bold" t-on-click.prevent="() =&gt; this.props.openView(line.reservation._name, 'form', line.reservation.id)"/>
-            </t>
-            <span t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'" t-out="' (Your SO)'"/>
-        </xpath>
-    </t>
-`);
-registerTemplate("sale_stock.QtyAtDate", `/sale_stock/static/src/widgets/qty_at_date_widget.xml`, `<t t-name="sale_stock.QtyAtDate" xml:space="preserve">
-        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'" t-on-click="showPopup" t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''" t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue ? 'text-danger' : '' }}"/>
-    </t>
-
-    `);
-registerTemplate("sale_stock.QtyAtDatePopover", `/sale_stock/static/src/widgets/qty_at_date_widget.xml`, `<t t-name="sale_stock.QtyAtDatePopover" xml:space="preserve">
-        <div class="p-2">
-        <h6>Availability</h6>
-        <table class="table table-borderless table-sm">
-            <tbody>
-                <t t-if="!props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
-                    <tr>
-                        <td><strong t-out="forecastedLabel"/><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
-                        <td class="text-end">
-                            <b t-out="props.record.data.virtual_available_at_date"/> <t t-out="props.record.data.product_uom_id[1]"/>
-                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
-                                <br/><span class="fs-7 text-muted" t-out="props.calcData.product_uom_virtual_available_at_date"/> <span class="fs-7 text-muted" t-out="props.calcData.product_uom_name"/>
-                            </t>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong t-out="availableLabel"/><br/><small>All planned operations included</small></td>
-                        <td class="text-end">
-                            <b t-out="props.record.data.free_qty_today" t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out="props.record.data.product_uom_id[1]"/>
-                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
-                                <br/><span t-out="props.calcData.product_uom_free_qty_today" t-att-class="\`fs-7 text-muted \${!props.calcData.will_be_fulfilled ? 'text-danger': ''}\`"/> <span class="fs-7 text-muted" t-out="props.calcData.product_uom_name"/>
-                            </t>
-                        </td>
-                    </tr>
-                </t>
-                <t t-elif="props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
-                    <tr>
-                        <td><strong>Expected Delivery</strong></td>
-                        <td class="oe-right"><span t-out="props.calcData.delivery_date"/></td>
-                    </tr>
-                    <tr>
-                        <p>This product is replenished on demand.</p>
-                    </tr>
-                </t>
-                <t t-elif="props.record.data.state == 'sale'">
-                    <tr>
-                        <td>
-                            <strong>Reserved</strong><br/>
-                        </td>
-                        <td style="min-width: 50px; text-align: right;">
-                            <b t-out="props.record.data.qty_available_today"/> <t t-out="props.record.data.product_uom_id[1]"/>
-                        </td>
-                    </tr>
-                    <tr t-if="props.record.data.qty_available_today &lt; props.record.data.qty_to_deliver">
-                        <td>
-                            <span t-if="props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str">
-                                Remaining demand available at <b t-out="props.calcData.forecast_expected_date_str" t-att-class="props.record.data.scheduled_date &lt; props.record.data.forecast_expected_date ? 'text-danger' : ''"/>
-                            </span>
-                            <span t-elif="!props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str" class="text-danger">
-                                Not enough future availability
-                            </span>
-                            <span t-elif="!props.calcData.will_be_fulfilled" class="text-danger">
-                                No future availability
-                            </span>
-                            <span t-else="">
-                                Available in stock
-                            </span>
-                        </td>
-                    </tr>
-                </t>
-            </tbody>
-        </table>
-        <button t-if="!props.record.data.is_mto" class="text-start btn btn-link" type="button" t-on-click="openForecast">
-            <i class="oi oi-fw o_button_icon oi-arrow-right"/>
-            View Forecast
-        </button>
-        </div>
-    </t>
-`);
-registerTemplate("sale_stock.DelayAlertWidget", `/sale_stock/static/src/xml/delay_alert.xml`, `<div t-name="sale_stock.DelayAlertWidget" class="m-1" xml:space="preserve">
-        <p>The delivery
-            <t t-foreach="props.late_elements" t-as="late_element" t-key="late_element.id">
-                <a t-esc="late_element.name" href="#" t-on-click="openElement" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
-            </t> will be late.
-        </p>
-    </div>
-`);
 registerTemplateExtension("web.PhoneField", `/sms/static/src/components/phone_field/phone_field.xml`, `<t t-inherit="web.PhoneField" t-inherit-mode="extension" xml:space="preserve">
         <xpath expr="//div[hasclass('o_phone_content')]//a" position="after">
             <t t-if="props.enableButton and props.record.data[props.name].length &gt; 0">
@@ -252750,4 +253029,4 @@ registerTemplate("spreadsheet.SpreadsheetBinaryField", `/spreadsheet/static/src/
                     });
 
 
-//# sourceMappingURL=/web/assets/92a60db/web.assets_web.js.map
+//# sourceMappingURL=/web/assets/79a2929/web.assets_web.js.map

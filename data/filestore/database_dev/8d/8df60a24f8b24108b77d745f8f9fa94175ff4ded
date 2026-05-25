@@ -22472,80 +22472,24 @@ odoo.define('@hr_expense/js/tours/hr_expense',['@web/core/l10n/translation','@we
 odoo.define('@hr_expense/js/web/activity_menu_patch',['@mail/core/web/activity_menu','@web/core/ui/ui_service','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{ActivityMenu}=require("@mail/core/web/activity_menu");const{MEDIAS_BREAKPOINTS,SIZES}=require("@web/core/ui/ui_service");const{patch}=require("@web/core/utils/patch");patch(ActivityMenu.prototype,{openActivityGroup(group){if(group.model==="hr.expense"){const mobileMaxWidth=MEDIAS_BREAKPOINTS[SIZES.MD].minWidth;const onMobile=window.innerWidth<=mobileMaxWidth;if(onMobile){group.view_type="kanban";}}
 return super.openActivityGroup(...arguments);},});return __exports;});;
 
-/* /hr_skills/static/src/fields/skills_one2many/skills_one2many.js */
-odoo.define('@hr_skills/fields/skills_one2many/skills_one2many',['@web/views/fields/x2many/x2many_field','@web/views/fields/relational_utils','@web/core/registry','@web/core/l10n/translation','@web/core/user','@hr_skills/views/skills_list_renderer','@web/core/utils/hooks','@odoo/owl'],function(require){'use strict';let __exports={};const{X2ManyField,x2ManyField}=require("@web/views/fields/x2many/x2many_field");const{useX2ManyCrud,useOpenX2ManyRecord}=require("@web/views/fields/relational_utils");const{registry}=require("@web/core/registry");const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{user}=require("@web/core/user");const{CommonSkillsListRenderer}=require("@hr_skills/views/skills_list_renderer");const{useService}=require('@web/core/utils/hooks');const{onWillStart}=require("@odoo/owl");const SkillsListRenderer=__exports.SkillsListRenderer=class SkillsListRenderer extends CommonSkillsListRenderer{static template="hr_skills.SkillsListRenderer";setup(){super.setup();this.orm=useService('orm');this.actionService=useService("action");onWillStart(async()=>{const res=await this.orm.searchCount('hr.skill.type',[]);this.anySkills=res>0;[this.user]=await this.orm.read("res.users",[user.userId],["employee_ids"]);this.IsHrUser=await user.hasGroup("hr.group_hr_user");this.userSubordinates=(await this.orm.searchRead("hr.employee",[["id","child_of",this.user.employee_ids]],["id"])).map((record)=>record["id"]);});}
-get groupBy(){return'skill_type_id';}
-async skillTypesAction(){return this.actionService.doAction("hr_skills.hr_skill_type_action");}
-async openSkillsReport(){const id=this.env.model.root.data.id||this.env.model.root.data.employee_id.id;this.actionService.doAction({type:"ir.actions.act_window",name:_t("Skills Report"),res_model:"hr.employee.skill.history.report",view_mode:"graph,list",views:[[false,"graph"]],context:{'fill_temporal':false,},target:"current",domain:[['employee_id','=',id]],});}
-get showTimeline(){return this.SkillsRight&&!this.props.list.context.no_timeline;}
-get SkillsRight(){let isSubordinate=false;if(this.env.model.root.data.employee_id){isSubordinate=this.userSubordinates.includes(this.env.model.root.data.employee_id.id);}
-return this.IsHrUser||isSubordinate;}}
-const SkillsX2ManyField=__exports.SkillsX2ManyField=class SkillsX2ManyField extends X2ManyField{static components={...X2ManyField.components,ListRenderer:SkillsListRenderer,};setup(){super.setup();this.orm=useService('orm');this.actionService=useService('action');const{saveRecord,updateRecord}=useX2ManyCrud(()=>this.list,this.isMany2Many);const openRecord=useOpenX2ManyRecord({resModel:this.list.resModel,activeField:this.activeField,activeActions:this.activeActions,getList:()=>this.list,saveRecord:saveRecord,updateRecord:updateRecord,withParentId:this.props.widget!=="many2many",});this._openRecord=(params)=>{params.title=this.getWizardTitleName();openRecord({...params});};}
-getWizardTitleName(){return _t("Update Skills")}
-async onAdd({context,editable}={}){const employeeId=this.props.record.resModel==="res.users"?this.props.record.data.employee_id.id:this.props.record.resId;return super.onAdd({editable,context:{...context,default_employee_id:employeeId,}});}}
-const skillsX2ManyField=__exports.skillsX2ManyField={...x2ManyField,component:SkillsX2ManyField,};registry.category("fields").add("skills_one2many",skillsX2ManyField);return __exports;});;
-
-/* /hr_skills/static/src/fields/boolean_toggle_load/boolean_toggle_load.js */
-odoo.define('@hr_skills/fields/boolean_toggle_load/boolean_toggle_load',['@web/core/registry','@web/views/fields/boolean_toggle/list_boolean_toggle_field'],function(require){'use strict';let __exports={};const{registry}=require('@web/core/registry');const{ListBooleanToggleField,listBooleanToggleField}=require("@web/views/fields/boolean_toggle/list_boolean_toggle_field");const ListBooleanToggleLoadField=__exports.ListBooleanToggleLoadField=class ListBooleanToggleLoadField extends ListBooleanToggleField{async onChange(newValue){this.state.value=newValue;const changes={[this.props.name]:newValue,technical_is_new_default:newValue};await this.props.record.update(changes,{save:this.props.autosave});}}
-const listBooleanToggleLoadField=__exports.listBooleanToggleLoadField={...listBooleanToggleField,component:ListBooleanToggleLoadField,};registry.category("fields").add("boolean_toggle_load",listBooleanToggleLoadField);return __exports;});;
-
-/* /hr_skills/static/src/fields/formatted_date/formatted_date.js */
-odoo.define('@hr_skills/fields/formatted_date/formatted_date',['@odoo/owl','@web/core/l10n/translation','@web/core/registry','@web/core/py_js/py','@web/views/fields/standard_field_props'],function(require){'use strict';let __exports={};const{Component}=require("@odoo/owl");const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{registry}=require("@web/core/registry");const{evaluateBooleanExpr}=require("@web/core/py_js/py");const{standardFieldProps}=require("@web/views/fields/standard_field_props");const FormattedDate=__exports.FormattedDate=class FormattedDate extends Component{static template="hr_skills.FormattedDate";static props={...standardFieldProps,dayFormat:String,monthFormat:String,yearFormat:String,color:Object,};get value(){return this.props.record.data[this.props.name];}
-get placeholder(){return _t("Indefinite");}
-get colorClass(){const colors=Object.keys(this.props.color);if(colors){for(const colorName of colors){if(evaluateBooleanExpr(`${this.props.color[colorName]}`,this.props.record.evalContextWithVirtualIds)){return"text-"+colorName;}}}
-return""}}
-const formattedDate=__exports.formattedDate={component:FormattedDate,supportedOptions:[{label:_t("Day Format"),name:"day_format",type:"string",default:"numeric",},{label:_t("Month Format"),name:"month_format",type:"string",default:"numeric",},{label:_t("Year Format"),name:"year_format",type:"string",default:"numeric",},{label:_t("Color"),name:"color",type:"string",default:{},},],supportedTypes:["date"],extractProps({options}){return{dayFormat:options.day_format||"numeric",monthFormat:options.month_format||"numeric",yearFormat:options.year_format||"numeric",color:options.color||{},};},};registry.category("fields").add("formatted_date",formattedDate);return __exports;});;
-
-/* /hr_skills/static/src/fields/hr_skills_tags_list/hr_skills_tags_list.js */
-odoo.define('@hr_skills/fields/hr_skills_tags_list/hr_skills_tags_list',['@web/core/tags_list/tags_list'],function(require){'use strict';let __exports={};const{TagsList}=require("@web/core/tags_list/tags_list");const SkillsTagList=__exports.SkillsTagList=class SkillsTagList extends TagsList{static template="hr_skills.SkillsTagsList";getTextStyle(tag){return tag.defaultLevel}}
-return __exports;});;
-
-/* /hr_skills/static/src/fields/many2many_tags_skills/many2many_tags_skills.js */
-odoo.define('@hr_skills/fields/many2many_tags_skills/many2many_tags_skills',['@web/core/registry','@web/views/fields/many2many_tags/many2many_tags_field','@hr_skills/fields/hr_skills_tags_list/hr_skills_tags_list'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{Many2ManyTagsField,many2ManyTagsField,}=require("@web/views/fields/many2many_tags/many2many_tags_field");const{SkillsTagList}=require("@hr_skills/fields/hr_skills_tags_list/hr_skills_tags_list");class SkillsMany2ManyTags extends Many2ManyTagsField{static components={...Many2ManyTagsField.components,TagsList:SkillsTagList};getTagProps(record){return{...super.getTagProps(record),defaultLevel:record.data.default_level};}}
-const skillsMany2ManyTags=__exports.skillsMany2ManyTags={...many2ManyTagsField,component:SkillsMany2ManyTags,relatedFields:(fieldInfo)=>{return[...many2ManyTagsField.relatedFields(fieldInfo),{name:"default_level",type:"boolean"},];},};registry.category("fields").add("many2many_tags_skills",skillsMany2ManyTags);return __exports;});;
-
-/* /hr_skills/static/src/fields/one2many_tags_skills/one2many_tags_skills.js */
-odoo.define('@hr_skills/fields/one2many_tags_skills/one2many_tags_skills',['@web/core/l10n/translation','@web/views/fields/x2many/x2many_field','@web/views/fields/relational_utils','@web/core/registry','@web/core/tags_list/tags_list'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{X2ManyField,x2ManyField}=require("@web/views/fields/x2many/x2many_field");const{useX2ManyCrud,useOpenX2ManyRecord}=require("@web/views/fields/relational_utils");const{registry}=require("@web/core/registry");const{TagsList}=require("@web/core/tags_list/tags_list");const One2ManyTagsSkillsField=__exports.One2ManyTagsSkillsField=class One2ManyTagsSkillsField extends X2ManyField{static components={...X2ManyField.components,TagsList,};static template="hr_recruitment_skills.One2ManyTagsSkillsField";setup(){super.setup();const{saveRecord,updateRecord}=useX2ManyCrud(()=>this.list,this.isMany2Many);const openRecord=useOpenX2ManyRecord({resModel:this.list.resModel,activeField:this.activeField,activeActions:this.activeActions,getList:()=>this.list,saveRecord:saveRecord,updateRecord:updateRecord,withParentId:this.props.widget!=="many2many",});this._openRecord=(params)=>{params.title=_t("Select Skills");openRecord({...params});};}
-getTagProps(record){const tagProps={id:record.id,resId:record.resId,text:record.data.display_name,colorIndex:record.data.color,canEdit:true,onClick:(ev)=>this.onTagClick(ev,record),onDelete:!this.props.readonly?()=>this.activeActions.onDelete(record):undefined,};return tagProps;}
-get tags(){return this.props.record.data[this.props.name].records.map((record)=>this.getTagProps(record));}
-onTagClick(ev,record){this.openRecord(record);}}
-const one2ManyTagsSkillsField=__exports.one2ManyTagsSkillsField={...x2ManyField,component:One2ManyTagsSkillsField,};registry.category("fields").add("many2one_tags_skills",one2ManyTagsSkillsField);return __exports;});;
-
-/* /hr_skills/static/src/fields/resume_one2many/resume_one2many.js */
-odoo.define('@hr_skills/fields/resume_one2many/resume_one2many',['@web/core/l10n/translation','@web/core/registry','@odoo/owl','@web/core/l10n/dates','@hr_skills/fields/skills_one2many/skills_one2many','@hr_skills/views/skills_list_renderer'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{registry}=require("@web/core/registry");const{onMounted,onPatched,useRef}=require("@odoo/owl");const{formatDate}=require("@web/core/l10n/dates");const{SkillsX2ManyField,skillsX2ManyField}=require("@hr_skills/fields/skills_one2many/skills_one2many");const{CommonSkillsListRenderer}=require("@hr_skills/views/skills_list_renderer");const ResumeListRenderer=__exports.ResumeListRenderer=class ResumeListRenderer extends CommonSkillsListRenderer{static template="hr_skills.ResumeListRenderer";static rowsTemplate="hr_skills.ResumeListRenderer.Rows";static recordRowTemplate="hr_skills.ResumeListRenderer.RecordRow";static useMagicColumnWidths=false;setup(){super.setup();this.linkRef=useRef("link-target-blank");onMounted(this._setLinksToOpenInNewTab);onPatched(this._setLinksToOpenInNewTab);}
-get groupBy(){return"line_type_id";}
-get colspan(){if(this.props.activeActions){return 3;}
-return 2;}
-formatDate(date){return formatDate(date);}
-_setLinksToOpenInNewTab(){const resumeLines=this.linkRef.el;if(resumeLines){const links=resumeLines.querySelectorAll('a');links.forEach(link=>{link.setAttribute('target','_blank');});}}}
-const ResumeX2ManyField=__exports.ResumeX2ManyField=class ResumeX2ManyField extends SkillsX2ManyField{static components={...SkillsX2ManyField.components,ListRenderer:ResumeListRenderer,};getWizardTitleName(){return _t("New Resume Line");}}
-const resumeX2ManyField=__exports.resumeX2ManyField={...skillsX2ManyField,component:ResumeX2ManyField,};registry.category("fields").add("resume_one2many",resumeX2ManyField);return __exports;});;
-
-/* /hr_skills/static/src/views/skills_list_renderer.js */
-odoo.define('@hr_skills/views/skills_list_renderer',['@web/core/l10n/translation','@web/views/list/list_renderer'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{ListRenderer}=require("@web/views/list/list_renderer");const CommonSkillsListRenderer=__exports.CommonSkillsListRenderer=class CommonSkillsListRenderer extends ListRenderer{get colspan(){const span=this.allColumns.length;if(this.isEditable){return span+1;}
-return span;}
-get groupBy(){return'';}
-get groupedList(){const grouped={};for(const record of this.list.records){const data=record.data;const group=data[this.groupBy];if(grouped[group.display_name]===undefined){grouped[group.display_name]={id:parseInt(group.id),name:group.display_name||_t('Other'),list:{records:[],},};}
-grouped[group.display_name].list.records.push(record);}
-return grouped;}
-get showTable(){return this.props.list.records.length;}
-get isEditable(){return this.props.editable!==false;}
-async onCellClicked(record,column,ev){if(!this.isEditable){return;}
-return await super.onCellClicked(record,column,ev);}}
-CommonSkillsListRenderer.rowsTemplate="hr_skills.SkillsListRenderer.Rows";return __exports;});;
-
-/* /hr_skills/static/src/components/avatar_card_resource/avatar_card_resource_popover_patch.js */
-odoo.define('@hr_skills/components/avatar_card_resource/avatar_card_resource_popover_patch',['@web/core/utils/patch','@resource_mail/components/avatar_card_resource/avatar_card_resource_popover'],function(require){'use strict';let __exports={};const{patch}=require("@web/core/utils/patch");const{AvatarCardResourcePopover}=require("@resource_mail/components/avatar_card_resource/avatar_card_resource_popover");const patchAvatarCardResourcePopover=__exports.patchAvatarCardResourcePopover={loadAdditionalData(){const promises=super.loadAdditionalData();this.skills=false;if(this.record.employee_skill_ids?.length){promises.push(this.orm.read("hr.employee.skill",this.record.employee_skill_ids,["display_name","color"]).then((skills)=>{this.skills=skills;}));}
-return promises;},get fieldNames(){return[...super.fieldNames,"employee_skill_ids",];},get hasFooter(){return this.skills?.length>0||super.hasFooter;},get skillTags(){return this.skills.map(({id,display_name,color})=>({id,text:display_name,colorIndex:color,}));},};const unpatchAvatarCardResourcePopover=__exports.unpatchAvatarCardResourcePopover=patch(AvatarCardResourcePopover.prototype,patchAvatarCardResourcePopover);return __exports;});;
-
-/* /hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.js */
-odoo.define('@hr_skills/components/internal_resume_lines/internal_resume_one2many',['@odoo/owl','@web/views/widgets/standard_widget_props','@web/core/registry','@web/core/utils/hooks','@web/core/l10n/dates'],function(require){'use strict';let __exports={};const{Component,onWillStart,onWillUpdateProps}=require("@odoo/owl");const{standardWidgetProps}=require("@web/views/widgets/standard_widget_props");const{registry}=require("@web/core/registry");const{useService}=require("@web/core/utils/hooks");const{formatDate}=require("@web/core/l10n/dates");const InternalResumeLineComponent=__exports.InternalResumeLineComponent=class InternalResumeLineComponent extends Component{static template="hr_skills.InternalResumeLineComponent";static props={...standardWidgetProps};setup(){super.setup();this.orm=useService("orm");onWillStart(async()=>{this.internalResumeLines=await this.getInternalResumeLines(this.props.record.resId,this.props.record.resModel)})
-onWillUpdateProps(async(nextProps)=>{this.internalResumeLines=await this.getInternalResumeLines(nextProps.record.resId,nextProps.record.resModel)})}
-async getInternalResumeLines(resId,resModel){const internalResumeLines=await this.orm.call("hr.employee","get_internal_resume_lines",[resId,resModel]);return internalResumeLines;}
-get companyId(){return this.props.record.data.company_id.display_name;}
-get haveResumeLines(){return this.props.record.data.resume_line_ids.records.length||this.internalResumeLines.length;}
-formatDate(date){const formattedDate=luxon.DateTime.fromISO(date);return formatDate(formattedDate);}}
-const internalResumeLinesComponent=__exports.internalResumeLinesComponent={component:InternalResumeLineComponent,fieldDependencies:[{name:"company_id",type:"many2one"},{name:"resume_line_ids",type:"one2many"}],};registry.category("view_widgets").add("internal_resume_lines",internalResumeLinesComponent);return __exports;});;
+/* /bateria_reportes/static/src/dashboard.js */
+odoo.define('@bateria_reportes/dashboard',['@web/core/registry','@odoo/owl','@web/core/utils/hooks','@web/core/user'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{Component,useState,onWillStart}=require("@odoo/owl");const{useService}=require("@web/core/utils/hooks");const{user}=require("@web/core/user");class BateriaDashboard extends Component{setup(){this.action=useService("action");this.orm=useService("orm");this.state=useState({alertasTraslado:[],isVentas:false,isCompras:false,isContabilidad:false,isAdmin:false,});onWillStart(async()=>{this.state.isVentas=await user.hasGroup("bateria_reportes.group_bateria_venta");this.state.isCompras=await user.hasGroup("bateria_reportes.group_bateria_compra");this.state.isContabilidad=await user.hasGroup("bateria_reportes.group_bateria_contabilidad");this.state.isAdmin=await user.hasGroup("bateria_reportes.group_bateria_admin");if(this.state.isAdmin){await this.buscarTrasladosPendientes();}});}
+async buscarTrasladosPendientes(){const traslados=await this.orm.searchRead("bateria.traslado",[["estado","=","borrador"]],["id","name","fecha"]);this.state.alertasTraslado=traslados;}
+abrirTraslado(traslado_id){this.action.doAction({type:"ir.actions.act_window",res_model:"bateria.traslado",res_id:traslado_id,views:[[false,"form"]],target:"current"});}
+openVentas(){this.action.doAction("bateria_reportes.action_bateria_orden_venta",{clearBreadcrumbs:true});}
+openInventario(){this.action.doAction("bateria_reportes.action_bateria_inventario",{clearBreadcrumbs:true});}
+openCatalogo(){this.action.doAction("bateria_reportes.action_bateria_producto",{clearBreadcrumbs:true});}
+openReportes(){this.action.doAction("bateria_reportes.action_reportes_gerenciales",{clearBreadcrumbs:true});}
+openCompras(){this.action.doAction("bateria_reportes.action_bateria_compra",{clearBreadcrumbs:true});}
+openEmbarques(){this.action.doAction("bateria_reportes.action_bateria_embarque",{clearBreadcrumbs:true});}
+openServicios(){this.action.doAction("bateria_reportes.action_bateria_servicio",{clearBreadcrumbs:true});}
+openGastos(){this.action.doAction("bateria_reportes.action_bateria_gasto",{clearBreadcrumbs:true});}
+openActivos(){this.action.doAction("bateria_reportes.action_bateria_activo",{clearBreadcrumbs:true});}
+openFlota(){this.action.doAction("bateria_reportes.action_bateria_vehiculo",{clearBreadcrumbs:true});}
+openTaller(){this.action.doAction("bateria_reportes.action_bateria_taller_articulo",{clearBreadcrumbs:true});}
+openContabilidad(){this.action.doAction("bateria_reportes.action_bateria_auditor_bdt",{clearBreadcrumbs:true});}
+openReparaciones(){this.action.doAction("bateria_reportes.action_bateria_reparacion",{clearBreadcrumbs:true});}}
+BateriaDashboard.template="bateria_reportes.Dashboard";registry.category("actions").add("bateria_reportes.dashboard",BateriaDashboard);return __exports;});;
 
 /* /stock_account/static/src/fields/boolean_confirm.js */
 odoo.define('@stock_account/fields/boolean_confirm',['@web/core/l10n/translation','@web/core/registry','@web/core/utils/hooks','@web/core/checkbox/checkbox','@web/core/confirmation_dialog/confirmation_dialog','@web/views/fields/boolean_toggle/boolean_toggle_field'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"stock_account",...args);const{registry}=require('@web/core/registry');const{useService}=require("@web/core/utils/hooks");const{CheckBox}=require("@web/core/checkbox/checkbox");const{ConfirmationDialog}=require("@web/core/confirmation_dialog/confirmation_dialog");const{BooleanToggleField,booleanToggleField,}=require("@web/views/fields/boolean_toggle/boolean_toggle_field");const ConfirmCheckBox=__exports.ConfirmCheckBox=class ConfirmCheckBox extends CheckBox{onClick(ev){ev.preventDefault();if(ev.target.tagName!=="INPUT"){return;}
@@ -22634,6 +22578,120 @@ openStockReport(){const additionalContext={};if(this.controller.dateAsString){ad
 return this.actionService.doAction("stock.action_product_stock_view",{additionalContext});}
 toggleInventoryValuationFold(){this.state.displayInventoryValuationLine=!this.state.displayInventoryValuationLine;}}
 registry.category("actions").add("stock_valuation_report",StockValuationReport);return __exports;});;
+
+/* /sale_stock/static/src/product_catalog/kanban_record.js */
+odoo.define('@sale_stock/product_catalog/kanban_record',['@product/product_catalog/kanban_record','@sale_stock/product_catalog/sale_order_line/sale_order_line','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{ProductCatalogKanbanRecord}=require("@product/product_catalog/kanban_record");const{ProductCatalogSaleOrderLine}=require("@sale_stock/product_catalog/sale_order_line/sale_order_line");const{patch}=require("@web/core/utils/patch");patch(ProductCatalogKanbanRecord.prototype,{updateQuantity(quantity){if(this.env.orderResModel!=="sale.order"||this.productCatalogData.productType=="service"){super.updateQuantity(...arguments);}else if(this.productCatalogData.quantity===this.productCatalogData.deliveredQty&&quantity<this.productCatalogData.quantity){this.props.record.load();this.props.record.model.notify();}else{super.updateQuantity(Math.max(quantity,this.productCatalogData.deliveredQty));}},get orderLineComponent(){if(this.env.orderResModel==="sale.order"){return ProductCatalogSaleOrderLine;}
+return super.orderLineComponent;},});return __exports;});;
+
+/* /sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js */
+odoo.define('@sale_stock/product_catalog/sale_order_line/sale_order_line',['@web/core/l10n/translation','@product/product_catalog/order_line/order_line'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"sale_stock",...args);const{ProductCatalogOrderLine}=require("@product/product_catalog/order_line/order_line");const ProductCatalogSaleOrderLine=__exports.ProductCatalogSaleOrderLine=class ProductCatalogSaleOrderLine extends ProductCatalogOrderLine{static props={...ProductCatalogOrderLine.props,deliveredQty:Number,}
+get disableRemove(){return this.props.quantity===this.props.deliveredQty;}
+get disabledButtonTooltip(){if(this.disableRemove){return _t("The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory.");}
+return super.disabledButtonTooltip;}}
+return __exports;});;
+
+/* /sale_stock/static/src/stock_valuation/stock_valuation_report.js */
+odoo.define('@sale_stock/stock_valuation/stock_valuation_report',['@web/core/l10n/translation','@web/core/utils/patch','@stock_account/stock_valuation/stock_valuation_report'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"sale_stock",...args);const{patch}=require("@web/core/utils/patch");const{StockValuationReport}=require("@stock_account/stock_valuation/stock_valuation_report");patch(StockValuationReport.prototype,{get accrual(){const accrual=super.accrual;const notInvoicedDeliveredGoods=this.data.not_invoiced_delivered_goods;notInvoicedDeliveredGoods.display_name=_t("Goods Delivered Not Invoiced");notInvoicedDeliveredGoods.method=this.openSaleOrder.bind(this);notInvoicedDeliveredGoods.index=accrual.lines.length;accrual.value+=notInvoicedDeliveredGoods.value;accrual.lines.push(notInvoicedDeliveredGoods);this.saleOrderIds=notInvoicedDeliveredGoods.lines.map((line)=>line.id);return accrual;},openSaleOrder(line=false){const action={type:"ir.actions.act_window",name:_t("Sale Orders"),res_model:"sale.order",views:[[false,"list"],[false,"form"]],target:"current",}
+if(line?.id){action.views=[[false,"form"]],action.res_id=line.id;}else{action.domain=[["id","in",this.saleOrderIds]];}
+return this.actionService.doAction(action);},});return __exports;});;
+
+/* /sale_stock/static/src/widgets/qty_at_date_widget.js */
+odoo.define('@sale_stock/widgets/qty_at_date_widget',['@web/core/l10n/dates','@web/core/l10n/localization','@web/core/registry','@web/core/utils/hooks','@web/core/popover/popover_hook','@odoo/owl','@web/views/widgets/standard_widget_props','@web/core/utils/numbers','@web/core/l10n/translation'],function(require){'use strict';let __exports={};const{formatDateTime}=require("@web/core/l10n/dates");const{localization}=require("@web/core/l10n/localization");const{registry}=require("@web/core/registry");const{useService}=require("@web/core/utils/hooks");const{usePopover}=require("@web/core/popover/popover_hook");const{Component,onWillRender}=require("@odoo/owl");const{standardWidgetProps}=require("@web/views/widgets/standard_widget_props");const{roundPrecision}=require("@web/core/utils/numbers");const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"sale_stock",...args);const QtyAtDatePopover=__exports.QtyAtDatePopover=class QtyAtDatePopover extends Component{static template="sale_stock.QtyAtDatePopover";static props={record:Object,calcData:Object,close:Function,};setup(){this.actionService=useService("action");}
+openForecast(){this.actionService.doAction("stock.stock_forecasted_product_product_action",{additionalContext:{active_model:'product.product',active_id:this.props.record.data.product_id.id,warehouse_id:this.props.record.data.warehouse_id&&this.props.record.data.warehouse_id.id,move_to_match_ids:this.props.record.data.move_ids.currentIds,sale_line_to_match_id:this.props.record.resId,},});}
+get forecastedLabel(){return _t('Forecasted Stock')}
+get availableLabel(){return _t('Available')}}
+const QtyAtDateWidget=__exports.QtyAtDateWidget=class QtyAtDateWidget extends Component{static components={Popover:QtyAtDatePopover};static template="sale_stock.QtyAtDate";static props={...standardWidgetProps};setup(){this.popover=usePopover(this.constructor.components.Popover,{position:"top"});this.orm=useService("orm");this.calcData={};onWillRender(()=>{this.initCalcData();});}
+initCalcData(){const{data}=this.props.record;if(data.scheduled_date){if(data.state==='sale'){this.calcData.will_be_fulfilled=data.free_qty_today>=data.qty_to_deliver;}else{this.calcData.will_be_fulfilled=data.virtual_available_at_date>=data.qty_to_deliver;}
+this.calcData.will_be_late=data.forecast_expected_date&&data.forecast_expected_date>data.scheduled_date;if(['draft','sent'].includes(data.state)){this.calcData.forecasted_issue=!this.calcData.will_be_fulfilled&&!data.is_mto;}else{this.calcData.forecasted_issue=!this.calcData.will_be_fulfilled||this.calcData.will_be_late;}}}
+async calcDataForDisplay(){const{data}=this.props.record;let lineUom;if(data.product_uom_id?.[0]){lineUom=(await this.orm.read("uom.uom",[data.product_uom_id[0]],["factor","rounding"]))[0];}
+let lineProduct;if(data.product_id?.[0]){lineProduct=await this.orm.searchRead("product.product",[["id","=",data.product_id[0]]],["uom_id"]);}
+let productUom;if(lineProduct?.[0]?.uom_id?.[0]){productUom=(await this.orm.searchRead("uom.uom",[["id","=",lineProduct[0].uom_id[0]]],["factor","name"]))[0];}
+if(lineUom&&productUom){this.calcData.product_uom_virtual_available_at_date=roundPrecision(data.virtual_available_at_date*lineUom.factor/productUom.factor,1);this.calcData.product_uom_free_qty_today=roundPrecision(data.free_qty_today*lineUom.factor/productUom.factor,1);this.calcData.product_uom_name=productUom.name;}}
+updateCalcData(){const{data}=this.props.record;if(!data.scheduled_date){return;}
+this.calcData.delivery_date=formatDateTime(data.scheduled_date,{format:localization.dateFormat});if(data.forecast_expected_date){this.calcData.forecast_expected_date_str=formatDateTime(data.forecast_expected_date,{format:localization.dateFormat});}}
+async showPopup(ev){const target=ev.currentTarget;await this.calcDataForDisplay();this.updateCalcData();this.popover.open(target,{record:this.props.record,calcData:this.calcData,});}}
+const qtyAtDateWidget=__exports.qtyAtDateWidget={component:QtyAtDateWidget,fieldDependencies:[{name:'display_qty_widget',type:'boolean'},{name:'free_qty_today',type:'float'},{name:'forecast_expected_date',type:'datetime'},{name:'is_mto',type:'boolean'},{name:'move_ids',type:'one2many'},{name:'qty_available_today',type:'float'},{name:'qty_to_deliver',type:'float'},{name:'scheduled_date',type:'datetime'},{name:'virtual_available_at_date',type:'float'},{name:'warehouse_id',type:'many2one'},],};registry.category("view_widgets").add("qty_at_date_widget",qtyAtDateWidget);return __exports;});;
+
+/* /repair/static/src/components/product_catalog/kanban_controller.js */
+odoo.define('@repair/components/product_catalog/kanban_controller',['@product/product_catalog/kanban_controller','@web/core/utils/patch','@web/core/l10n/translation'],function(require){'use strict';let __exports={};const{ProductCatalogKanbanController}=require("@product/product_catalog/kanban_controller");const{patch}=require("@web/core/utils/patch");const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"repair",...args);patch(ProductCatalogKanbanController.prototype,{_defineButtonContent(){if(this.orderResModel==="repair.order"){this.buttonString=_t("Back to Repair");}else{super._defineButtonContent();}},});return __exports;});;
+
+/* /repair/static/src/components/product_catalog/order_line.js */
+odoo.define('@repair/components/product_catalog/order_line',['@product/product_catalog/order_line/order_line','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{ProductCatalogOrderLine}=require("@product/product_catalog/order_line/order_line");const{patch}=require("@web/core/utils/patch");patch(ProductCatalogOrderLine.prototype,{get showPrice(){return super.showPrice&&this.env.orderResModel!=="repair.order";}});return __exports;});;
+
+/* /hr_skills/static/src/fields/skills_one2many/skills_one2many.js */
+odoo.define('@hr_skills/fields/skills_one2many/skills_one2many',['@web/views/fields/x2many/x2many_field','@web/views/fields/relational_utils','@web/core/registry','@web/core/l10n/translation','@web/core/user','@hr_skills/views/skills_list_renderer','@web/core/utils/hooks','@odoo/owl'],function(require){'use strict';let __exports={};const{X2ManyField,x2ManyField}=require("@web/views/fields/x2many/x2many_field");const{useX2ManyCrud,useOpenX2ManyRecord}=require("@web/views/fields/relational_utils");const{registry}=require("@web/core/registry");const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{user}=require("@web/core/user");const{CommonSkillsListRenderer}=require("@hr_skills/views/skills_list_renderer");const{useService}=require('@web/core/utils/hooks');const{onWillStart}=require("@odoo/owl");const SkillsListRenderer=__exports.SkillsListRenderer=class SkillsListRenderer extends CommonSkillsListRenderer{static template="hr_skills.SkillsListRenderer";setup(){super.setup();this.orm=useService('orm');this.actionService=useService("action");onWillStart(async()=>{const res=await this.orm.searchCount('hr.skill.type',[]);this.anySkills=res>0;[this.user]=await this.orm.read("res.users",[user.userId],["employee_ids"]);this.IsHrUser=await user.hasGroup("hr.group_hr_user");this.userSubordinates=(await this.orm.searchRead("hr.employee",[["id","child_of",this.user.employee_ids]],["id"])).map((record)=>record["id"]);});}
+get groupBy(){return'skill_type_id';}
+async skillTypesAction(){return this.actionService.doAction("hr_skills.hr_skill_type_action");}
+async openSkillsReport(){const id=this.env.model.root.data.id||this.env.model.root.data.employee_id.id;this.actionService.doAction({type:"ir.actions.act_window",name:_t("Skills Report"),res_model:"hr.employee.skill.history.report",view_mode:"graph,list",views:[[false,"graph"]],context:{'fill_temporal':false,},target:"current",domain:[['employee_id','=',id]],});}
+get showTimeline(){return this.SkillsRight&&!this.props.list.context.no_timeline;}
+get SkillsRight(){let isSubordinate=false;if(this.env.model.root.data.employee_id){isSubordinate=this.userSubordinates.includes(this.env.model.root.data.employee_id.id);}
+return this.IsHrUser||isSubordinate;}}
+const SkillsX2ManyField=__exports.SkillsX2ManyField=class SkillsX2ManyField extends X2ManyField{static components={...X2ManyField.components,ListRenderer:SkillsListRenderer,};setup(){super.setup();this.orm=useService('orm');this.actionService=useService('action');const{saveRecord,updateRecord}=useX2ManyCrud(()=>this.list,this.isMany2Many);const openRecord=useOpenX2ManyRecord({resModel:this.list.resModel,activeField:this.activeField,activeActions:this.activeActions,getList:()=>this.list,saveRecord:saveRecord,updateRecord:updateRecord,withParentId:this.props.widget!=="many2many",});this._openRecord=(params)=>{params.title=this.getWizardTitleName();openRecord({...params});};}
+getWizardTitleName(){return _t("Update Skills")}
+async onAdd({context,editable}={}){const employeeId=this.props.record.resModel==="res.users"?this.props.record.data.employee_id.id:this.props.record.resId;return super.onAdd({editable,context:{...context,default_employee_id:employeeId,}});}}
+const skillsX2ManyField=__exports.skillsX2ManyField={...x2ManyField,component:SkillsX2ManyField,};registry.category("fields").add("skills_one2many",skillsX2ManyField);return __exports;});;
+
+/* /hr_skills/static/src/fields/boolean_toggle_load/boolean_toggle_load.js */
+odoo.define('@hr_skills/fields/boolean_toggle_load/boolean_toggle_load',['@web/core/registry','@web/views/fields/boolean_toggle/list_boolean_toggle_field'],function(require){'use strict';let __exports={};const{registry}=require('@web/core/registry');const{ListBooleanToggleField,listBooleanToggleField}=require("@web/views/fields/boolean_toggle/list_boolean_toggle_field");const ListBooleanToggleLoadField=__exports.ListBooleanToggleLoadField=class ListBooleanToggleLoadField extends ListBooleanToggleField{async onChange(newValue){this.state.value=newValue;const changes={[this.props.name]:newValue,technical_is_new_default:newValue};await this.props.record.update(changes,{save:this.props.autosave});}}
+const listBooleanToggleLoadField=__exports.listBooleanToggleLoadField={...listBooleanToggleField,component:ListBooleanToggleLoadField,};registry.category("fields").add("boolean_toggle_load",listBooleanToggleLoadField);return __exports;});;
+
+/* /hr_skills/static/src/fields/formatted_date/formatted_date.js */
+odoo.define('@hr_skills/fields/formatted_date/formatted_date',['@odoo/owl','@web/core/l10n/translation','@web/core/registry','@web/core/py_js/py','@web/views/fields/standard_field_props'],function(require){'use strict';let __exports={};const{Component}=require("@odoo/owl");const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{registry}=require("@web/core/registry");const{evaluateBooleanExpr}=require("@web/core/py_js/py");const{standardFieldProps}=require("@web/views/fields/standard_field_props");const FormattedDate=__exports.FormattedDate=class FormattedDate extends Component{static template="hr_skills.FormattedDate";static props={...standardFieldProps,dayFormat:String,monthFormat:String,yearFormat:String,color:Object,};get value(){return this.props.record.data[this.props.name];}
+get placeholder(){return _t("Indefinite");}
+get colorClass(){const colors=Object.keys(this.props.color);if(colors){for(const colorName of colors){if(evaluateBooleanExpr(`${this.props.color[colorName]}`,this.props.record.evalContextWithVirtualIds)){return"text-"+colorName;}}}
+return""}}
+const formattedDate=__exports.formattedDate={component:FormattedDate,supportedOptions:[{label:_t("Day Format"),name:"day_format",type:"string",default:"numeric",},{label:_t("Month Format"),name:"month_format",type:"string",default:"numeric",},{label:_t("Year Format"),name:"year_format",type:"string",default:"numeric",},{label:_t("Color"),name:"color",type:"string",default:{},},],supportedTypes:["date"],extractProps({options}){return{dayFormat:options.day_format||"numeric",monthFormat:options.month_format||"numeric",yearFormat:options.year_format||"numeric",color:options.color||{},};},};registry.category("fields").add("formatted_date",formattedDate);return __exports;});;
+
+/* /hr_skills/static/src/fields/hr_skills_tags_list/hr_skills_tags_list.js */
+odoo.define('@hr_skills/fields/hr_skills_tags_list/hr_skills_tags_list',['@web/core/tags_list/tags_list'],function(require){'use strict';let __exports={};const{TagsList}=require("@web/core/tags_list/tags_list");const SkillsTagList=__exports.SkillsTagList=class SkillsTagList extends TagsList{static template="hr_skills.SkillsTagsList";getTextStyle(tag){return tag.defaultLevel}}
+return __exports;});;
+
+/* /hr_skills/static/src/fields/many2many_tags_skills/many2many_tags_skills.js */
+odoo.define('@hr_skills/fields/many2many_tags_skills/many2many_tags_skills',['@web/core/registry','@web/views/fields/many2many_tags/many2many_tags_field','@hr_skills/fields/hr_skills_tags_list/hr_skills_tags_list'],function(require){'use strict';let __exports={};const{registry}=require("@web/core/registry");const{Many2ManyTagsField,many2ManyTagsField,}=require("@web/views/fields/many2many_tags/many2many_tags_field");const{SkillsTagList}=require("@hr_skills/fields/hr_skills_tags_list/hr_skills_tags_list");class SkillsMany2ManyTags extends Many2ManyTagsField{static components={...Many2ManyTagsField.components,TagsList:SkillsTagList};getTagProps(record){return{...super.getTagProps(record),defaultLevel:record.data.default_level};}}
+const skillsMany2ManyTags=__exports.skillsMany2ManyTags={...many2ManyTagsField,component:SkillsMany2ManyTags,relatedFields:(fieldInfo)=>{return[...many2ManyTagsField.relatedFields(fieldInfo),{name:"default_level",type:"boolean"},];},};registry.category("fields").add("many2many_tags_skills",skillsMany2ManyTags);return __exports;});;
+
+/* /hr_skills/static/src/fields/one2many_tags_skills/one2many_tags_skills.js */
+odoo.define('@hr_skills/fields/one2many_tags_skills/one2many_tags_skills',['@web/core/l10n/translation','@web/views/fields/x2many/x2many_field','@web/views/fields/relational_utils','@web/core/registry','@web/core/tags_list/tags_list'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{X2ManyField,x2ManyField}=require("@web/views/fields/x2many/x2many_field");const{useX2ManyCrud,useOpenX2ManyRecord}=require("@web/views/fields/relational_utils");const{registry}=require("@web/core/registry");const{TagsList}=require("@web/core/tags_list/tags_list");const One2ManyTagsSkillsField=__exports.One2ManyTagsSkillsField=class One2ManyTagsSkillsField extends X2ManyField{static components={...X2ManyField.components,TagsList,};static template="hr_recruitment_skills.One2ManyTagsSkillsField";setup(){super.setup();const{saveRecord,updateRecord}=useX2ManyCrud(()=>this.list,this.isMany2Many);const openRecord=useOpenX2ManyRecord({resModel:this.list.resModel,activeField:this.activeField,activeActions:this.activeActions,getList:()=>this.list,saveRecord:saveRecord,updateRecord:updateRecord,withParentId:this.props.widget!=="many2many",});this._openRecord=(params)=>{params.title=_t("Select Skills");openRecord({...params});};}
+getTagProps(record){const tagProps={id:record.id,resId:record.resId,text:record.data.display_name,colorIndex:record.data.color,canEdit:true,onClick:(ev)=>this.onTagClick(ev,record),onDelete:!this.props.readonly?()=>this.activeActions.onDelete(record):undefined,};return tagProps;}
+get tags(){return this.props.record.data[this.props.name].records.map((record)=>this.getTagProps(record));}
+onTagClick(ev,record){this.openRecord(record);}}
+const one2ManyTagsSkillsField=__exports.one2ManyTagsSkillsField={...x2ManyField,component:One2ManyTagsSkillsField,};registry.category("fields").add("many2one_tags_skills",one2ManyTagsSkillsField);return __exports;});;
+
+/* /hr_skills/static/src/fields/resume_one2many/resume_one2many.js */
+odoo.define('@hr_skills/fields/resume_one2many/resume_one2many',['@web/core/l10n/translation','@web/core/registry','@odoo/owl','@web/core/l10n/dates','@hr_skills/fields/skills_one2many/skills_one2many','@hr_skills/views/skills_list_renderer'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{registry}=require("@web/core/registry");const{onMounted,onPatched,useRef}=require("@odoo/owl");const{formatDate}=require("@web/core/l10n/dates");const{SkillsX2ManyField,skillsX2ManyField}=require("@hr_skills/fields/skills_one2many/skills_one2many");const{CommonSkillsListRenderer}=require("@hr_skills/views/skills_list_renderer");const ResumeListRenderer=__exports.ResumeListRenderer=class ResumeListRenderer extends CommonSkillsListRenderer{static template="hr_skills.ResumeListRenderer";static rowsTemplate="hr_skills.ResumeListRenderer.Rows";static recordRowTemplate="hr_skills.ResumeListRenderer.RecordRow";static useMagicColumnWidths=false;setup(){super.setup();this.linkRef=useRef("link-target-blank");onMounted(this._setLinksToOpenInNewTab);onPatched(this._setLinksToOpenInNewTab);}
+get groupBy(){return"line_type_id";}
+get colspan(){if(this.props.activeActions){return 3;}
+return 2;}
+formatDate(date){return formatDate(date);}
+_setLinksToOpenInNewTab(){const resumeLines=this.linkRef.el;if(resumeLines){const links=resumeLines.querySelectorAll('a');links.forEach(link=>{link.setAttribute('target','_blank');});}}}
+const ResumeX2ManyField=__exports.ResumeX2ManyField=class ResumeX2ManyField extends SkillsX2ManyField{static components={...SkillsX2ManyField.components,ListRenderer:ResumeListRenderer,};getWizardTitleName(){return _t("New Resume Line");}}
+const resumeX2ManyField=__exports.resumeX2ManyField={...skillsX2ManyField,component:ResumeX2ManyField,};registry.category("fields").add("resume_one2many",resumeX2ManyField);return __exports;});;
+
+/* /hr_skills/static/src/views/skills_list_renderer.js */
+odoo.define('@hr_skills/views/skills_list_renderer',['@web/core/l10n/translation','@web/views/list/list_renderer'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"hr_skills",...args);const{ListRenderer}=require("@web/views/list/list_renderer");const CommonSkillsListRenderer=__exports.CommonSkillsListRenderer=class CommonSkillsListRenderer extends ListRenderer{get colspan(){const span=this.allColumns.length;if(this.isEditable){return span+1;}
+return span;}
+get groupBy(){return'';}
+get groupedList(){const grouped={};for(const record of this.list.records){const data=record.data;const group=data[this.groupBy];if(grouped[group.display_name]===undefined){grouped[group.display_name]={id:parseInt(group.id),name:group.display_name||_t('Other'),list:{records:[],},};}
+grouped[group.display_name].list.records.push(record);}
+return grouped;}
+get showTable(){return this.props.list.records.length;}
+get isEditable(){return this.props.editable!==false;}
+async onCellClicked(record,column,ev){if(!this.isEditable){return;}
+return await super.onCellClicked(record,column,ev);}}
+CommonSkillsListRenderer.rowsTemplate="hr_skills.SkillsListRenderer.Rows";return __exports;});;
+
+/* /hr_skills/static/src/components/avatar_card_resource/avatar_card_resource_popover_patch.js */
+odoo.define('@hr_skills/components/avatar_card_resource/avatar_card_resource_popover_patch',['@web/core/utils/patch','@resource_mail/components/avatar_card_resource/avatar_card_resource_popover'],function(require){'use strict';let __exports={};const{patch}=require("@web/core/utils/patch");const{AvatarCardResourcePopover}=require("@resource_mail/components/avatar_card_resource/avatar_card_resource_popover");const patchAvatarCardResourcePopover=__exports.patchAvatarCardResourcePopover={loadAdditionalData(){const promises=super.loadAdditionalData();this.skills=false;if(this.record.employee_skill_ids?.length){promises.push(this.orm.read("hr.employee.skill",this.record.employee_skill_ids,["display_name","color"]).then((skills)=>{this.skills=skills;}));}
+return promises;},get fieldNames(){return[...super.fieldNames,"employee_skill_ids",];},get hasFooter(){return this.skills?.length>0||super.hasFooter;},get skillTags(){return this.skills.map(({id,display_name,color})=>({id,text:display_name,colorIndex:color,}));},};const unpatchAvatarCardResourcePopover=__exports.unpatchAvatarCardResourcePopover=patch(AvatarCardResourcePopover.prototype,patchAvatarCardResourcePopover);return __exports;});;
+
+/* /hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.js */
+odoo.define('@hr_skills/components/internal_resume_lines/internal_resume_one2many',['@odoo/owl','@web/views/widgets/standard_widget_props','@web/core/registry','@web/core/utils/hooks','@web/core/l10n/dates'],function(require){'use strict';let __exports={};const{Component,onWillStart,onWillUpdateProps}=require("@odoo/owl");const{standardWidgetProps}=require("@web/views/widgets/standard_widget_props");const{registry}=require("@web/core/registry");const{useService}=require("@web/core/utils/hooks");const{formatDate}=require("@web/core/l10n/dates");const InternalResumeLineComponent=__exports.InternalResumeLineComponent=class InternalResumeLineComponent extends Component{static template="hr_skills.InternalResumeLineComponent";static props={...standardWidgetProps};setup(){super.setup();this.orm=useService("orm");onWillStart(async()=>{this.internalResumeLines=await this.getInternalResumeLines(this.props.record.resId,this.props.record.resModel)})
+onWillUpdateProps(async(nextProps)=>{this.internalResumeLines=await this.getInternalResumeLines(nextProps.record.resId,nextProps.record.resModel)})}
+async getInternalResumeLines(resId,resModel){const internalResumeLines=await this.orm.call("hr.employee","get_internal_resume_lines",[resId,resModel]);return internalResumeLines;}
+get companyId(){return this.props.record.data.company_id.display_name;}
+get haveResumeLines(){return this.props.record.data.resume_line_ids.records.length||this.internalResumeLines.length;}
+formatDate(date){const formattedDate=luxon.DateTime.fromISO(date);return formatDate(formattedDate);}}
+const internalResumeLinesComponent=__exports.internalResumeLinesComponent={component:InternalResumeLineComponent,fieldDependencies:[{name:"company_id",type:"many2one"},{name:"resume_line_ids",type:"one2many"}],};registry.category("view_widgets").add("internal_resume_lines",internalResumeLinesComponent);return __exports;});;
 
 /* /purchase_stock/static/src/js/tours/purchase_stock.js */
 odoo.define('@purchase_stock/js/tours/purchase_stock',['@web/core/l10n/translation','@purchase/js/tours/purchase_steps','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"purchase_stock",...args);const PurchaseAdditionalTourSteps=require("@purchase/js/tours/purchase_steps")[Symbol.for("default")];const{patch}=require("@web/core/utils/patch");patch(PurchaseAdditionalTourSteps.prototype,{_get_purchase_stock_steps:function(){return[{trigger:".o-form-buttonbox button[name='action_view_picking']",},{trigger:".o-form-buttonbox button[name='action_view_picking']",content:_t("Receive the ordered products."),tooltipPosition:"bottom",run:'click',},{trigger:".o_statusbar_buttons button[name='button_validate']",content:_t("Validate the receipt of all ordered products."),tooltipPosition:"bottom",run:'click',},{trigger:".modal-dialog",},{trigger:".modal-footer .btn-primary",content:_t("Process all the receipt quantities."),tooltipPosition:"bottom",run:"click",},{trigger:".o_back_button a, .breadcrumb-item:not('.active'):last",content:_t('Go back to the purchase order to generate the vendor bill.'),tooltipPosition:'bottom',run:"click",},{trigger:".o_statusbar_buttons button[name='action_create_invoice']",content:_t("Generate the draft vendor bill."),tooltipPosition:"bottom",run:'click',}];}});__exports[Symbol.for("default")]=PurchaseAdditionalTourSteps;return __exports;});;
@@ -23116,39 +23174,6 @@ odoo.define('@sale_pdf_quote_builder/js/quotation_document_kanban/quotation_docu
 /* /sale_pdf_quote_builder/static/src/js/quotation_document_kanban/quotation_document_kanban_widget.js */
 odoo.define('@sale_pdf_quote_builder/js/quotation_document_kanban/quotation_document_kanban_widget',['@product/js/product_document_kanban/product_document_kanban_renderer','@product/js/product_document_kanban/upload_button/upload_button','@web/core/registry','@web/views/fields/x2many/x2many_field'],function(require){'use strict';let __exports={};const{ProductDocumentKanbanRenderer}=require("@product/js/product_document_kanban/product_document_kanban_renderer");const{UploadButton}=require('@product/js/product_document_kanban/upload_button/upload_button');const{registry}=require('@web/core/registry');const{X2ManyField,x2ManyField}=require('@web/views/fields/x2many/x2many_field');const QuotationDocumentX2ManyField=__exports.QuotationDocumentX2ManyField=class QuotationDocumentX2ManyField extends X2ManyField{static template='sale_pdf_quote_builder.QuotationDocumentX2ManyField';static components={...X2ManyField.components,UploadButton,KanbanRenderer:ProductDocumentKanbanRenderer,};setup(){super.setup();this.uploadRoute='/sale_pdf_quote_builder/quotation_document/upload';this.formData={'sale_order_template_id':this.props.record.resId,};this.allowedMIMETypes='application/pdf';}}
 const quotationDocumentX2ManyField=__exports.quotationDocumentX2ManyField={...x2ManyField,component:QuotationDocumentX2ManyField,};registry.category('fields').add('quotation_document_many2many',quotationDocumentX2ManyField);return __exports;});;
-
-/* /sale_stock/static/src/product_catalog/kanban_record.js */
-odoo.define('@sale_stock/product_catalog/kanban_record',['@product/product_catalog/kanban_record','@sale_stock/product_catalog/sale_order_line/sale_order_line','@web/core/utils/patch'],function(require){'use strict';let __exports={};const{ProductCatalogKanbanRecord}=require("@product/product_catalog/kanban_record");const{ProductCatalogSaleOrderLine}=require("@sale_stock/product_catalog/sale_order_line/sale_order_line");const{patch}=require("@web/core/utils/patch");patch(ProductCatalogKanbanRecord.prototype,{updateQuantity(quantity){if(this.env.orderResModel!=="sale.order"||this.productCatalogData.productType=="service"){super.updateQuantity(...arguments);}else if(this.productCatalogData.quantity===this.productCatalogData.deliveredQty&&quantity<this.productCatalogData.quantity){this.props.record.load();this.props.record.model.notify();}else{super.updateQuantity(Math.max(quantity,this.productCatalogData.deliveredQty));}},get orderLineComponent(){if(this.env.orderResModel==="sale.order"){return ProductCatalogSaleOrderLine;}
-return super.orderLineComponent;},});return __exports;});;
-
-/* /sale_stock/static/src/product_catalog/sale_order_line/sale_order_line.js */
-odoo.define('@sale_stock/product_catalog/sale_order_line/sale_order_line',['@web/core/l10n/translation','@product/product_catalog/order_line/order_line'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"sale_stock",...args);const{ProductCatalogOrderLine}=require("@product/product_catalog/order_line/order_line");const ProductCatalogSaleOrderLine=__exports.ProductCatalogSaleOrderLine=class ProductCatalogSaleOrderLine extends ProductCatalogOrderLine{static props={...ProductCatalogOrderLine.props,deliveredQty:Number,}
-get disableRemove(){return this.props.quantity===this.props.deliveredQty;}
-get disabledButtonTooltip(){if(this.disableRemove){return _t("The ordered quantity cannot be decreased below the amount already delivered. Instead, create a return in your inventory.");}
-return super.disabledButtonTooltip;}}
-return __exports;});;
-
-/* /sale_stock/static/src/stock_valuation/stock_valuation_report.js */
-odoo.define('@sale_stock/stock_valuation/stock_valuation_report',['@web/core/l10n/translation','@web/core/utils/patch','@stock_account/stock_valuation/stock_valuation_report'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"sale_stock",...args);const{patch}=require("@web/core/utils/patch");const{StockValuationReport}=require("@stock_account/stock_valuation/stock_valuation_report");patch(StockValuationReport.prototype,{get accrual(){const accrual=super.accrual;const notInvoicedDeliveredGoods=this.data.not_invoiced_delivered_goods;notInvoicedDeliveredGoods.display_name=_t("Goods Delivered Not Invoiced");notInvoicedDeliveredGoods.method=this.openSaleOrder.bind(this);notInvoicedDeliveredGoods.index=accrual.lines.length;accrual.value+=notInvoicedDeliveredGoods.value;accrual.lines.push(notInvoicedDeliveredGoods);this.saleOrderIds=notInvoicedDeliveredGoods.lines.map((line)=>line.id);return accrual;},openSaleOrder(line=false){const action={type:"ir.actions.act_window",name:_t("Sale Orders"),res_model:"sale.order",views:[[false,"list"],[false,"form"]],target:"current",}
-if(line?.id){action.views=[[false,"form"]],action.res_id=line.id;}else{action.domain=[["id","in",this.saleOrderIds]];}
-return this.actionService.doAction(action);},});return __exports;});;
-
-/* /sale_stock/static/src/widgets/qty_at_date_widget.js */
-odoo.define('@sale_stock/widgets/qty_at_date_widget',['@web/core/l10n/dates','@web/core/l10n/localization','@web/core/registry','@web/core/utils/hooks','@web/core/popover/popover_hook','@odoo/owl','@web/views/widgets/standard_widget_props','@web/core/utils/numbers','@web/core/l10n/translation'],function(require){'use strict';let __exports={};const{formatDateTime}=require("@web/core/l10n/dates");const{localization}=require("@web/core/l10n/localization");const{registry}=require("@web/core/registry");const{useService}=require("@web/core/utils/hooks");const{usePopover}=require("@web/core/popover/popover_hook");const{Component,onWillRender}=require("@odoo/owl");const{standardWidgetProps}=require("@web/views/widgets/standard_widget_props");const{roundPrecision}=require("@web/core/utils/numbers");const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"sale_stock",...args);const QtyAtDatePopover=__exports.QtyAtDatePopover=class QtyAtDatePopover extends Component{static template="sale_stock.QtyAtDatePopover";static props={record:Object,calcData:Object,close:Function,};setup(){this.actionService=useService("action");}
-openForecast(){this.actionService.doAction("stock.stock_forecasted_product_product_action",{additionalContext:{active_model:'product.product',active_id:this.props.record.data.product_id.id,warehouse_id:this.props.record.data.warehouse_id&&this.props.record.data.warehouse_id.id,move_to_match_ids:this.props.record.data.move_ids.currentIds,sale_line_to_match_id:this.props.record.resId,},});}
-get forecastedLabel(){return _t('Forecasted Stock')}
-get availableLabel(){return _t('Available')}}
-const QtyAtDateWidget=__exports.QtyAtDateWidget=class QtyAtDateWidget extends Component{static components={Popover:QtyAtDatePopover};static template="sale_stock.QtyAtDate";static props={...standardWidgetProps};setup(){this.popover=usePopover(this.constructor.components.Popover,{position:"top"});this.orm=useService("orm");this.calcData={};onWillRender(()=>{this.initCalcData();});}
-initCalcData(){const{data}=this.props.record;if(data.scheduled_date){if(data.state==='sale'){this.calcData.will_be_fulfilled=data.free_qty_today>=data.qty_to_deliver;}else{this.calcData.will_be_fulfilled=data.virtual_available_at_date>=data.qty_to_deliver;}
-this.calcData.will_be_late=data.forecast_expected_date&&data.forecast_expected_date>data.scheduled_date;if(['draft','sent'].includes(data.state)){this.calcData.forecasted_issue=!this.calcData.will_be_fulfilled&&!data.is_mto;}else{this.calcData.forecasted_issue=!this.calcData.will_be_fulfilled||this.calcData.will_be_late;}}}
-async calcDataForDisplay(){const{data}=this.props.record;let lineUom;if(data.product_uom_id?.[0]){lineUom=(await this.orm.read("uom.uom",[data.product_uom_id[0]],["factor","rounding"]))[0];}
-let lineProduct;if(data.product_id?.[0]){lineProduct=await this.orm.searchRead("product.product",[["id","=",data.product_id[0]]],["uom_id"]);}
-let productUom;if(lineProduct?.[0]?.uom_id?.[0]){productUom=(await this.orm.searchRead("uom.uom",[["id","=",lineProduct[0].uom_id[0]]],["factor","name"]))[0];}
-if(lineUom&&productUom){this.calcData.product_uom_virtual_available_at_date=roundPrecision(data.virtual_available_at_date*lineUom.factor/productUom.factor,1);this.calcData.product_uom_free_qty_today=roundPrecision(data.free_qty_today*lineUom.factor/productUom.factor,1);this.calcData.product_uom_name=productUom.name;}}
-updateCalcData(){const{data}=this.props.record;if(!data.scheduled_date){return;}
-this.calcData.delivery_date=formatDateTime(data.scheduled_date,{format:localization.dateFormat});if(data.forecast_expected_date){this.calcData.forecast_expected_date_str=formatDateTime(data.forecast_expected_date,{format:localization.dateFormat});}}
-async showPopup(ev){const target=ev.currentTarget;await this.calcDataForDisplay();this.updateCalcData();this.popover.open(target,{record:this.props.record,calcData:this.calcData,});}}
-const qtyAtDateWidget=__exports.qtyAtDateWidget={component:QtyAtDateWidget,fieldDependencies:[{name:'display_qty_widget',type:'boolean'},{name:'free_qty_today',type:'float'},{name:'forecast_expected_date',type:'datetime'},{name:'is_mto',type:'boolean'},{name:'move_ids',type:'one2many'},{name:'qty_available_today',type:'float'},{name:'qty_to_deliver',type:'float'},{name:'scheduled_date',type:'datetime'},{name:'virtual_available_at_date',type:'float'},{name:'warehouse_id',type:'many2one'},],};registry.category("view_widgets").add("qty_at_date_widget",qtyAtDateWidget);return __exports;});;
 
 /* /sms/static/src/components/phone_field/phone_field.js */
 odoo.define('@sms/components/phone_field/phone_field',['@web/core/l10n/translation','@web/core/utils/patch','@web/views/fields/phone/phone_field','@sms/components/sms_button/sms_button'],function(require){'use strict';let __exports={};const{appTranslateFn}=require("@web/core/l10n/translation");const _t=(str,...args)=>appTranslateFn(str,"sms",...args);const{patch}=require("@web/core/utils/patch");const{PhoneField,phoneField,formPhoneField}=require("@web/views/fields/phone/phone_field");const{SendSMSButton}=require('@sms/components/sms_button/sms_button');patch(PhoneField,{components:{...PhoneField.components,SendSMSButton},defaultProps:{...PhoneField.defaultProps,enableButton:true,},props:{...PhoneField.props,enableButton:{type:Boolean,optional:true},},});const patchDescr=()=>({extractProps({options}){const props=super.extractProps(...arguments);props.enableButton=options.enable_sms;return props;},supportedOptions:[{label:_t("Enable SMS"),name:"enable_sms",type:"boolean",default:true,}],});patch(phoneField,patchDescr());patch(formPhoneField,patchDescr());return __exports;});;
@@ -39617,6 +39642,447 @@ registerTemplate("hr_expense.DashboardListRenderer", `/hr_expense/static/src/vie
         </xpath>
     </t>
 `);
+registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/dashboard.xml`, `<t t-name="bateria_reportes.Dashboard" owl="1" xml:space="preserve">
+        <div class="o_action_manager" style="background-color: #f4f5f7; height: 100vh; overflow-y: auto;">
+            <div class="container py-5">
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <h1 class="display-4 fw-bold" style="color: #014f96;">🔋 Gestión de Baterías</h1>
+                        <p class="lead text-muted">Selecciona un módulo para comenzar</p>
+                    </div>
+                </div>
+
+                <t t-if="state.isAdmin and state.alertasTraslado.length &gt; 0">
+                    <div class="row justify-content-center mb-5">
+                        <div class="col-md-10">
+                            <div class="alert alert-danger shadow-sm" role="alert" style="border-left: 6px solid #dc3545; border-radius: 10px;">
+                                <h4 class="alert-heading fw-bold mb-3">
+                                    <i class="fa fa-exclamation-triangle me-2 animate__animated animate__flash animate__infinite"/> 
+                                    ¡Atención Supervisor! Traslados Pendientes
+                                </h4>
+                                <p class="mb-3">Hay vendedores que no pueden facturar porque están esperando que apruebes el movimiento de mercancía al Racksito:</p>
+
+                                <div class="d-flex flex-column gap-2">
+                                    <t t-foreach="state.alertasTraslado" t-as="traslado" t-key="traslado.id">
+                                        <div class="d-flex justify-content-between align-items-center bg-white p-3 rounded border">
+                                            <div>
+                                                <span class="badge bg-danger fs-6 me-2">PENDIENTE</span>
+                                                <strong class="fs-5" t-esc="traslado.name"/>
+                                            </div>
+                                            <button class="btn btn-outline-danger" t-on-click="() =&gt; this.abrirTraslado(traslado.id)">
+                                                Ver Traslado <i class="fa fa-arrow-right ms-1"/>
+                                            </button>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="row g-4 justify-content-center">
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isVentas || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openVentas">
+                            <div class="card-body py-5">
+                                <i class="fa fa-shopping-cart fa-4x mb-3" style="color: #28a745;"/>
+                                <h3 class="card-title fw-bold">Ventas</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin || state.isVentas">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReparaciones">
+                            <div class="card-body py-5">
+                                <i class="fa fa-cogs fa-4x mb-3" style="color: #6f42c1;"/>
+                                <h3 class="card-title fw-bold">Reparaciones</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isVentas || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openFlota">
+                            <div class="card-body py-5">
+                                <i class="fa fa-car fa-4x mb-3" style="color: #17a2b8;"/>
+                                <h3 class="card-title fw-bold">Flota</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openCompras">
+                            <div class="card-body py-5">
+                                <i class="fa fa-shopping-bag fa-4x mb-3" style="color: #6f42c1;"/>
+                                <h3 class="card-title fw-bold">Compras</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openEmbarques">
+                            <div class="card-body py-5">
+                                <i class="fa fa-truck fa-4x mb-3" style="color: #20c997;"/>
+                                <h3 class="card-title fw-bold">Embarques</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openServicios">
+                            <div class="card-body py-5">
+                                <i class="fa fa-plug fa-4x mb-3" style="color: #607D8B;"/>
+                                <h3 class="card-title fw-bold">Servicios</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openGastos">
+                            <div class="card-body py-5">
+                                <i class="fa fa-credit-card fa-4x mb-3" style="color: #E91E63;"/>
+                                <h3 class="card-title fw-bold">Gastos</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isContabilidad || state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openContabilidad">
+                            <div class="card-body py-5">
+                                <i class="fa fa-calculator fa-4x mb-3" style="color: #e83e8c;"/>
+                                <h3 class="card-title fw-bold">Contabilidad</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin || state.isVentas">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openInventario">
+                            <div class="card-body py-5">
+                                <i class="fa fa-cubes fa-4x mb-3" style="color: #fd7e14;"/>
+                                <h3 class="card-title fw-bold">Inventario</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openTaller">
+                            <div class="card-body py-5">
+                                <i class="fa fa-wrench fa-4x mb-3" style="color: #dc3545;"/>
+                                <h3 class="card-title fw-bold">Taller</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReportes">
+                            <div class="card-body py-5">
+                                <i class="fa fa-bar-chart fa-4x mb-3" style="color: #007bff;"/>
+                                <h3 class="card-title fw-bold">Reportes</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-lg-3">
+                        <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openCatalogo">
+                            <div class="card-body py-5">
+                                <i class="fa fa-list fa-4x mb-3" style="color: #ffc107;"/>
+                                <h3 class="card-title fw-bold">Catálogo</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </t>
+`);
+registerTemplate("stock_account.BooleanToggleConfirm", `/stock_account/static/src/fields/boolean_confirm.xml`, `<t t-name="stock_account.BooleanToggleConfirm" xml:space="preserve">
+        <ConfirmCheckBox className="'o_field_boolean o_boolean_toggle'" id="props.id" value="props.record.data[props.name] or false" disabled="isReadonly" onChange="(value) =&gt; this.onChange(value)"/>
+    </t>
+`);
+registerTemplateExtension("stock.ForecastedHeader", `/stock_account/static/src/stock_account_forecasted/forecasted_header.xml`, `<t t-name="stock_account.ForecastedHeader" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension" xml:space="preserve">
+        <xpath expr="//h3[@name='product_name']" position="after">
+            <h6 t-if="() =&gt; env.user.has_group('stock.group_stock_manager')">
+                Value On Hand:
+                <a href="#" t-out="props.docs.value" t-on-click.prevent="_onClickValuation"/>
+            </h6>
+        </xpath>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReportButtonsBar", `/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml`, `<t t-name="stock_account.StockValuationReportButtonsBar" xml:space="preserve">
+
+        <button class="o_report_button_generate_entry btn text-nowrap btn-secondary" t-on-click="onClickGenerateEntry">
+            Generate Entry
+        </button>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.FilterDate", `/stock_account/static/src/stock_valuation/filters/filter_date.xml`, `<t t-name="stock_account.StockValuationReport.FilterDate" xml:space="preserve">
+        <div id="filter_date" t-ref="filterDate" class="d-print-none" t-on-click="onDateClick">
+            <button class="btn btn-secondary">
+                <i class="fa fa-calendar me-1"/>As of <t t-out="date"/>
+            </button>
+        </div>
+        <div class="d-none d-print-block">
+            At the date of <t t-out="date"/>
+        </div>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.FilterOptions", `/stock_account/static/src/stock_valuation/filters/filter_options.xml`, `<t t-name="stock_account.StockValuationReport.FilterOptions" xml:space="preserve">
+        <Dropdown>
+            <button class="btn btn-secondary" disabled="true">
+                <i class="fa fa-sliders me-1"/>Options
+            </button>
+
+
+        </Dropdown>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.FilterWarehouses", `/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml`, `<t t-name="stock_account.StockValuationReport.FilterWarehouses" xml:space="preserve">
+        <Dropdown>
+            <button class="btn btn-secondary" disabled="true">
+                <i class="fa fa-filter me-1"/>All Warehouses
+            </button>
+
+
+        </Dropdown>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.Filters", `/stock_account/static/src/stock_valuation/filters/filters.xml`, `<t t-name="stock_account.StockValuationReport.Filters" xml:space="preserve">
+        <t t-call="stock_account.StockValuationReport.FilterDate"/>
+
+
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.InventoryValuationLine", `/stock_account/static/src/stock_valuation/line/line.xml`, `<t t-name="stock_account.StockValuationReport.InventoryValuationLine" xml:space="preserve">
+        <tr t-att-class="cssClass">
+            <td class="line_name w-50" t-on-click="onClick">
+                <div class="wrapper">
+                    <t t-if="label">
+                        <a t-if="props.onClickMethod" href="#" t-out="label"/>
+                        <span t-else="" t-out="label"/>
+                    </t>
+                </div>
+            </td>
+            <td class="w-25">
+                <div t-if="formattedValue" t-out="formattedValue"/>
+                <div t-elif="debit" t-out="debit"/>
+            </td>
+            <td t-if="credit" class="w-25">
+                <div t-out="credit"/>
+            </td>
+            <td t-else="" t-on-click="onClickToggle" class="w-25">
+                <button t-attf-class="btn btn_foldable#{props.sublines ? '' : '_empty'}" t-att-tabindex="props.lines ? 0 : -1">
+                    <i t-if="hasSublines" t-attf-class="fa fa-folder#{state.displaySublines ? '-open' : ''}-o"/>
+                </button>
+            </td>
+        </tr>
+        <t t-if="state.displaySublines &amp;&amp; hasSublines">
+            <t t-if="props.displayDebitCredit">
+                <tr>
+                    <td/>
+                    <td>Debit</td>
+                    <td>Credit</td>
+                </tr>
+            </t>
+            <t t-foreach="props.sublines" t-as="line" t-key="line.account_id">
+                <StockValuationReportLine label="line.display_name || line.label" line="line" sublines="line.lines" level="props.level + 2" onClickMethod="line.method" value="line.value"/>
+            </t>
+        </t>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport.InventoryValuationToggleLine", `/stock_account/static/src/stock_valuation/line/toggle_line.xml`, `<t t-name="stock_account.StockValuationReport.InventoryValuationToggleLine" t-inherit="stock_account.StockValuationReport.InventoryValuationLine" t-inherit-mode="primary" xml:space="preserve">
+        <xpath expr="//div[hasclass('wrapper')]//button//i" position="attributes">
+            <attribute name="t-attf-class">fa fa-#{state.displaySublines ? 'check-' : ''}square-o</attribute>
+        </xpath>
+        <xpath expr="//t[@t-foreach='props.sublines']//StockValuationReportLine" position="replace">
+            <t t-if="line.lines">
+                <StockValuationReportToggleLine label="line.display_name" line="line" sublines="line.lines" level="props.level + 2" onClickMethod="props.onClickMethod || line.method" value="line.value"/>
+            </t>
+            <t t-else="">
+                <StockValuationReportLine label="line.display_name" line="line" level="props.level + 2" onClickMethod="props.onClickMethod || line.method" value="line.value"/>
+            </t>
+        </xpath>
+    </t>
+`);
+registerTemplate("stock_account.StockValuationReport", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport" xml:space="preserve">
+        <div class="o_action account_report">
+            <ControlPanel>
+
+                <t t-set-slot="control-panel-create-button">
+                    <StockValuationReportButtonsBar/>
+                </t>
+
+
+
+                <t t-set-slot="layout-actions">
+                   <div class="d-flex gap-1 flex-wrap">
+                       <StockValuationReportFilters/>
+                   </div>
+                </t>
+            </ControlPanel>
+             <div class="o_content">
+                <div id="warnings" class="warnings d-print-none"/>
+                <div class="fit-content w-print-100">
+                    <table class="table table-borderless table-hover w-print-100 mx-auto">
+                        <tbody>
+                            <t t-call="stock_account.StockValuationReport.InitialBalance"/>
+                            <t t-if="data.inventory_loss" t-call="stock_account.StockValuationReport.InventoryLoss"/>
+                            <t t-call="stock_account.StockValuationReport.StockVariation"/>
+                            <t t-call="stock_account.StockValuationReport.EndingStock"/>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.EmptyLine", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.EmptyLine" xml:space="preserve">
+        <tr class="empty"><td colspan="3"/></tr>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.InitialBalance", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.InitialBalance" xml:space="preserve">
+        <StockValuationReportLine label.translate="Initial Balance" level="0" onClickMethod="data.initial_balance.lines.length ? openAccountMoves.bind(this) : undefined" sublines="data.initial_balance.lines" value="data.initial_balance.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.StockVariation", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.StockVariation" xml:space="preserve">
+        <StockValuationReportLine label.translate="Stock Variation" level="0" sublines="data.stock_variation.lines" displayDebitCredit="true" value="data.stock_variation.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.EndingStock", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.EndingStock" xml:space="preserve">
+        <StockValuationReportLine label.translate="Ending Stock" level="0" onClickMethod="data.ending_stock.lines.length ? openStockReport.bind(this) : undefined" sublines="data.ending_stock.lines" value="data.ending_stock.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.InventoryLoss", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.InventoryLoss" xml:space="preserve">
+        <StockValuationReportLine label.translate="Inventory Loss" level="0" displayDebitCredit="true" onClickMethod.bind="openInventoryLoss" sublines="data.inventory_loss.lines" value="data.inventory_loss.value"/>
+        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
+    </t>
+
+    `);
+registerTemplate("stock_account.StockValuationReport.Accrual", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.Accrual" xml:space="preserve">
+        <t t-if="accrual.lines.length">
+            <StockValuationReportToggleLine label.translate="Accrual" sublines="accrual.lines" level="0"/>
+        </t>
+    </t>
+`);
+registerTemplateExtension("stock.ForecastedDetails", `/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml`, `<t t-name="sale_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension" xml:space="preserve">
+        <xpath expr="//tr[@name='draft_picking_out']" position="after">
+            <tr t-if="currentProduct.draft_sale_qty.out" name="draft_so_out" t-attf-class="#{currentProduct.draft_sale_orders_matched and 'table-info'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
+                <td/>
+                <td>
+                <t t-set="draft_so_out_count" t-value="currentProduct.draft_sale_orders.length"/>
+                <a t-if="draft_so_out_count == 1" href="#" t-on-click.prevent="() =&gt; this.props.openView('sale.order', 'form', currentProduct.draft_sale_orders[0].id)">
+                    1 Quotation</a>
+                <a t-else="" href="#" t-on-click.prevent="() =&gt; this.props.openView('sale.order', 'list', false, [['id', 'in', currentProduct.draft_sale_orders.map((so) =&gt; so.id)]])">
+                    <t t-out="draft_so_out_count"/> Quotations</a>
+                </td>
+                <td class="text-end">
+                    <span class="text-danger">
+                        <t t-out="_formatFloat(-currentProduct.draft_sale_qty.out)"/> <t t-out="line.uom_id.display_name"/>
+                    </span>
+                </td>
+                <td colspan="3"/>
+            </tr>
+        </xpath>
+        <xpath expr="//td[@name='usedby_cell']" position="inside">
+            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id" t-out="' - ' + line.move_out.picking_id.sale_id.partner_id.display_name"/>
+            <t t-if="line.reservation and (line.document_out._name != line.reservation._name or line.document_out.id != line.reservation.id)">
+                <span t-out="' - '"/>
+                <a t-if="line.reservation" t-out="line.reservation.name" href="#" class="fw-bold" t-on-click.prevent="() =&gt; this.props.openView(line.reservation._name, 'form', line.reservation.id)"/>
+            </t>
+            <span t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'" t-out="' (Your SO)'"/>
+        </xpath>
+    </t>
+`);
+registerTemplate("sale_stock.QtyAtDate", `/sale_stock/static/src/widgets/qty_at_date_widget.xml`, `<t t-name="sale_stock.QtyAtDate" xml:space="preserve">
+        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'" t-on-click="showPopup" t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''" t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue ? 'text-danger' : '' }}"/>
+    </t>
+
+    `);
+registerTemplate("sale_stock.QtyAtDatePopover", `/sale_stock/static/src/widgets/qty_at_date_widget.xml`, `<t t-name="sale_stock.QtyAtDatePopover" xml:space="preserve">
+        <div class="p-2">
+        <h6>Availability</h6>
+        <table class="table table-borderless table-sm">
+            <tbody>
+                <t t-if="!props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
+                    <tr>
+                        <td><strong t-out="forecastedLabel"/><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
+                        <td class="text-end">
+                            <b t-out="props.record.data.virtual_available_at_date"/> <t t-out="props.record.data.product_uom_id[1]"/>
+                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
+                                <br/><span class="fs-7 text-muted" t-out="props.calcData.product_uom_virtual_available_at_date"/> <span class="fs-7 text-muted" t-out="props.calcData.product_uom_name"/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong t-out="availableLabel"/><br/><small>All planned operations included</small></td>
+                        <td class="text-end">
+                            <b t-out="props.record.data.free_qty_today" t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out="props.record.data.product_uom_id[1]"/>
+                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
+                                <br/><span t-out="props.calcData.product_uom_free_qty_today" t-att-class="\`fs-7 text-muted \${!props.calcData.will_be_fulfilled ? 'text-danger': ''}\`"/> <span class="fs-7 text-muted" t-out="props.calcData.product_uom_name"/>
+                            </t>
+                        </td>
+                    </tr>
+                </t>
+                <t t-elif="props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
+                    <tr>
+                        <td><strong>Expected Delivery</strong></td>
+                        <td class="oe-right"><span t-out="props.calcData.delivery_date"/></td>
+                    </tr>
+                    <tr>
+                        <p>This product is replenished on demand.</p>
+                    </tr>
+                </t>
+                <t t-elif="props.record.data.state == 'sale'">
+                    <tr>
+                        <td>
+                            <strong>Reserved</strong><br/>
+                        </td>
+                        <td style="min-width: 50px; text-align: right;">
+                            <b t-out="props.record.data.qty_available_today"/> <t t-out="props.record.data.product_uom_id[1]"/>
+                        </td>
+                    </tr>
+                    <tr t-if="props.record.data.qty_available_today &lt; props.record.data.qty_to_deliver">
+                        <td>
+                            <span t-if="props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str">
+                                Remaining demand available at <b t-out="props.calcData.forecast_expected_date_str" t-att-class="props.record.data.scheduled_date &lt; props.record.data.forecast_expected_date ? 'text-danger' : ''"/>
+                            </span>
+                            <span t-elif="!props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str" class="text-danger">
+                                Not enough future availability
+                            </span>
+                            <span t-elif="!props.calcData.will_be_fulfilled" class="text-danger">
+                                No future availability
+                            </span>
+                            <span t-else="">
+                                Available in stock
+                            </span>
+                        </td>
+                    </tr>
+                </t>
+            </tbody>
+        </table>
+        <button t-if="!props.record.data.is_mto" class="text-start btn btn-link" type="button" t-on-click="openForecast">
+            <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+            View Forecast
+        </button>
+        </div>
+    </t>
+`);
+registerTemplate("sale_stock.DelayAlertWidget", `/sale_stock/static/src/xml/delay_alert.xml`, `<div t-name="sale_stock.DelayAlertWidget" class="m-1" xml:space="preserve">
+        <p>The delivery
+            <t t-foreach="props.late_elements" t-as="late_element" t-key="late_element.id">
+                <a t-esc="late_element.name" href="#" t-on-click="openElement" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
+            </t> will be late.
+        </p>
+    </div>
+`);
 registerTemplate("hr_skills.SkillsListRenderer", `/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml`, `<t t-name="hr_skills.SkillsListRenderer" t-inherit-mode="primary" t-inherit="web.ListRenderer" xml:space="preserve">
         <xpath expr="//table" position="attributes">
             <attribute name="t-attf-class" add="mb-1 {{ !isEditable ? 'cursor-default' : '' }} {{ !showTable ? 'd-none' : ''}} o_skill_table overflow-hidden" separator=" "/>
@@ -39842,183 +40308,6 @@ registerTemplate("hr_skills.InternalResumeLineComponent", `/hr_skills/static/src
             </t>
         </div>
     </div>
-`);
-registerTemplate("stock_account.BooleanToggleConfirm", `/stock_account/static/src/fields/boolean_confirm.xml`, `<t t-name="stock_account.BooleanToggleConfirm" xml:space="preserve">
-        <ConfirmCheckBox className="'o_field_boolean o_boolean_toggle'" id="props.id" value="props.record.data[props.name] or false" disabled="isReadonly" onChange="(value) =&gt; this.onChange(value)"/>
-    </t>
-`);
-registerTemplateExtension("stock.ForecastedHeader", `/stock_account/static/src/stock_account_forecasted/forecasted_header.xml`, `<t t-name="stock_account.ForecastedHeader" t-inherit="stock.ForecastedHeader" t-inherit-mode="extension" xml:space="preserve">
-        <xpath expr="//h3[@name='product_name']" position="after">
-            <h6 t-if="() =&gt; env.user.has_group('stock.group_stock_manager')">
-                Value On Hand:
-                <a href="#" t-out="props.docs.value" t-on-click.prevent="_onClickValuation"/>
-            </h6>
-        </xpath>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReportButtonsBar", `/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml`, `<t t-name="stock_account.StockValuationReportButtonsBar" xml:space="preserve">
-
-        <button class="o_report_button_generate_entry btn text-nowrap btn-secondary" t-on-click="onClickGenerateEntry">
-            Generate Entry
-        </button>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.FilterDate", `/stock_account/static/src/stock_valuation/filters/filter_date.xml`, `<t t-name="stock_account.StockValuationReport.FilterDate" xml:space="preserve">
-        <div id="filter_date" t-ref="filterDate" class="d-print-none" t-on-click="onDateClick">
-            <button class="btn btn-secondary">
-                <i class="fa fa-calendar me-1"/>As of <t t-out="date"/>
-            </button>
-        </div>
-        <div class="d-none d-print-block">
-            At the date of <t t-out="date"/>
-        </div>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.FilterOptions", `/stock_account/static/src/stock_valuation/filters/filter_options.xml`, `<t t-name="stock_account.StockValuationReport.FilterOptions" xml:space="preserve">
-        <Dropdown>
-            <button class="btn btn-secondary" disabled="true">
-                <i class="fa fa-sliders me-1"/>Options
-            </button>
-
-
-        </Dropdown>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.FilterWarehouses", `/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml`, `<t t-name="stock_account.StockValuationReport.FilterWarehouses" xml:space="preserve">
-        <Dropdown>
-            <button class="btn btn-secondary" disabled="true">
-                <i class="fa fa-filter me-1"/>All Warehouses
-            </button>
-
-
-        </Dropdown>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.Filters", `/stock_account/static/src/stock_valuation/filters/filters.xml`, `<t t-name="stock_account.StockValuationReport.Filters" xml:space="preserve">
-        <t t-call="stock_account.StockValuationReport.FilterDate"/>
-
-
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.InventoryValuationLine", `/stock_account/static/src/stock_valuation/line/line.xml`, `<t t-name="stock_account.StockValuationReport.InventoryValuationLine" xml:space="preserve">
-        <tr t-att-class="cssClass">
-            <td class="line_name w-50" t-on-click="onClick">
-                <div class="wrapper">
-                    <t t-if="label">
-                        <a t-if="props.onClickMethod" href="#" t-out="label"/>
-                        <span t-else="" t-out="label"/>
-                    </t>
-                </div>
-            </td>
-            <td class="w-25">
-                <div t-if="formattedValue" t-out="formattedValue"/>
-                <div t-elif="debit" t-out="debit"/>
-            </td>
-            <td t-if="credit" class="w-25">
-                <div t-out="credit"/>
-            </td>
-            <td t-else="" t-on-click="onClickToggle" class="w-25">
-                <button t-attf-class="btn btn_foldable#{props.sublines ? '' : '_empty'}" t-att-tabindex="props.lines ? 0 : -1">
-                    <i t-if="hasSublines" t-attf-class="fa fa-folder#{state.displaySublines ? '-open' : ''}-o"/>
-                </button>
-            </td>
-        </tr>
-        <t t-if="state.displaySublines &amp;&amp; hasSublines">
-            <t t-if="props.displayDebitCredit">
-                <tr>
-                    <td/>
-                    <td>Debit</td>
-                    <td>Credit</td>
-                </tr>
-            </t>
-            <t t-foreach="props.sublines" t-as="line" t-key="line.account_id">
-                <StockValuationReportLine label="line.display_name || line.label" line="line" sublines="line.lines" level="props.level + 2" onClickMethod="line.method" value="line.value"/>
-            </t>
-        </t>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport.InventoryValuationToggleLine", `/stock_account/static/src/stock_valuation/line/toggle_line.xml`, `<t t-name="stock_account.StockValuationReport.InventoryValuationToggleLine" t-inherit="stock_account.StockValuationReport.InventoryValuationLine" t-inherit-mode="primary" xml:space="preserve">
-        <xpath expr="//div[hasclass('wrapper')]//button//i" position="attributes">
-            <attribute name="t-attf-class">fa fa-#{state.displaySublines ? 'check-' : ''}square-o</attribute>
-        </xpath>
-        <xpath expr="//t[@t-foreach='props.sublines']//StockValuationReportLine" position="replace">
-            <t t-if="line.lines">
-                <StockValuationReportToggleLine label="line.display_name" line="line" sublines="line.lines" level="props.level + 2" onClickMethod="props.onClickMethod || line.method" value="line.value"/>
-            </t>
-            <t t-else="">
-                <StockValuationReportLine label="line.display_name" line="line" level="props.level + 2" onClickMethod="props.onClickMethod || line.method" value="line.value"/>
-            </t>
-        </xpath>
-    </t>
-`);
-registerTemplate("stock_account.StockValuationReport", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport" xml:space="preserve">
-        <div class="o_action account_report">
-            <ControlPanel>
-
-                <t t-set-slot="control-panel-create-button">
-                    <StockValuationReportButtonsBar/>
-                </t>
-
-
-
-                <t t-set-slot="layout-actions">
-                   <div class="d-flex gap-1 flex-wrap">
-                       <StockValuationReportFilters/>
-                   </div>
-                </t>
-            </ControlPanel>
-             <div class="o_content">
-                <div id="warnings" class="warnings d-print-none"/>
-                <div class="fit-content w-print-100">
-                    <table class="table table-borderless table-hover w-print-100 mx-auto">
-                        <tbody>
-                            <t t-call="stock_account.StockValuationReport.InitialBalance"/>
-                            <t t-if="data.inventory_loss" t-call="stock_account.StockValuationReport.InventoryLoss"/>
-                            <t t-call="stock_account.StockValuationReport.StockVariation"/>
-                            <t t-call="stock_account.StockValuationReport.EndingStock"/>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.EmptyLine", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.EmptyLine" xml:space="preserve">
-        <tr class="empty"><td colspan="3"/></tr>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.InitialBalance", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.InitialBalance" xml:space="preserve">
-        <StockValuationReportLine label.translate="Initial Balance" level="0" onClickMethod="data.initial_balance.lines.length ? openAccountMoves.bind(this) : undefined" sublines="data.initial_balance.lines" value="data.initial_balance.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.StockVariation", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.StockVariation" xml:space="preserve">
-        <StockValuationReportLine label.translate="Stock Variation" level="0" sublines="data.stock_variation.lines" displayDebitCredit="true" value="data.stock_variation.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.EndingStock", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.EndingStock" xml:space="preserve">
-        <StockValuationReportLine label.translate="Ending Stock" level="0" onClickMethod="data.ending_stock.lines.length ? openStockReport.bind(this) : undefined" sublines="data.ending_stock.lines" value="data.ending_stock.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.InventoryLoss", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.InventoryLoss" xml:space="preserve">
-        <StockValuationReportLine label.translate="Inventory Loss" level="0" displayDebitCredit="true" onClickMethod.bind="openInventoryLoss" sublines="data.inventory_loss.lines" value="data.inventory_loss.value"/>
-        <t t-call="stock_account.StockValuationReport.EmptyLine"/>
-    </t>
-
-    `);
-registerTemplate("stock_account.StockValuationReport.Accrual", `/stock_account/static/src/stock_valuation/stock_valuation_report.xml`, `<t t-name="stock_account.StockValuationReport.Accrual" xml:space="preserve">
-        <t t-if="accrual.lines.length">
-            <StockValuationReportToggleLine label.translate="Accrual" sublines="accrual.lines" level="0"/>
-        </t>
-    </t>
 `);
 registerTemplate("purchase_stock.ProductCatalogSearchPanel", `/purchase_stock/static/src/product_catalog/search/search_panel.xml`, `<t t-name="purchase_stock.ProductCatalogSearchPanel" t-inherit="account.ProductCatalogSearchPanel" t-inherit-mode="primary" xml:space="preserve">
         <xpath expr="//t[@t-call='account.ProductCatalogSearchPanelContent']" position="attributes">
@@ -40874,117 +41163,6 @@ registerTemplate("sale_pdf_quote_builder.QuotationDocumentX2ManyField", `/sale_p
             <UploadButton formData="formData" allowedMIMETypes="allowedMIMETypes" load.bind="() =&gt; this.props.record.load()" uploadRoute="uploadRoute"/>
         </xpath>
     </t>
-`);
-registerTemplateExtension("stock.ForecastedDetails", `/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml`, `<t t-name="sale_stock.ForecastedDetails" t-inherit="stock.ForecastedDetails" t-inherit-mode="extension" xml:space="preserve">
-        <xpath expr="//tr[@name='draft_picking_out']" position="after">
-            <tr t-if="currentProduct.draft_sale_qty.out" name="draft_so_out" t-attf-class="#{currentProduct.draft_sale_orders_matched and 'table-info'} #{multipleProducts and 'collapse show' or ''} collapseGroup_#{line.product.id}">
-                <td/>
-                <td>
-                <t t-set="draft_so_out_count" t-value="currentProduct.draft_sale_orders.length"/>
-                <a t-if="draft_so_out_count == 1" href="#" t-on-click.prevent="() =&gt; this.props.openView('sale.order', 'form', currentProduct.draft_sale_orders[0].id)">
-                    1 Quotation</a>
-                <a t-else="" href="#" t-on-click.prevent="() =&gt; this.props.openView('sale.order', 'list', false, [['id', 'in', currentProduct.draft_sale_orders.map((so) =&gt; so.id)]])">
-                    <t t-out="draft_so_out_count"/> Quotations</a>
-                </td>
-                <td class="text-end">
-                    <span class="text-danger">
-                        <t t-out="_formatFloat(-currentProduct.draft_sale_qty.out)"/> <t t-out="line.uom_id.display_name"/>
-                    </span>
-                </td>
-                <td colspan="3"/>
-            </tr>
-        </xpath>
-        <xpath expr="//td[@name='usedby_cell']" position="inside">
-            <span t-if="line.move_out and line.move_out.picking_id and line.move_out.picking_id.sale_id" t-out="' - ' + line.move_out.picking_id.sale_id.partner_id.display_name"/>
-            <t t-if="line.reservation and (line.document_out._name != line.reservation._name or line.document_out.id != line.reservation.id)">
-                <span t-out="' - '"/>
-                <a t-if="line.reservation" t-out="line.reservation.name" href="#" class="fw-bold" t-on-click.prevent="() =&gt; this.props.openView(line.reservation._name, 'form', line.reservation.id)"/>
-            </t>
-            <span t-if="line.document_out and line.is_matched and line.document_out._name === 'sale.order'" t-out="' (Your SO)'"/>
-        </xpath>
-    </t>
-`);
-registerTemplate("sale_stock.QtyAtDate", `/sale_stock/static/src/widgets/qty_at_date_widget.xml`, `<t t-name="sale_stock.QtyAtDate" xml:space="preserve">
-        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'" t-on-click="showPopup" t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''" t-attf-class="fa fa-area-chart cursor-pointer {{ calcData.forecasted_issue ? 'text-danger' : '' }}"/>
-    </t>
-
-    `);
-registerTemplate("sale_stock.QtyAtDatePopover", `/sale_stock/static/src/widgets/qty_at_date_widget.xml`, `<t t-name="sale_stock.QtyAtDatePopover" xml:space="preserve">
-        <div class="p-2">
-        <h6>Availability</h6>
-        <table class="table table-borderless table-sm">
-            <tbody>
-                <t t-if="!props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
-                    <tr>
-                        <td><strong t-out="forecastedLabel"/><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
-                        <td class="text-end">
-                            <b t-out="props.record.data.virtual_available_at_date"/> <t t-out="props.record.data.product_uom_id[1]"/>
-                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
-                                <br/><span class="fs-7 text-muted" t-out="props.calcData.product_uom_virtual_available_at_date"/> <span class="fs-7 text-muted" t-out="props.calcData.product_uom_name"/>
-                            </t>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong t-out="availableLabel"/><br/><small>All planned operations included</small></td>
-                        <td class="text-end">
-                            <b t-out="props.record.data.free_qty_today" t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out="props.record.data.product_uom_id[1]"/>
-                            <t t-if="props.record.data.product_uom_id[1] !== props.calcData.product_uom_name">
-                                <br/><span t-out="props.calcData.product_uom_free_qty_today" t-att-class="\`fs-7 text-muted \${!props.calcData.will_be_fulfilled ? 'text-danger': ''}\`"/> <span class="fs-7 text-muted" t-out="props.calcData.product_uom_name"/>
-                            </t>
-                        </td>
-                    </tr>
-                </t>
-                <t t-elif="props.record.data.is_mto and ['draft', 'sent'].includes(props.record.data.state)">
-                    <tr>
-                        <td><strong>Expected Delivery</strong></td>
-                        <td class="oe-right"><span t-out="props.calcData.delivery_date"/></td>
-                    </tr>
-                    <tr>
-                        <p>This product is replenished on demand.</p>
-                    </tr>
-                </t>
-                <t t-elif="props.record.data.state == 'sale'">
-                    <tr>
-                        <td>
-                            <strong>Reserved</strong><br/>
-                        </td>
-                        <td style="min-width: 50px; text-align: right;">
-                            <b t-out="props.record.data.qty_available_today"/> <t t-out="props.record.data.product_uom_id[1]"/>
-                        </td>
-                    </tr>
-                    <tr t-if="props.record.data.qty_available_today &lt; props.record.data.qty_to_deliver">
-                        <td>
-                            <span t-if="props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str">
-                                Remaining demand available at <b t-out="props.calcData.forecast_expected_date_str" t-att-class="props.record.data.scheduled_date &lt; props.record.data.forecast_expected_date ? 'text-danger' : ''"/>
-                            </span>
-                            <span t-elif="!props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str" class="text-danger">
-                                Not enough future availability
-                            </span>
-                            <span t-elif="!props.calcData.will_be_fulfilled" class="text-danger">
-                                No future availability
-                            </span>
-                            <span t-else="">
-                                Available in stock
-                            </span>
-                        </td>
-                    </tr>
-                </t>
-            </tbody>
-        </table>
-        <button t-if="!props.record.data.is_mto" class="text-start btn btn-link" type="button" t-on-click="openForecast">
-            <i class="oi oi-fw o_button_icon oi-arrow-right"/>
-            View Forecast
-        </button>
-        </div>
-    </t>
-`);
-registerTemplate("sale_stock.DelayAlertWidget", `/sale_stock/static/src/xml/delay_alert.xml`, `<div t-name="sale_stock.DelayAlertWidget" class="m-1" xml:space="preserve">
-        <p>The delivery
-            <t t-foreach="props.late_elements" t-as="late_element" t-key="late_element.id">
-                <a t-esc="late_element.name" href="#" t-on-click="openElement" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
-            </t> will be late.
-        </p>
-    </div>
 `);
 registerTemplateExtension("web.PhoneField", `/sms/static/src/components/phone_field/phone_field.xml`, `<t t-inherit="web.PhoneField" t-inherit-mode="extension" xml:space="preserve">
         <xpath expr="//div[hasclass('o_phone_content')]//a" position="after">

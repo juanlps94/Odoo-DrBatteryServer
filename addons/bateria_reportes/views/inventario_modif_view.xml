@@ -12,41 +12,6 @@
     <record id="stock.menu_stock_warehouse_mgmt" model="ir.ui.menu">
         <field name="active" eval="False"/>
     </record>
-
-    <record id="menu_battery_movement_history" model="ir.ui.menu">
-        <field name="name">Historial de movimientos</field>
-        <field name="parent_id" ref="stock.menu_stock_root"/>
-        <field name="action" ref="action_bateria_inventario_movimientos"/>
-        <field name="sequence">20</field>
-    </record>
-
-    <record id="menu_battery_transfers_custom" model="ir.ui.menu">
-        <field name="name">Traslados</field>
-        <field name="parent_id" ref="stock.menu_stock_root"/>
-        <field name="action" ref="action_bateria_traslados"/>
-        <field name="sequence">30</field>
-    </record>
-
-    <!-- <record id="menu_battery_transfers" model="ir.ui.menu">
-        <field name="name">Traslados</field>
-        <field name="parent_id" ref="stock.menu_stock_root"/>
-        <field name="action" ref="stock.action_picking_tree_all"/>
-        <field name="sequence">30</field>
-    </record> -->
-
-
-    <!-- <record id="view_bateria_ubicacion_list" model="ir.ui.view">
-        <field name="name">bateria.ubicacion.list</field>
-        <field name="model">bateria.ubicacion</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="nombre_completo" string="Ubicación"/>
-                <field name="tipo"/>
-                <field name="compania"/>
-            </list>
-        </field>
-    </record> -->
-
 </odoo>
 
 

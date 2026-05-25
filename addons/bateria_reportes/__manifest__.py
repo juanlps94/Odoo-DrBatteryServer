@@ -6,19 +6,26 @@
     'author': 'JuanDev',
     'depends': [
         'base',
-        'sale',      # Lo necesitas para heredar Ventas
-        'purchase',  # Lo necesitas para heredar Compras
-        'stock',     # Lo necesitas para heredar Inventario (si aplica)
+        'web',
+        'stock',     # Estos modulos
+        'purchase',  # Son necesarios
+        'mail',      # Para adaptar
+        'contacts',  # La Localizacion
+        'account',   # A la empresa
+        'sale'  # Lo necesitas para heredar Ventas
     ],
     'data': [
         'views/inventario_modif_view.xml',  # Aquí es donde has personalizado las vistas de picking
-        # Aquí iremos agregando tus archivos XML de herencia más adelante
+        'views/dashboard_view.xml' 
     ],
     'assets': {
         'web.assets_backend': [
-            'bateria_reportes/static/src/scss/custom_style.scss',
+            'bateria_reportes/static/src/dashboard.js',
+            'bateria_reportes/static/src/dashboard.css',
+            'bateria_reportes/static/src/dashboard.xml',
         ],
     },
+
     'installable': True,
     'application': True,
     'license': 'LGPL-3',
