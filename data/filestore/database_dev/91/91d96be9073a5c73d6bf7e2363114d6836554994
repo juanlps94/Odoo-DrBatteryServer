@@ -251487,7 +251487,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
 
                 <div class="row g-4 justify-content-center">
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isVentas || state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openVentas">
                             <div class="card-body py-5">
                                 <i class="fa fa-shopping-cart fa-4x mb-3" style="color: #28a745;"/>
@@ -251496,7 +251496,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin || state.isVentas">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReparaciones">
                             <div class="card-body py-5">
                                 <i class="fa fa-cogs fa-4x mb-3" style="color: #6f42c1;"/>
@@ -251505,7 +251505,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isVentas || state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openFlota">
                             <div class="card-body py-5">
                                 <i class="fa fa-car fa-4x mb-3" style="color: #17a2b8;"/>
@@ -251514,7 +251514,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openCompras">
                             <div class="card-body py-5">
                                 <i class="fa fa-shopping-bag fa-4x mb-3" style="color: #6f42c1;"/>
@@ -251523,7 +251523,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openEmbarques">
                             <div class="card-body py-5">
                                 <i class="fa fa-truck fa-4x mb-3" style="color: #20c997;"/>
@@ -251532,7 +251532,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openServicios">
                             <div class="card-body py-5">
                                 <i class="fa fa-plug fa-4x mb-3" style="color: #607D8B;"/>
@@ -251541,7 +251541,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isCompras || state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openGastos">
                             <div class="card-body py-5">
                                 <i class="fa fa-credit-card fa-4x mb-3" style="color: #E91E63;"/>
@@ -251550,7 +251550,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isContabilidad || state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openContabilidad">
                             <div class="card-body py-5">
                                 <i class="fa fa-calculator fa-4x mb-3" style="color: #e83e8c;"/>
@@ -251559,7 +251559,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin || state.isVentas">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openInventario">
                             <div class="card-body py-5">
                                 <i class="fa fa-cubes fa-4x mb-3" style="color: #fd7e14;"/>
@@ -251568,7 +251568,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openTaller">
                             <div class="card-body py-5">
                                 <i class="fa fa-wrench fa-4x mb-3" style="color: #dc3545;"/>
@@ -251577,7 +251577,7 @@ registerTemplate("bateria_reportes.Dashboard", `/bateria_reportes/static/src/das
                         </div>
                     </div>
 
-                    <div class="col-md-4 col-lg-3" t-if="state.isAdmin">
+                    <div class="col-md-4 col-lg-3">
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReportes">
                             <div class="card-body py-5">
                                 <i class="fa fa-bar-chart fa-4x mb-3" style="color: #007bff;"/>
@@ -253029,4 +253029,4 @@ registerTemplate("spreadsheet.SpreadsheetBinaryField", `/spreadsheet/static/src/
                     });
 
 
-//# sourceMappingURL=/web/assets/79a2929/web.assets_web.js.map
+//# sourceMappingURL=/web/assets/da4076b/web.assets_web.js.map

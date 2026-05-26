@@ -13,7 +13,7 @@
               sequence="1"/>
 
 
-        <record id="stock.menu_stock_root" model="ir.ui.menu">
+        <!-- <record id="stock.menu_stock_root" model="ir.ui.menu">
             <field name="parent_id" ref="menu_bateria_dashboard_root"/>
             <field name="sequence">10</field>
         </record>
@@ -48,7 +48,7 @@
         
         <record id="stock.menu_stock_warehouse_mgmt" model="ir.ui.menu">
             <field name="active" eval="False"/>
-        </record>
+        </record> -->
 
 </odoo>
 
