@@ -5,6 +5,7 @@ from odoo import models, fields, api
 # 1. UBICACIONES FÍSICAS (Actualizado a Jerarquía Padre/Hijo)
 # =================================================================================
 
+# Esta es una prueba para actualizar el commit y los archivos junto con el git.ignore
 
 # =================================================================================
 # 2. EL INVENTARIO CENTRAL
