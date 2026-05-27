@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<!-- El ID de este modulo de inventario es stock.stock_picking_type_action -->
+
 <record id="stock.menu_warehouse_report" model="ir.ui.menu">
         <field name="active" eval="False"/>
     </record>
@@ -13,44 +15,75 @@
         <field name="active" eval="False"/>
     </record>
 
-    <record id="menu_battery_movement_history" model="ir.ui.menu">
-        <field name="name">Historial de movimientos</field>
-        <field name="parent_id" ref="stock.menu_stock_root"/>
-        <field name="action" ref="action_bateria_inventario_movimientos"/>
-        <field name="sequence">20</field>
-    </record>
-
-    <record id="menu_battery_transfers_custom" model="ir.ui.menu">
-        <field name="name">Traslados</field>
-        <field name="parent_id" ref="stock.menu_stock_root"/>
-        <field name="action" ref="action_bateria_traslados"/>
-        <field name="sequence">30</field>
-    </record>
-
-    <!-- <record id="menu_battery_transfers" model="ir.ui.menu">
-        <field name="name">Traslados</field>
-        <field name="parent_id" ref="stock.menu_stock_root"/>
-        <field name="action" ref="stock.action_picking_tree_all"/>
-        <field name="sequence">30</field>
-    </record> -->
-
-
-    <!-- <record id="view_bateria_ubicacion_list" model="ir.ui.view">
-        <field name="name">bateria.ubicacion.list</field>
-        <field name="model">bateria.ubicacion</field>
+<record id="view_bateria_inventario_tree" model="ir.ui.view">
+        <field name="name">bateria.inventario.tree</field>
+        <field name="model">bateria.inventario</field>
         <field name="arch" type="xml">
-            <list>
-                <field name="nombre_completo" string="Ubicación"/>
-                <field name="tipo"/>
-                <field name="compania"/>
+            <list string="Movimientos de Baterías" decoration-info="tipo_movimiento == 'entrada'" decoration-warning="tipo_movimiento == 'salida'">
+                <field name="fecha"/>
+                <field name="producto_id"/>
+                <field name="tipo_movimiento" widget="badge"/>
+                <field name="cantidad"/>
+                <field name="ubicacion_id"/>
+                <field name="stock_disponible"/>
+                <field name="nota"/>
             </list>
+        </field>
+    </record>
+
+    <!-- <record id="view_bateria_inventario_form" model="ir.ui.view">
+        <field name="name">bateria.inventario.form</field>
+        <field name="model">bateria.inventario</field>
+        <field name="arch" type="xml">
+            <form string="Movimiento de Batería">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="producto_id"/>
+                            <field name="cantidad"/>
+                            <field name="tipo_movimiento"/>
+                        </group>
+                        <group>
+                            <field name="fecha"/>
+                            <field name="ubicacion_id"/>
+                            <field name="stock_disponible"/>
+                            <field name="fecha_vencimiento"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="nota"/>
+                        <field name="orden_venta_id" invisible="not orden_venta_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bateria_inventario" model="ir.actions.act_window">
+        <field name="name">Inventario de Baterías</field>
+        <field name="res_model">bateria.inventario</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Crea el primer movimiento de inventario de baterías.
+            </p>
         </field>
     </record> -->
 
+    <menuitem id="menu_bateria_inventario_root"
+              name="Control de Baterías"
+              parent="stock.menu_stock_root"
+              sequence="20"/>
+
+    <menuitem id="menu_bateria_inventario_movimientos"
+              name="Movimientos de Baterías"
+              parent="menu_bateria_inventario_root"
+              action="action_bateria_inventario"
+              sequence="10"/>
+
 </odoo>
-
-
 <!-- 
+
 
 <record id="view_bateria_ubicacion_list" model="ir.ui.view">
         <field name="name">bateria.ubicacion.list</field>
@@ -106,29 +139,7 @@
         </field>
     </record>
 
-    <record id="view_bateria_inventario_form" model="ir.ui.view">
-        <field name="name">bateria.inventario.form</field>
-        <field name="model">bateria.inventario</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <group>
-                        <group string="Detalles del Movimiento">
-                            <field name="fecha"/>
-                            <field name="tipo_movimiento"/>
-                            <field name="producto_id" options="{'no_create': True}"/>
-                            <field name="ubicacion_id"/>
-                        </group>
-                        <group string="Valores y Referencia">
-                            <field name="cantidad"/>
-                            <field name="nota"/>
-                            <field name="orden_venta_id" readonly="1" invisible="not orden_venta_id"/>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
+    
 
     <record id="view_bateria_traslado_list" model="ir.ui.view">
         <field name="name">bateria.traslado.list</field>
