@@ -12,7 +12,10 @@
         'mail',      # Para adaptar
         'contacts',  # La Localizacion
         'account',   # A la empresa
-        'sale'  # Lo necesitas para heredar Ventas
+        'sale',  # Lo necesitas para heredar Ventas
+        'hr_expense',  # Lo necesitas para heredar Gastos
+        'spreadsheet_dashboard',  # Lo necesitas para heredar Reportes Gerenciales
+
     ],
     'data': [
         'views/inventario_modif_view.xml',  # Aquí es donde has personalizado las vistas de picking

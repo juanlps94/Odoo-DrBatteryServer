@@ -1,0 +1,20 @@
+<odoo>
+    <data noupdate="1">
+        <record id="bateria_producto_demo" model="bateria.producto">
+            <field name="name">Batería Moura 12V 75Ah</field>
+            </record>
+
+        <record id="bateria_ubicacion_demo" model="bateria.ubicacion">
+            <field name="name">Pasillo A - Estante 2</field>
+        </record>
+
+        <record id="bateria_inventario_registro_1" model="bateria.inventario">
+            <field name="fecha" eval="datetime.now()"/>
+            <field name="tipo_movimiento">entrada</field>
+            <field name="producto_id" ref="bateria_producto_demo"/>
+            <field name="cantidad">10</field>
+            <field name="ubicacion_id" ref="bateria_ubicacion_demo"/>
+            <field name="nota">Carga inicial de inventario para pruebas</field>
+        </record>
+    </data>
+</odoo>

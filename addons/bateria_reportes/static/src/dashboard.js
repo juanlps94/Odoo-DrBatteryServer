@@ -51,14 +51,15 @@ class BateriaDashboard extends Component {
     }
 
     // --- ACCIONES DE NAVEGACIÓN ---
-    openVentas() { this.action.doAction("bateria_reportes.action_bateria_orden_venta", { clearBreadcrumbs: true }); }
-    openInventario() { this.action.doAction("bateria_reportes.action_bateria_inventario", { clearBreadcrumbs: true }); }
-    openCatalogo() { this.action.doAction("bateria_reportes.action_bateria_producto", { clearBreadcrumbs: true }); }
-    openReportes() { this.action.doAction("bateria_reportes.action_reportes_gerenciales", { clearBreadcrumbs: true }); }
-    openCompras() { this.action.doAction("bateria_reportes.action_bateria_compra", { clearBreadcrumbs: true }); }
+    openVentas() { this.action.doAction("sale.action_orders", { clearBreadcrumbs: true }); } // Accion para ir al modulo de ventas
+    openInventario() { this.action.doAction("stock.stock_picking_type_action", { clearBreadcrumbs: true }); } // Accion para ir al modulo de inventario  
+    openReportes() { this.action.doAction("spreadsheet_dashboard.menu_dashboard_management", { clearBreadcrumbs: true }); } // Accion para ir al modulo de reportes gerenciales
+    openCompras() { this.action.doAction("purchase.purchase_form_action", { clearBreadcrumbs: true }); } // Accion para ir al modulo de compras
+    openGastos() { this.action.doAction("hr_expense.hr_expense_actions_my_all", { clearBreadcrumbs: true }); } // Accion para ir al modulo de gastos
+    
+    openCatalogo() { this.action.doAction("bateria_reportes.action_bateria_producto", { clearBreadcrumbs: true }); } 
     openEmbarques() { this.action.doAction("bateria_reportes.action_bateria_embarque", { clearBreadcrumbs: true }); } // 👇 Nueva Acción
     openServicios() { this.action.doAction("bateria_reportes.action_bateria_servicio", { clearBreadcrumbs: true }); }
-    openGastos() { this.action.doAction("bateria_reportes.action_bateria_gasto", { clearBreadcrumbs: true }); }
     openActivos() { this.action.doAction("bateria_reportes.action_bateria_activo", { clearBreadcrumbs: true }); }
     openFlota() { this.action.doAction("bateria_reportes.action_bateria_vehiculo", { clearBreadcrumbs: true }); }
     openTaller() { this.action.doAction("bateria_reportes.action_bateria_taller_articulo", { clearBreadcrumbs: true }); }

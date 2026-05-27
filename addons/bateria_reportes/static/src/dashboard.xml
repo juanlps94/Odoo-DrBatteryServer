@@ -49,6 +49,9 @@
                         </div>
                     </div>
 
+                    <!-- MODULO DE REPARACIONES MAS ADELANTE SE ACTIVARA
+                    
+                    
                     <div class="col-md-4 col-lg-3" >
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReparaciones">
                             <div class="card-body py-5">
@@ -56,8 +59,10 @@
                                 <h3 class="card-title fw-bold">Reparaciones</h3>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
+                    <!-- CARTA DE MODULO DE EMBARQUES SE ACTIVARA MAS ADELANTE 
+                    
                     <div class="col-md-4 col-lg-3" >
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openFlota">
                             <div class="card-body py-5">
@@ -65,7 +70,7 @@
                                 <h3 class="card-title fw-bold">Flota</h3>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-md-4 col-lg-3" >
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openCompras">
@@ -76,6 +81,8 @@
                         </div>
                     </div>
                     
+                    <!-- CARTA PARA EL MODULO DE EMBARQUES - POR EL MOMENTO SE QUITA HASTA TENER CLARO QUE SE VA A USAR O NO 
+                    
                     <div class="col-md-4 col-lg-3" >
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openEmbarques">
                             <div class="card-body py-5">
@@ -83,7 +90,7 @@
                                 <h3 class="card-title fw-bold">Embarques</h3>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-md-4 col-lg-3" >
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openServicios">
@@ -121,6 +128,10 @@
                         </div>
                     </div>
 
+                    <!--  MODULO DE TALLER SE ACTIVARA MAS ADELANTE
+                    
+                    
+                    
                     <div class="col-md-4 col-lg-3" >
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openTaller">
                             <div class="card-body py-5">
@@ -128,7 +139,7 @@
                                 <h3 class="card-title fw-bold">Taller</h3>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-md-4 col-lg-3" >
                         <div class="card h-100 shadow-sm text-center bateria-dashboard-card" t-on-click="openReportes">

@@ -1,0 +1,6 @@
+# Odoo sessions y datos temporales
+*.placeholder
+**/session/*
+**/.sessions/*
+*.pyc
+__pycache__/
